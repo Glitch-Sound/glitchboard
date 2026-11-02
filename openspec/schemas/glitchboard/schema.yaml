@@ -1,0 +1,81 @@
+name: glitchboard
+version: 1
+description: GlitchBoardの要件ID、EARS、Gherkin、BDDに基づく開発手順
+
+artifacts:
+  - id: proposal
+    generates: proposal.md
+    description: 目的、対象要件、スコープ、具体例、未決事項
+    template: proposal.md
+    instruction: |
+      Whyには利用者の問題と必要性、What Changesには振る舞いの変更を書く。
+      一つの変更は一つの検証可能な目的に絞り、実装方法はdesign.mdへ分離する。
+      Requirementsには対象要件と根拠、Examplesには発見した具体例を記載する。
+      具体例を仕様へ展開した後は、Examplesからシナリオへリンクし、受け入れ条件を再定義しない。
+      Capabilitiesには継続して使える機能名を使い、実装作業名や要件ごとの細切れの名前を避ける。
+      新規機能のパスの各階層はkebab-caseとし、既存機能はopenspec/specs/の正確な相対パスを使う。
+      該当しない機能一覧は"なし"とし、両方ともなしならconfig.yamlの仕様を省略する条件に従う。
+      Impactに互換性、依存関係、文書への影響を、Open Questionsに確認先と阻害する段階を記載する。
+      YAMLのデータ構造や移行、稼働日・期限の境界を変える場合は影響を明示する。
+    requires: []
+
+  - id: specs
+    generates: "specs/**/*.md"
+    description: 要件ID付きのEARS要件とGherkin受け入れ条件
+    template: spec.md
+    instruction: |
+      提案の各機能に対応するspecs/<capability-path>/spec.mdを作成する。
+      新規機能だけにPurposeを50文字以上で記載し、既存機能の差分では省く。
+      既存の目的を変える場合は正式仕様のPurposeを直接更新し、変更理由を残す。
+      新規要件の本文は500文字以内とし、詳細な具体例はシナリオ、実装方法はdesign.mdへ置く。
+      見出しは ### Requirement: <要件ID> - <名称> と #### Scenario: <シナリオID> - <名称> とする。
+      ADDEDとMODIFIEDの各要件には1つ以上のシナリオを用意し、GIVEN、WHEN、THENを太字の箇条書きにする。
+      EARSのテンプレートはイベントと状態の例なので、条件に合う形式へ置き換える。
+      ADDEDは追加、MODIFIEDは変更、REMOVEDは廃止、RENAMEDは名称変更に使い、未使用のブロックとセクションは削除する。
+      MODIFIEDでは正式仕様の要件ブロック全体をコピーし、見出しと全シナリオを保持して必要な変更を反映する。
+      受け入れ条件の変更理由と影響するテストを設計へ記録する。
+      日付・ポイント・負荷の要件では対象Project、単位、分母が0の場合、学習中、期限切れ、非稼働日の扱いを必要に応じて定義する。
+      REMOVEDにはReasonとMigration、RENAMEDにはFROMとTOを記載し、この2種類だけの項目に新しい本文やシナリオを追加しない。
+      名称と振る舞いを同時に変更するときは、RENAMEDに加え、変更後の見出しでMODIFIEDを記載する。
+    requires:
+      - proposal
+
+  - id: design
+    generates: design.md
+    description: 要件と設計判断、責務、配置、検証方法の対応
+    template: design.md
+    instruction: |
+      小さな変更も作成し、必要な判断を簡潔に記載する。
+      Contextは前提と制約に絞り、提案の目的と仕様の本文はリンクで参照する。
+      Decisionsに対象要件、選択した方式、理由、代替案、配置と依存を記載する。
+      Traceabilityには全シナリオと設計節、実装予定、検証方法の対応を記載する。
+      Verification Planには測定方法、手動確認、全体検証を記載し、合格基準は仕様を参照する。
+      移行がある場合はMigration Planに手順と失敗時に戻す方法を記載する。
+      Extension、shared、webviewの責務と通信境界、YAMLのコメント保持、VS Codeテーマとオフライン動作への影響を検討する。
+      仕様を省略する変更は要件IDの代わりに目的と設計節の対応を記載する。
+    requires:
+      - proposal
+      - specs
+
+  - id: tasks
+    generates: tasks.md
+    description: 対象IDと完了条件を持つ実装、テスト、文書更新の作業
+    template: tasks.md
+    instruction: |
+      各タスクは - [ ] X.Y の形式とし、番号を文書内で一意にする。
+      要件に対応する各行に要件ID、該当シナリオID、完了の確認方法を含め、設計節へのリンクはグループ単位で記載する。
+      支援作業は目的と設計節へのリンクを記載する。
+      グループを依存順に並べ、各グループ内で必要なテスト、文書更新、台帳更新を完結させる。
+      複数のシナリオを扱うグループは対象IDをすべて記載し、リファクタリングのタスクは必要な場合だけ追加する。
+      最後のグループには広い結合検証と成果物全体の照合を置き、検証内容はtech.mdの方針に従う。
+      アーカイブ後でなければ実行できない作業はWorkflow follow-upへ通常の箇条書きで記載し、チェックボックスにしない。
+      未使用のグループを削除して番号を振り直し、対象シナリオの漏れと重複した番号がないことを確認する。
+    requires:
+      - specs
+      - design
+
+apply:
+  requires: [tasks]
+  tracks: tasks.md
+  instruction: |
+    tasks.mdの未完了項目を依存順に実施し、完了条件を確認できた項目だけをチェックする。
