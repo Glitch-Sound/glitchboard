@@ -11,8 +11,7 @@
 
 **Goals:**
 
-- 稼働日・負荷・危険判定の全受け入れ例を成立させる。
-
+- 稼働日・負荷・危険判定の全受け入れ例を成立させる。\
 **Non-Goals:**
 
 - 他の変更の振る舞いをこの変更で実装しない。
@@ -22,11 +21,14 @@
 ### D-01 - 責務とデータ境界
 
 - 対象: REQ-006、REQ-007、REQ-008、REQ-009、REQ-010、REQ-011。
-- 選択: packages/shared/src/calculationに責務を配置する。計算はshared、永続化とVS Code APIはextension、画面はwebviewに置く。
+- 選択: packages/shared/src/calculationに責務を配置する。\
+  計算はshared、永続化とVS Code APIはextension、画面はwebviewに置く。
 - 理由: [技術方針](../../../tech.md)の依存方向とオフライン要件を守れる。
 - 代替案: WebviewがYAMLを直接操作する方式は、VS Code APIと検証境界を分散させるため採用しない。
-- 配置と依存: packages/shared/src/calculation。通信型はpackages/sharedに置き、境界でZod検証する。
-- データと日付: YAMLの更新では対象外のコメントを保持し、日付は日本時間のYYYY-MM-DDとして扱う。該当しない機能では変更しない。
+- 配置と依存: packages/shared/src/calculation。\
+  通信型はpackages/sharedに置き、境界でZod検証する。
+- データと日付: YAMLの更新では対象外のコメントを保持し、日付は日本時間のYYYY-MM-DDとして扱う。\
+  該当しない機能では変更しない。
 
 ### D-02 - 表示更新と検証
 
@@ -40,7 +42,9 @@
 ### D-03 - 決定的な日付計算
 
 - 対象: REQ-006～REQ-011。
-- 選択: Asia/Tokyoの今日と休日設定を計算関数に入力する。実績ペースは10稼働日を固定分母とし、予測は期限とIDで安定ソートして先頭Eventからptを配る。必要ペースは全未完了Eventの配分を日付ごとに足し、表示期間で切り出す。
+- 選択: Asia/Tokyoの今日と休日設定を計算関数に入力する。\
+  実績ペースは10稼働日を固定分母とし、予測は期限とIDで安定ソートして先頭Eventからptを配る。\
+  必要ペースは全未完了Eventの配分を日付ごとに足し、表示期間で切り出す。
 - 理由: テストで時刻、祝日、Project間の競合を固定できる。
 - 代替案: 画面内で現在時刻を直接参照する方式は表示面で結果がずれるため採用しない。
 - 配置と依存: packages/shared/src/calculationに純粋関数を置き、extensionが現在日と読込Projectを渡す。
@@ -67,8 +71,10 @@
 
 ## Verification Plan
 
-- 正常、境界、異常: Traceabilityの各テストで仕様のGIVEN、WHEN、THENを確認する。自動化しにくいVS Codeの実表示とテーマは手動確認し、結果を台帳へ記録する。
-- 非機能要件: 対象NREQのシナリオに記載した環境、データ、指標を使う。該当しない場合は対象外とする。
+- 正常、境界、異常: Traceabilityの各テストで仕様のGIVEN、WHEN、THENを確認する。\
+  自動化しにくいVS Codeの実表示とテーマは手動確認し、結果を台帳へ記録する。
+- 非機能要件: 対象NREQのシナリオに記載した環境、データ、指標を使う。\
+  該当しない場合は対象外とする。
 - 手動確認: VS Code安定版でダーク・ライトテーマとサイドバー・エディタの動作を確認し、スクリーンショットを検証記録に添える。
 - 全体検証: `pnpm test`、`pnpm typecheck`、`pnpm check`、`pnpm check:fsd`と`openspec validate workload-analytics --strict`を実行し、失敗0件を確認する。
 
@@ -80,8 +86,10 @@
 
 ## Migration Plan
 
-新規機能のため既存管理データの移行はない。失敗時は変更前のGitコミットと管理データの履歴へ戻す。
+新規機能のため既存管理データの移行はない。\
+失敗時は変更前のGitコミットと管理データの履歴へ戻す。
 
 ## Open Questions
 
-なし。具体案の採用はproposal.mdのReadinessに従いレビュー時に確認する。
+なし。\
+具体案の採用はproposal.mdのReadinessに従いレビュー時に確認する。

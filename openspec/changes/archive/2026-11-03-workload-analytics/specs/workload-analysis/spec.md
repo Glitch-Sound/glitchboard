@@ -2,14 +2,14 @@
 
 ## Purpose
 
-稼働日・負荷・危険判定は、個人が複数Projectの作業をVS Codeで管理する際に、期限と実績を基に、稼働日単位で予測・必要ペース・危険を一貫して計算できるようにする。
+稼働日・負荷・危険判定は、個人が複数Projectの作業をVS Codeで管理する際に、期限と実績を基に、稼働日単位で予測・必要ペース・危険を一貫して計算できるようにする。\
 この機能は管理対象の状態と画面の振る舞いを一貫して扱う。
 
 ## ADDED Requirements
 
 ### Requirement: REQ-006 - 稼働日と日付基準
 
-WHILE 負荷を計算するとき、GlitchBoardは SHALL `manage.yaml`の`workdays_off`と`public_holidays`を用い、Asia/Tokyoの暦日を基準として稼働日を判定する。
+WHILE 負荷を計算するとき、GlitchBoardは SHALL `manage.yaml`の`workdays_off`と`public_holidays`を用い、Asia/Tokyoの暦日を基準として稼働日を判定する。\
 `due`と`doneAt`は`YYYY-MM-DD`の文字列で保存し、残り日数は稼働日でなく暦日で数える。
 
 #### Scenario: REQ-006-S01 - 休日設定
@@ -26,7 +26,8 @@ WHILE 負荷を計算するとき、GlitchBoardは SHALL `manage.yaml`の`workda
 
 ### Requirement: REQ-007 - 実績ペースと学習中
 
-WHEN 完了履歴を集計するとき、GlitchBoardは SHALL 読込中Projectの直近10稼働日の完了ポイント合計を10で割る。最初の完了日を第1稼働日として10日目に達するまで学習中とする。
+WHEN 完了履歴を集計するとき、GlitchBoardは SHALL 読込中Projectの直近10稼働日の完了ポイント合計を10で割る。\
+最初の完了日を第1稼働日として10日目に達するまで学習中とする。
 
 #### Scenario: REQ-007-S01 - 未見積の完了
 
@@ -64,8 +65,8 @@ WHEN 未完了Eventの予測を求めるとき、GlitchBoardは SHALL 期限、P
 
 ### Requirement: REQ-009 - 必要ペース
 
-WHEN 表示期間の必要ペースを求めるとき、GlitchBoardは SHALL 読込中Projectの全未完了Eventを対象に、残りポイントを今日から期限日までの稼働日に均等配分する。
-期限切れまたは配分可能日が0日の残りは今日の列へ載せる。
+WHEN 表示期間の必要ペースを求めるとき、GlitchBoardは SHALL 読込中Projectの全未完了Eventを対象に、残りポイントを今日から期限日までの稼働日に均等配分する。\
+期限切れまたは配分可能日が0日の残りは今日の列へ載せる。\
 非稼働日はこの例外を除き0とし、表示期間外に期限を持つEventも期間内の割当分だけを集計する。
 
 #### Scenario: REQ-009-S01 - 期限が休日
@@ -82,7 +83,8 @@ WHEN 表示期間の必要ペースを求めるとき、GlitchBoardは SHALL 読
 
 ### Requirement: REQ-010 - 期間負荷
 
-WHEN 期間負荷を表示するとき、GlitchBoardは SHALL 表示期間内の必要ペース合計を同期間の稼働日数と実績ペースの積で割り100倍する。分母が0なら数値を表示しない。
+WHEN 期間負荷を表示するとき、GlitchBoardは SHALL 表示期間内の必要ペース合計を同期間の稼働日数と実績ペースの積で割り100倍する。\
+分母が0なら数値を表示しない。
 
 #### Scenario: REQ-010-S01 - 100%超
 
@@ -98,8 +100,8 @@ WHEN 期間負荷を表示するとき、GlitchBoardは SHALL 表示期間内の
 
 ### Requirement: REQ-011 - 危険と件数
 
-WHEN 危険を判定するとき、GlitchBoardは SHALL 未完了Eventの期限接近0～3暦日、期限切れ、完了予測日が期限後の溢れ、必要ペースが実績ペースを超える日の重なりを区別する。
-危険件数は期限接近、期限切れ、溢れのEventを重複除外して数え、表示期間内に重なりが1日以上あれば1を加える。
+WHEN 危険を判定するとき、GlitchBoardは SHALL 未完了Eventの期限接近0～3暦日、期限切れ、完了予測日が期限後の溢れ、必要ペースが実績ペースを超える日の重なりを区別する。\
+危険件数は期限接近、期限切れ、溢れのEventを重複除外して数え、表示期間内に重なりが1日以上あれば1を加える。\
 期限まで4～7暦日は黄色の注意表示とし、危険には数えない。
 
 #### Scenario: REQ-011-S01 - 期限接近と溢れ

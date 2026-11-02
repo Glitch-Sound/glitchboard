@@ -2,15 +2,15 @@
 
 ## Purpose
 
-階層の追加・変更・削除は、個人が複数Projectの作業をVS Codeで管理する際に、管理項目を少ない操作で追加・更新・削除し、計算結果へ即時反映する。
+階層の追加・変更・削除は、個人が複数Projectの作業をVS Codeで管理する際に、管理項目を少ない操作で追加・更新・削除し、計算結果へ即時反映する。\
 この機能は管理対象の状態と画面の振る舞いを一貫して扱う。
 
 ## Requirements
 
 ### Requirement: REQ-022 - インライン追加
 
-WHEN 各階層の見出しで追加を選んだとき、GlitchBoardは SHALL その場に入力欄を開き、Enterで必要項目を検証して保存し、Escで取り消す。
-Projectは名前と色、Eventは名前、Project、期限、StoryとTaskは名前を入力する。
+WHEN 各階層の見出しで追加を選んだとき、GlitchBoardは SHALL その場に入力欄を開き、Enterで必要項目を検証して保存し、Escで取り消す。\
+Projectは名前と色、Eventは名前、Project、期限、StoryとTaskは名前を入力する。\
 EventのProjectは選択中EventのProjectを初期値とし、Taskは未見積で作る。
 
 #### Scenario: REQ-022-S01 - Event追加
@@ -27,7 +27,7 @@ EventのProjectは選択中EventのProjectを初期値とし、Taskは未見積�
 
 ### Requirement: REQ-023 - ポイント変更
 
-WHEN Taskのポイントバッジを選んだとき、GlitchBoardは SHALL 1、2、3、5、8、13、21の7値からスライダーまたは数値で選択させ、保存後に集計と危険を再計算する。
+WHEN Taskのポイントバッジを選んだとき、GlitchBoardは SHALL 1、2、3、5、8、13、21の7値からスライダーまたは数値で選択させ、保存後に集計と危険を再計算する。\
 1と2は青、3と5は緑、8と13はオレンジ、21は赤紫で表示する。
 
 #### Scenario: REQ-023-S01 - 未見積を設定

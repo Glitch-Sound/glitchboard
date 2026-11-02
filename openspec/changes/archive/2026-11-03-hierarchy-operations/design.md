@@ -11,8 +11,7 @@
 
 **Goals:**
 
-- 階層の追加・変更・削除の全受け入れ例を成立させる。
-
+- 階層の追加・変更・削除の全受け入れ例を成立させる。\
 **Non-Goals:**
 
 - 他の変更の振る舞いをこの変更で実装しない。
@@ -22,11 +21,14 @@
 ### D-01 - 責務とデータ境界
 
 - 対象: REQ-022、REQ-023、REQ-024、REQ-025。
-- 選択: packages/webview/src/features と packages/extension/src/storageに責務を配置する。計算はshared、永続化とVS Code APIはextension、画面はwebviewに置く。
+- 選択: packages/webview/src/features と packages/extension/src/storageに責務を配置する。\
+  計算はshared、永続化とVS Code APIはextension、画面はwebviewに置く。
 - 理由: [技術方針](../../../tech.md)の依存方向とオフライン要件を守れる。
 - 代替案: WebviewがYAMLを直接操作する方式は、VS Code APIと検証境界を分散させるため採用しない。
-- 配置と依存: packages/webview/src/features と packages/extension/src/storage。通信型はpackages/sharedに置き、境界でZod検証する。
-- データと日付: YAMLの更新では対象外のコメントを保持し、日付は日本時間のYYYY-MM-DDとして扱う。該当しない機能では変更しない。
+- 配置と依存: packages/webview/src/features と packages/extension/src/storage。\
+  通信型はpackages/sharedに置き、境界でZod検証する。
+- データと日付: YAMLの更新では対象外のコメントを保持し、日付は日本時間のYYYY-MM-DDとして扱う。\
+  該当しない機能では変更しない。
 
 ### D-02 - 表示更新と検証
 
@@ -40,7 +42,9 @@
 ### D-03 - 項目操作のコマンド化
 
 - 対象: REQ-022～REQ-025。
-- 選択: 追加、ポイント、完了、削除をID指定のコマンドとしてExtensionへ送る。削除前の子孫件数は同じ検証済みデータ版から求め、保存直前に再確認する。完了日はAsia/Tokyoで採番し、Taskのポイント変更後に集計スナップショットを再生成する。
+- 選択: 追加、ポイント、完了、削除をID指定のコマンドとしてExtensionへ送る。\
+  削除前の子孫件数は同じ検証済みデータ版から求め、保存直前に再確認する。\
+  完了日はAsia/Tokyoで採番し、Taskのポイント変更後に集計スナップショットを再生成する。
 - 理由: 画面操作とYAML更新の競合を抑え、削除件数を正しく示せる。
 - 代替案: Webview側だけで削除対象を確定する方式は外部変更時に誤削除するため採用しない。
 - 配置と依存: packages/webview/src/featuresに操作、packages/extension/src/storageに保存、packages/sharedにコマンドスキーマを置く。
@@ -60,8 +64,10 @@
 
 ## Verification Plan
 
-- 正常、境界、異常: Traceabilityの各テストで仕様のGIVEN、WHEN、THENを確認する。自動化しにくいVS Codeの実表示とテーマは手動確認し、結果を台帳へ記録する。
-- 非機能要件: 対象NREQのシナリオに記載した環境、データ、指標を使う。該当しない場合は対象外とする。
+- 正常、境界、異常: Traceabilityの各テストで仕様のGIVEN、WHEN、THENを確認する。\
+  自動化しにくいVS Codeの実表示とテーマは手動確認し、結果を台帳へ記録する。
+- 非機能要件: 対象NREQのシナリオに記載した環境、データ、指標を使う。\
+  該当しない場合は対象外とする。
 - 手動確認: VS Code安定版でダーク・ライトテーマとサイドバー・エディタの動作を確認し、スクリーンショットを検証記録に添える。
 - 全体検証: `pnpm test`、`pnpm typecheck`、`pnpm check`、`pnpm check:fsd`と`openspec validate hierarchy-operations --strict`を実行し、失敗0件を確認する。
 
@@ -73,8 +79,10 @@
 
 ## Migration Plan
 
-新規機能のため既存管理データの移行はない。失敗時は変更前のGitコミットと管理データの履歴へ戻す。
+新規機能のため既存管理データの移行はない。\
+失敗時は変更前のGitコミットと管理データの履歴へ戻す。
 
 ## Open Questions
 
-なし。具体案の採用はproposal.mdのReadinessに従いレビュー時に確認する。
+なし。\
+具体案の採用はproposal.mdのReadinessに従いレビュー時に確認する。

@@ -2,15 +2,15 @@
 
 ## Purpose
 
-EVENT一覧と抽出は、個人が複数Projectの作業をVS Codeで管理する際に、期限と対象Projectをサイドバーで絞り込み、Eventへすぐ移動できるようにする。
+EVENT一覧と抽出は、個人が複数Projectの作業をVS Codeで管理する際に、期限と対象Projectをサイドバーで絞り込み、Eventへすぐ移動できるようにする。\
 この機能は管理対象の状態と画面の振る舞いを一貫して扱う。
 
 ## Requirements
 
 ### Requirement: REQ-019 - 期限順とグループ
 
-WHILE EVENT一覧を表示するとき、GlitchBoardは SHALL 未完了Eventを期限切れ、今日から日曜まで、以後に分けて期限順に表示し、すべて条件では完了済みも別グループへ表示する。
-Eventは配下に1件以上のTaskがあり全Taskが完了したとき完了済みとする。
+WHILE EVENT一覧を表示するとき、GlitchBoardは SHALL 未完了Eventを期限切れ、今日から日曜まで、以後に分けて期限順に表示し、すべて条件では完了済みも別グループへ表示する。\
+Eventは配下に1件以上のTaskがあり全Taskが完了したとき完了済みとする。\
 各行にEvent名、Project名、残り暦日または超過日数、期限日を示し、危険なEventの文字を赤くする。
 
 #### Scenario: REQ-019-S01 - 日曜の境界
@@ -27,9 +27,9 @@ Eventは配下に1件以上のTaskがあり全Taskが完了したとき完了済
 
 ### Requirement: REQ-020 - 抽出条件とProject切り替え
 
-WHEN 漏斗から抽出条件を変えたとき、GlitchBoardは SHALL 対象と読込Projectを反映し、条件と表示Event件数を見出しの下に示し、初期状態から変更した条件数を漏斗バッジに示す。
-対象「未完了 + 今後」は期限切れを含む全未完了Eventとし、初期値もこの条件とする。
-読込Projectの選択は`manage.yaml`に保存する。
+WHEN 漏斗から抽出条件を変えたとき、GlitchBoardは SHALL 対象と読込Projectを反映し、条件と表示Event件数を見出しの下に示し、初期状態から変更した条件数を漏斗バッジに示す。\
+対象「未完了 + 今後」は期限切れを含む全未完了Eventとし、初期値もこの条件とする。\
+読込Projectの選択は`manage.yaml`に保存する。\
 危険のみの抽出は設けない。
 
 #### Scenario: REQ-020-S01 - 期限切れの包含

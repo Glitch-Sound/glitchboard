@@ -13,11 +13,11 @@
 
 **In scope:**
 
-- EVENT一覧と抽出の要件、表示または保存、検証。
-
+- EVENT一覧と抽出の要件、表示または保存、検証。\
 **Out of scope:**
 
-- 他の変更の機能。依存する場合は各変更の仕様に従う。
+- 他の変更の機能。\
+  依存する場合は各変更の仕様に従う。
 
 ## Requirements
 
@@ -31,7 +31,8 @@
 
 ### New Capabilities
 
-- `event-navigation`: EVENT一覧と抽出を扱う。対象はREQ-019、REQ-020、REQ-021。
+- `event-navigation`: EVENT一覧と抽出を扱う。\
+  対象はREQ-019、REQ-020、REQ-021。
 
 ### Modified Capabilities
 
@@ -50,12 +51,14 @@
 ## Impact
 
 - 実装と配置: packages/webview/src/pages/event-list。
-- 互換性とデータ: 新規機能のため既存データの移行はない。保存形式と日付境界は仕様で定義する。
+- 互換性とデータ: 新規機能のため既存データの移行はない。\
+  保存形式と日付境界は仕様で定義する。
 - 依存関係と文書: [技術方針](../../../tech.md)と[構造方針](../../../structure.md)に従い、正式仕様化時にspecs/README.mdを更新する。
 
 ## Open Questions
 
-- なし。境界条件は差分仕様の具体案として記載した。
+- なし。\
+  境界条件は差分仕様の具体案として記載した。
 
 ## Readiness
 

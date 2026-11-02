@@ -2,15 +2,15 @@
 
 ## Purpose
 
-共通詳細パネルは、個人が複数Projectの作業をVS Codeで管理する際に、全階層の補足と編集操作を共通の詳細パネルから行えるようにする。
+共通詳細パネルは、個人が複数Projectの作業をVS Codeで管理する際に、全階層の補足と編集操作を共通の詳細パネルから行えるようにする。\
 この機能は管理対象の状態と画面の振る舞いを一貫して扱う。
 
 ## ADDED Requirements
 
 ### Requirement: REQ-026 - 詳細パネルの表示
 
-WHEN どの階層の詳細ボタンを押したときも、GlitchBoardは SHALL 右側のパネルに種別と階層、主要指標3つ、補足、リンク、編集と削除を示す。
-補足があれば詳細ボタンを青、なければ灰色とし、補足なしでは「+ 補足を追加」を示す。
+WHEN どの階層の詳細ボタンを押したときも、GlitchBoardは SHALL 右側のパネルに種別と階層、主要指標3つ、補足、リンク、編集と削除を示す。\
+補足があれば詳細ボタンを青、なければ灰色とし、補足なしでは「+ 補足を追加」を示す。\
 Taskにはポイント、Projectには色の編集部品を示し、Escまたは×で閉じる。
 
 #### Scenario: REQ-026-S01 - 補足あり
@@ -43,7 +43,7 @@ WHEN 詳細パネルで編集を保存したとき、GlitchBoardは SHALL 名前
 
 ### Requirement: REQ-028 - 補足とリンク
 
-WHEN 詳細パネルで補足を保存したとき、GlitchBoardは SHALL `note`の文章と箇条書き、および`links`配列の`label`と`target`をProject YAMLに保存する。
+WHEN 詳細パネルで補足を保存したとき、GlitchBoardは SHALL `note`の文章と箇条書き、および`links`配列の`label`と`target`をProject YAMLに保存する。\
 リンク先は管理リポジトリ内の相対パスまたはhttp/https URLだけを許可し、相対パスの`..`による管理リポジトリ外への移動を拒否する。
 
 #### Scenario: REQ-028-S01 - 相対リンク

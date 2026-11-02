@@ -2,7 +2,7 @@
 
 ## Purpose
 
-VS Code拡張の表示基盤は、個人が複数Projectの作業をVS Codeで管理する際に、どのワークスペースでも同じ管理データへ接続し、サイドバーとエディタで操作できる土台を作る。
+VS Code拡張の表示基盤は、個人が複数Projectの作業をVS Codeで管理する際に、どのワークスペースでも同じ管理データへ接続し、サイドバーとエディタで操作できる土台を作る。\
 この機能は管理対象の状態と画面の振る舞いを一貫して扱う。
 
 ## Requirements
@@ -19,7 +19,8 @@ WHEN 拡張を起動したとき、GlitchBoardは SHALL EVENT一覧をVS Codeサ
 
 ### Requirement: REQ-013 - 状態同期と外部変更
 
-WHEN YAMLが変更されたとき、GlitchBoardは SHALL 再読込と検証を行い、ボードとEVENT一覧へ同じデータ版を配信する。選択項目がなくなった場合は選択を解除する。
+WHEN YAMLが変更されたとき、GlitchBoardは SHALL 再読込と検証を行い、ボードとEVENT一覧へ同じデータ版を配信する。\
+選択項目がなくなった場合は選択を解除する。
 
 #### Scenario: REQ-013-S01 - 外部変更
 

@@ -11,8 +11,7 @@
 
 **Goals:**
 
-- データモデルと永続化の全受け入れ例を成立させる。
-
+- データモデルと永続化の全受け入れ例を成立させる。\
 **Non-Goals:**
 
 - 他の変更の振る舞いをこの変更で実装しない。
@@ -22,11 +21,14 @@
 ### D-01 - 責務とデータ境界
 
 - 対象: REQ-001、REQ-002、REQ-003、REQ-004、REQ-005。
-- 選択: packages/shared/src/domain と packages/extension/src/storageに責務を配置する。計算はshared、永続化とVS Code APIはextension、画面はwebviewに置く。
+- 選択: packages/shared/src/domain と packages/extension/src/storageに責務を配置する。\
+  計算はshared、永続化とVS Code APIはextension、画面はwebviewに置く。
 - 理由: [技術方針](../../../tech.md)の依存方向とオフライン要件を守れる。
 - 代替案: WebviewがYAMLを直接操作する方式は、VS Code APIと検証境界を分散させるため採用しない。
-- 配置と依存: packages/shared/src/domain と packages/extension/src/storage。通信型はpackages/sharedに置き、境界でZod検証する。
-- データと日付: YAMLの更新では対象外のコメントを保持し、日付は日本時間のYYYY-MM-DDとして扱う。該当しない機能では変更しない。
+- 配置と依存: packages/shared/src/domain と packages/extension/src/storage。\
+  通信型はpackages/sharedに置き、境界でZod検証する。
+- データと日付: YAMLの更新では対象外のコメントを保持し、日付は日本時間のYYYY-MM-DDとして扱う。\
+  該当しない機能では変更しない。
 
 ### D-02 - 表示更新と検証
 
@@ -40,7 +42,8 @@
 ### D-03 - YAMLの具体構造と保存
 
 - 対象: REQ-001～REQ-005。
-- 選択: `manage.yaml`にsettingsとprojects配列を置き、Projectファイルにevents、stories、tasksを入れ子で保持する。`yaml`のDocumentを編集して未変更ノードとコメントを保ち、同じディレクトリの一時ファイルへ書いてから置換する。
+- 選択: `manage.yaml`にsettingsとprojects配列を置き、Projectファイルにevents、stories、tasksを入れ子で保持する。\
+  `yaml`のDocumentを編集して未変更ノードとコメントを保ち、同じディレクトリの一時ファイルへ書いてから置換する。
 - 理由: 管理データをGitで差分確認でき、途中書込みによる破損を避けられる。
 - 代替案: 全件を文字列化して再保存する方式はコメントを失うため採用しない。
 - 配置と依存: packages/shared/src/domainにZodスキーマ、packages/extension/src/storageに読込と保存を置く。
@@ -62,8 +65,10 @@
 
 ## Verification Plan
 
-- 正常、境界、異常: Traceabilityの各テストで仕様のGIVEN、WHEN、THENを確認する。自動化しにくいVS Codeの実表示とテーマは手動確認し、結果を台帳へ記録する。
-- 非機能要件: 対象NREQのシナリオに記載した環境、データ、指標を使う。該当しない場合は対象外とする。
+- 正常、境界、異常: Traceabilityの各テストで仕様のGIVEN、WHEN、THENを確認する。\
+  自動化しにくいVS Codeの実表示とテーマは手動確認し、結果を台帳へ記録する。
+- 非機能要件: 対象NREQのシナリオに記載した環境、データ、指標を使う。\
+  該当しない場合は対象外とする。
 - 手動確認: VS Code安定版でダーク・ライトテーマとサイドバー・エディタの動作を確認し、スクリーンショットを検証記録に添える。
 - 全体検証: `pnpm test`、`pnpm typecheck`、`pnpm check`、`pnpm check:fsd`と`openspec validate data-persistence --strict`を実行し、失敗0件を確認する。
 
@@ -75,8 +80,10 @@
 
 ## Migration Plan
 
-新規機能のため既存管理データの移行はない。失敗時は変更前のGitコミットと管理データの履歴へ戻す。
+新規機能のため既存管理データの移行はない。\
+失敗時は変更前のGitコミットと管理データの履歴へ戻す。
 
 ## Open Questions
 
-なし。具体案の採用はproposal.mdのReadinessに従いレビュー時に確認する。
+なし。\
+具体案の採用はproposal.mdのReadinessに従いレビュー時に確認する。

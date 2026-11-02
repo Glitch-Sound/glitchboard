@@ -2,7 +2,7 @@
 
 ## Purpose
 
-ボードとタイムラインは、個人が複数Projectの作業をVS Codeで管理する際に、Project横断の期限、負荷、進捗を一画面で把握できるようにする。
+ボードとタイムラインは、個人が複数Projectの作業をVS Codeで管理する際に、Project横断の期限、負荷、進捗を一画面で把握できるようにする。\
 この機能は管理対象の状態と画面の振る舞いを一貫して扱う。
 
 ## ADDED Requirements
@@ -19,9 +19,9 @@ WHEN 表示期間を切り替えたとき、GlitchBoardは SHALL 3日を今日�
 
 ### Requirement: REQ-016 - Project別の期限タイムライン
 
-WHILE ボードを表示するとき、GlitchBoardは SHALL Projectごとの行と日付列を示し、期限日のEventをProject色の◆で示す。
-今日と休日の列は異なる背景で示し、同じProject・同じ日付のEventは件数バッジ付きでまとめる。
-月表示では選択中Eventだけにマーカーのラベルを出す。
+WHILE ボードを表示するとき、GlitchBoardは SHALL Projectごとの行と日付列を示し、期限日のEventをProject色の◆で示す。\
+今日と休日の列は異なる背景で示し、同じProject・同じ日付のEventは件数バッジ付きでまとめる。\
+月表示では選択中Eventだけにマーカーのラベルを出す。\
 期限接近、期限切れ、溢れのEventの◆には赤い光を付け、期限まで4～7暦日の注意は黄色で示す。
 
 #### Scenario: REQ-016-S01 - 同日の複数Event
@@ -38,8 +38,8 @@ WHILE ボードを表示するとき、GlitchBoardは SHALL Projectごとの行�
 
 ### Requirement: REQ-017 - ヘッダーと必要ペースグラフ
 
-WHILE ボードを表示するとき、GlitchBoardは SHALL 実績ペース、直近10稼働日の完了ポイントの棒、期間負荷、危険件数と、日別必要ペースの階段状SVGを表示する。
-グラフの数値ラベルは最大値の日だけに置き、実績ペースを黄色の破線、超過部分を赤い面で示す。
+WHILE ボードを表示するとき、GlitchBoardは SHALL 実績ペース、直近10稼働日の完了ポイントの棒、期間負荷、危険件数と、日別必要ペースの階段状SVGを表示する。\
+グラフの数値ラベルは最大値の日だけに置き、実績ペースを黄色の破線、超過部分を赤い面で示す。\
 学習中は実績値、負荷値、実績線、赤塗りを隠す。
 
 #### Scenario: REQ-017-S01 - 学習中の表示
@@ -56,9 +56,9 @@ WHILE ボードを表示するとき、GlitchBoardは SHALL 実績ペース、�
 
 ### Requirement: REQ-018 - Event詳細エリア
 
-WHEN Eventを選択したとき、GlitchBoardは SHALL Event要約、Story一覧、Task一覧を3列で表示し、未完了Taskを持つ最初のStoryを初期選択する。
-Event要約には残り暦日または超過日数、算出可能な完了予測日、残りptと未見積件数、済pt/全ptを示す。
-Storyには完了Task数とpt進捗バー、Taskには完了チェックとポイントバッジを示す。
+WHEN Eventを選択したとき、GlitchBoardは SHALL Event要約、Story一覧、Task一覧を3列で表示し、未完了Taskを持つ最初のStoryを初期選択する。\
+Event要約には残り暦日または超過日数、算出可能な完了予測日、残りptと未見積件数、済pt/全ptを示す。\
+Storyには完了Task数とpt進捗バー、Taskには完了チェックとポイントバッジを示す。\
 残り日数が負なら「n日超過」とし、学習中または実績0pt/日の完了予測日は表示しない。
 
 #### Scenario: REQ-018-S01 - 未完了Taskを選ぶ

@@ -13,11 +13,11 @@
 
 **In scope:**
 
-- データモデルと永続化の要件、表示または保存、検証。
-
+- データモデルと永続化の要件、表示または保存、検証。\
 **Out of scope:**
 
-- 他の変更の機能。依存する場合は各変更の仕様に従う。
+- 他の変更の機能。\
+  依存する場合は各変更の仕様に従う。
 
 ## Requirements
 
@@ -33,7 +33,8 @@
 
 ### New Capabilities
 
-- `data-management`: データモデルと永続化を扱う。対象はREQ-001、REQ-002、REQ-003、REQ-004、REQ-005。
+- `data-management`: データモデルと永続化を扱う。\
+  対象はREQ-001、REQ-002、REQ-003、REQ-004、REQ-005。
 
 ### Modified Capabilities
 
@@ -56,12 +57,14 @@
 ## Impact
 
 - 実装と配置: packages/shared/src/domain と packages/extension/src/storage。
-- 互換性とデータ: 新規機能のため既存データの移行はない。保存形式と日付境界は仕様で定義する。
+- 互換性とデータ: 新規機能のため既存データの移行はない。\
+  保存形式と日付境界は仕様で定義する。
 - 依存関係と文書: [技術方針](../../../tech.md)と[構造方針](../../../structure.md)に従い、正式仕様化時にspecs/README.mdを更新する。
 
 ## Open Questions
 
-- なし。境界条件は差分仕様の具体案として記載した。
+- なし。\
+  境界条件は差分仕様の具体案として記載した。
 
 ## Readiness
 
