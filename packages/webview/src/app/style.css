@@ -1,0 +1,371 @@
+@import "tailwindcss";
+
+:root {
+  color: var(--vscode-foreground);
+  background: var(--vscode-editor-background);
+  font-family: var(--vscode-font-family);
+}
+body {
+  margin: 0;
+}
+main {
+  padding: 12px;
+}
+.timeline {
+  border-collapse: collapse;
+  table-layout: fixed;
+  min-width: max-content;
+}
+.timeline-row > * {
+  min-width: 44px;
+  border: 1px solid var(--vscode-panel-border);
+  padding: 6px;
+  text-align: center;
+}
+.timeline-row > :first-child {
+  min-width: 120px;
+  border-inline-start: 4px solid;
+  text-align: start;
+}
+.timeline .today {
+  background: var(--vscode-editor-selectionBackground);
+}
+.timeline .holiday {
+  background: var(--vscode-sideBar-background);
+}
+.timeline .today-holiday {
+  background: var(--vscode-editor-selectionBackground);
+  box-shadow: inset 0 0 0 2px var(--vscode-focusBorder);
+}
+.marker-wrap {
+  position: relative;
+}
+.event-marker {
+  border: 0;
+  background: transparent;
+  font-size: 18px;
+  cursor: pointer;
+}
+.event-marker.danger {
+  text-shadow: 0 0 6px #ff3434;
+}
+.event-marker.caution {
+  text-shadow: 0 0 6px #e8bd25;
+}
+.event-marker sup {
+  font-size: 10px;
+  color: var(--vscode-foreground);
+}
+.marker-list {
+  position: absolute;
+  z-index: 2;
+  background: var(--vscode-menu-background);
+  border: 1px solid var(--vscode-menu-border);
+  display: grid;
+  min-width: 120px;
+}
+.marker-list button {
+  color: var(--vscode-menu-foreground);
+  background: transparent;
+  border: 0;
+  text-align: start;
+  padding: 4px;
+}
+.marker-label {
+  display: block;
+  font-size: 11px;
+}
+.workload-summary {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+.danger-text {
+  color: var(--vscode-errorForeground);
+}
+.completion-bars {
+  display: flex;
+  align-items: end;
+  gap: 3px;
+  height: 42px;
+}
+.completion-bars div {
+  width: 10px;
+  background: var(--vscode-charts-blue);
+}
+.workload-header svg {
+  width: 100%;
+  height: 72px;
+}
+.required-step {
+  stroke: var(--vscode-charts-blue);
+  stroke-width: 2;
+}
+.pace-line {
+  stroke: var(--vscode-charts-yellow);
+  stroke-width: 1.5;
+  stroke-dasharray: 4 3;
+}
+.overload-area {
+  fill: var(--vscode-charts-red);
+  opacity: 0.5;
+}
+.workload-days {
+  display: flex;
+}
+.workload-days span {
+  flex: 1;
+  text-align: center;
+}
+.overlap-day {
+  background: color-mix(in srgb, var(--vscode-charts-red) 18%, transparent);
+}
+.event-details {
+  display: grid;
+  grid-template-columns: minmax(180px, 1fr) minmax(180px, 1fr) minmax(
+      240px,
+      1.4fr
+    );
+  gap: 12px;
+  border-top: 1px solid var(--vscode-panel-border);
+  margin-top: 16px;
+  padding-top: 12px;
+}
+.event-details > div {
+  min-width: 0;
+}
+.event-details progress {
+  width: 100%;
+}
+.story-choice {
+  display: flex;
+  align-items: center;
+}
+.story-choice > button {
+  flex: 1;
+}
+.delete-control {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+.delete-control > button {
+  width: auto;
+  padding: 2px 5px;
+  border: 0;
+  background: transparent;
+  color: var(--vscode-foreground);
+  cursor: pointer;
+}
+.delete-menu,
+.delete-dialog {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 10;
+  display: grid;
+  gap: 6px;
+  min-width: 220px;
+  padding: 10px;
+  border: 1px solid var(--vscode-panel-border);
+  background: var(--vscode-editor-background);
+  color: var(--vscode-foreground);
+  box-shadow: 0 4px 12px var(--vscode-widget-shadow);
+  font-size: 12px;
+}
+.delete-dialog {
+  min-width: 280px;
+}
+.detail-button {
+  display: inline-block;
+  width: auto;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+.detail-button.has-note {
+  color: var(--vscode-charts-blue, #3575bd);
+}
+.detail-button.no-note {
+  color: var(--vscode-descriptionForeground);
+}
+.detail-panel {
+  position: fixed;
+  z-index: 20;
+  inset-block: 0;
+  right: 0;
+  width: min(420px, 85vw);
+  overflow: auto;
+  padding: 18px;
+  border-left: 1px solid var(--vscode-panel-border);
+  background: var(--vscode-editor-background);
+  color: var(--vscode-foreground);
+  box-shadow: -4px 0 16px var(--vscode-widget-shadow);
+}
+.detail-panel header {
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+}
+.detail-hierarchy {
+  color: var(--vscode-descriptionForeground);
+}
+.detail-metrics {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+}
+.detail-metrics span {
+  padding: 8px;
+  border: 1px solid var(--vscode-panel-border);
+}
+.detail-note {
+  white-space: pre-wrap;
+}
+.detail-panel section {
+  margin-block: 16px;
+  border-top: 1px solid var(--vscode-panel-border);
+}
+.detail-note-form,
+.detail-note-form > div {
+  display: grid;
+  gap: 8px;
+}
+.detail-note-form textarea {
+  min-height: 120px;
+  width: 100%;
+}
+.detail-note-form input {
+  width: 100%;
+}
+.detail-delete-confirm {
+  position: sticky;
+  bottom: 0;
+  padding: 12px;
+  border: 1px solid var(--vscode-panel-border);
+  background: var(--vscode-editor-background);
+  box-shadow: 0 -4px 12px var(--vscode-widget-shadow);
+}
+.task-line {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 0;
+  border-bottom: 1px solid var(--vscode-panel-border);
+}
+.task-line span {
+  flex: 1;
+}
+.points-unestimated {
+  color: var(--vscode-descriptionForeground);
+}
+.points-low {
+  color: var(--vscode-charts-blue, #3575bd);
+}
+.points-medium {
+  color: var(--vscode-charts-green, #357c4c);
+}
+.points-high {
+  color: var(--vscode-charts-orange, #a56513);
+}
+.points-21 {
+  color: var(--vscode-charts-purple, #8648b8);
+}
+.event-list section {
+  border-top: 1px solid var(--vscode-panel-border);
+}
+.event-list h2 {
+  font-size: 12px;
+  color: var(--vscode-descriptionForeground);
+}
+.event-list button {
+  display: grid;
+  width: 100%;
+  text-align: start;
+  color: var(--vscode-foreground);
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid var(--vscode-panel-border);
+  padding: 8px 4px;
+  cursor: pointer;
+}
+.event-list button:hover {
+  background: var(--vscode-list-hoverBackground);
+}
+.event-list button.danger-text {
+  color: var(--vscode-errorForeground);
+}
+.event-list small {
+  color: var(--vscode-descriptionForeground);
+}
+.event-filters {
+  position: relative;
+}
+.event-filters > button {
+  background: transparent;
+  color: var(--vscode-foreground);
+  border: 1px solid var(--vscode-panel-border);
+  cursor: pointer;
+}
+.event-filters p {
+  color: var(--vscode-descriptionForeground);
+  font-size: 12px;
+}
+.filter-popover {
+  position: absolute;
+  z-index: 3;
+  background: var(--vscode-menu-background);
+  border: 1px solid var(--vscode-menu-border);
+  padding: 8px;
+  display: grid;
+  gap: 6px;
+}
+.filter-popover label {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+.point-selector {
+  position: relative;
+}
+.point-selector > button {
+  background: var(--vscode-button-secondaryBackground);
+  border: 1px solid var(--vscode-panel-border);
+  cursor: pointer;
+}
+.point-options {
+  position: absolute;
+  z-index: 3;
+  right: 0;
+  top: 100%;
+  background: var(--vscode-menu-background);
+  border: 1px solid var(--vscode-menu-border);
+  display: grid;
+  grid-template-columns: repeat(4, auto);
+  gap: 4px;
+  padding: 4px;
+}
+.point-options button {
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+}
+.event-details [aria-label="Story一覧"] button {
+  display: grid;
+  width: 100%;
+  text-align: start;
+  border: 1px solid var(--vscode-panel-border);
+  color: var(--vscode-foreground);
+  background: var(--vscode-editor-background);
+  padding: 6px;
+}
+.event-details [aria-label="Story一覧"] button[aria-pressed="true"] {
+  background: var(--vscode-list-activeSelectionBackground);
+  color: var(--vscode-list-activeSelectionForeground);
+}
+.event-details [aria-label="Story一覧"] .delete-control > button {
+  width: auto;
+  padding: 2px 5px;
+  border: 0;
+}

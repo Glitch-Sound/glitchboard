@@ -1,0 +1,8 @@
+pre-commit:
+  jobs:
+    - name: biome
+      run: corepack pnpm check
+    - name: typecheck
+      run: corepack pnpm typecheck
+    - name: fsd
+      run: corepack pnpm check:fsd

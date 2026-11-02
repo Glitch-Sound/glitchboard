@@ -1,0 +1,56 @@
+{
+  "name": "glitchboard",
+  "displayName": "GlitchBoard",
+  "description": "個人用プロジェクト管理ツール",
+  "publisher": "glitchboard",
+  "version": "0.1.0",
+  "type": "module",
+  "main": "./dist/extension.js",
+  "engines": {
+    "vscode": "^1.105.0"
+  },
+  "activationEvents": [
+    "onView:glitchboard.events",
+    "onCommand:glitchboard.open"
+  ],
+  "contributes": {
+    "commands": [
+      {
+        "command": "glitchboard.open",
+        "title": "GlitchBoardを開く"
+      }
+    ],
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "glitchboard",
+          "title": "GlitchBoard",
+          "icon": "media/icon.svg"
+        }
+      ]
+    },
+    "views": {
+      "glitchboard": [
+        {
+          "id": "glitchboard.events",
+          "name": "EVENT一覧",
+          "type": "webview"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "GlitchBoard",
+      "properties": {
+        "glitchboard.manageFile": {
+          "type": "string",
+          "default": "",
+          "description": "manage.yamlの絶対パス"
+        }
+      }
+    }
+  },
+  "dependencies": {
+    "@glitchboard/shared": "workspace:*",
+    "yaml": "^2.8.1"
+  }
+}
