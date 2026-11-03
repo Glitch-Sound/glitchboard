@@ -21,7 +21,7 @@ describe("REQ-023-S01 未見積を設定", () => {
       createElement(PointSelector, { points: undefined, onChange }),
     );
     fireEvent.click(screen.getByRole("button", { name: "未見積" }));
-    fireEvent.click(screen.getByRole("button", { name: "8pt" }));
+    fireEvent.click(screen.getByRole("button", { name: /^8$/ }));
     expect(onChange).toHaveBeenCalledWith(8);
     view.rerender(createElement(PointSelector, { points: 8, onChange }));
     expect(screen.getByRole("button", { name: "8pt" }).className).toBe(

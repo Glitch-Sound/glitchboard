@@ -32,12 +32,12 @@ describe("REQ-018-S03 危険なEventの要約", () => {
           },
         }),
       );
+      expect(container.querySelector(".event-days.danger-text")).toBeTruthy();
       expect(
-        container.querySelector(".event-summary.danger-text"),
+        container.querySelector(".event-prediction.danger-text"),
       ).toBeTruthy();
-      expect(
-        screen.getByText("2026-11-12").closest(".event-summary"),
-      ).toBeTruthy();
+      expect(screen.getByText("11/12(木)")).toBeTruthy();
+      expect(container.querySelector(".event-summary.danger-text")).toBeNull();
     },
   );
 });

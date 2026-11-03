@@ -57,7 +57,7 @@ function RequiredPace({
   const values = days.map((day) => requiredByDay?.[day] ?? 0);
   const maxValue = Math.max(0, ...values);
   const scale = Math.max(1, maxValue, pace ?? 0);
-  const y = (value: number) => 76 - (value / scale) * 55;
+  const y = (value: number) => 52 - (value / scale) * 34;
   const width = Math.max(1, days.length) * 100;
   const step = values
     .map(
@@ -70,7 +70,7 @@ function RequiredPace({
   return (
     <div className="required-chart" role="img" aria-label="日別必要ペース">
       <svg
-        viewBox={`0 0 ${width} 84`}
+        viewBox={`0 0 ${width} 58`}
         preserveAspectRatio="none"
         aria-hidden="true"
       >
@@ -110,7 +110,7 @@ function RequiredPace({
           className="chart-max"
           style={{
             left: `${((maxIndex + 0.5) / days.length) * 100}%`,
-            bottom: `${((84 - y(maxValue)) / 84) * 100}%`,
+            bottom: `${((58 - y(maxValue)) / 58) * 100}%`,
           }}
         >
           {maxValue.toFixed(1)}pt

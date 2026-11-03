@@ -16,6 +16,10 @@ export const snapshotMessageSchema = z.object({
         file: z.string().min(1),
         load: z.boolean(),
         name: z.string(),
+        color: z
+          .string()
+          .regex(/^#[0-9a-fA-F]{6}$/)
+          .optional(),
       }),
     ),
   }),

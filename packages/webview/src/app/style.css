@@ -108,7 +108,11 @@ main {
   right: 0;
   width: min(420px, 85vw);
   overflow: auto;
-  padding: 18px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 20px;
   border-left: 1px solid var(--vscode-panel-border);
   background: var(--vscode-editor-background);
   color: var(--vscode-foreground);
@@ -119,8 +123,47 @@ main {
   justify-content: space-between;
   align-items: start;
 }
+.detail-header-content {
+  min-width: 0;
+}
+.detail-title {
+  margin: 8px 0 0;
+  font-size: 20px;
+  line-height: 1.25;
+}
+.detail-close {
+  flex: none;
+  border: 1px solid var(--vscode-panel-border);
+  border-radius: 5px;
+  background: transparent;
+  color: var(--vscode-foreground);
+  cursor: pointer;
+}
+.detail-kind {
+  display: inline-block;
+  padding: 3px 7px;
+  border-radius: 4px;
+  background: color-mix(in srgb, currentColor 14%, transparent);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+.detail-kind-project {
+  color: var(--vscode-charts-blue);
+}
+.detail-kind-event {
+  color: var(--vscode-charts-purple);
+}
+.detail-kind-story {
+  color: var(--vscode-charts-orange);
+}
+.detail-kind-task {
+  color: var(--vscode-charts-green);
+}
 .detail-hierarchy {
   color: var(--vscode-descriptionForeground);
+  margin: 10px 0 0;
+  font-size: 11px;
 }
 .detail-metrics {
   display: grid;
@@ -128,15 +171,73 @@ main {
   gap: 6px;
 }
 .detail-metrics span {
-  padding: 8px;
+  display: grid;
+  align-content: space-between;
+  gap: 6px;
+  min-height: 60px;
+  padding: 9px;
   border: 1px solid var(--vscode-panel-border);
+  border-radius: 7px;
+  background: var(--vscode-sideBar-background);
+}
+.detail-metrics small {
+  color: var(--vscode-descriptionForeground);
+  font-size: 10px;
+}
+.detail-metrics strong {
+  font-size: 14px;
+  overflow-wrap: anywhere;
+}
+.detail-points {
+  display: grid;
+  gap: 8px;
+  padding: 12px;
+  border: 1px solid var(--vscode-panel-border);
+  border-radius: 7px;
+}
+.detail-points label {
+  display: flex;
+  justify-content: space-between;
+}
+.detail-points input {
+  width: 100%;
+}
+.detail-points button {
+  justify-self: end;
+  border: 0;
+  background: transparent;
+  color: var(--vscode-descriptionForeground);
+  cursor: pointer;
 }
 .detail-note {
   white-space: pre-wrap;
 }
 .detail-panel section {
-  margin-block: 16px;
+  margin-block: 0;
   border-top: 1px solid var(--vscode-panel-border);
+}
+.detail-panel :where(section h3) {
+  margin: 14px 0 9px;
+  font-size: 12px;
+}
+.detail-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: auto;
+  padding-top: 16px;
+  border-top: 1px solid var(--vscode-panel-border);
+}
+.detail-action {
+  flex: 1;
+  padding: 8px 12px;
+  border: 1px solid var(--vscode-panel-border);
+  border-radius: 6px;
+  background: var(--vscode-button-secondaryBackground);
+  color: var(--vscode-button-secondaryForeground);
+  cursor: pointer;
+}
+.detail-delete-action {
+  color: var(--vscode-errorForeground);
 }
 .detail-note-form,
 .detail-note-form > div {
@@ -235,33 +336,58 @@ main {
   cursor: pointer;
 }
 .point-options {
-  position: absolute;
-  z-index: 3;
-  right: 0;
-  top: 100%;
-  background: var(--vscode-menu-background);
-  border: 1px solid var(--vscode-menu-border);
+  position: fixed;
+  z-index: 80;
+  width: min(278px, calc(100vw - 32px));
+  box-sizing: border-box;
+  background: var(
+    --vscode-editorWidget-background,
+    var(--vscode-editor-background)
+  );
+  border: 1px solid var(--vscode-panel-border);
+  border-radius: 9px;
+  box-shadow: 0 8px 24px var(--vscode-widget-shadow);
   display: grid;
-  grid-template-columns: repeat(4, auto);
-  gap: 4px;
-  padding: 4px;
+  gap: 12px;
+  padding: 14px;
+}
+.point-current {
+  font-size: 24px;
+  line-height: 1;
+}
+.point-options input[type="range"] {
+  width: 100%;
+  margin: 0;
+}
+.point-options-values {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 3px;
 }
 .point-options button {
-  background: transparent;
-  border: 0;
+  min-width: 0;
+  padding: 6px 0;
+  background: color-mix(in srgb, currentColor 12%, transparent);
+  border: 1px solid color-mix(in srgb, currentColor 24%, transparent);
+  border-radius: 5px;
   cursor: pointer;
 }
-.story-choice > button {
+.point-options .point-unestimated-option {
+  width: 100%;
+  color: var(--vscode-descriptionForeground);
+  white-space: nowrap;
+}
+.story-select {
   text-align: start;
   color: var(--vscode-foreground);
   background: var(--vscode-editor-background);
 }
-.story-choice > button[aria-pressed="true"] {
+.story-select[aria-pressed="true"] {
   background: var(--vscode-list-activeSelectionBackground);
   color: var(--vscode-list-activeSelectionForeground);
 }
-.event-summary.danger-text .delete-control > button {
-  color: var(--vscode-errorForeground);
+.success-text {
+  color: var(--vscode-charts-green, #3a995c);
 }
 
 /* REQ-015〜019、REQ-022〜025: 3段のボードと狭いサイドバーの表示。 */
@@ -285,6 +411,16 @@ main {
 .board-header h1 {
   margin: 0;
   font-size: 21px;
+  white-space: nowrap;
+}
+.board-title {
+  display: grid;
+  gap: 2px;
+  flex: none;
+}
+.board-title time {
+  color: var(--vscode-descriptionForeground);
+  font-size: 11px;
   white-space: nowrap;
 }
 .period-switch {
@@ -380,11 +516,6 @@ main {
 .timeline .overdue-heading {
   color: var(--vscode-charts-red);
 }
-.timeline .timeline-row > :first-child {
-  width: 170px;
-  min-width: 170px;
-  box-sizing: border-box;
-}
 .timeline-row > * {
   min-width: 0;
   padding: 7px 3px;
@@ -394,7 +525,9 @@ main {
   text-align: center;
 }
 .timeline-row > :first-child {
-  min-width: 0;
+  width: 170px;
+  min-width: 170px;
+  box-sizing: border-box;
   padding: 8px;
   border-inline-start: 3px solid;
   text-align: start;
@@ -410,17 +543,14 @@ main {
   gap: 2px;
   white-space: nowrap;
 }
-.timeline-heading time span {
+.timeline-heading :where(time span) {
   font-size: 10px;
   color: var(--vscode-descriptionForeground);
 }
-.timeline-heading time strong {
+.timeline-heading :where(time strong) {
   font-size: 12px;
 }
-.timeline-month .timeline-heading time strong {
-  font-size: 10px;
-}
-.timeline-month .timeline-row > * {
+.timeline-month :where(.timeline-row > *) {
   padding-inline: 0;
 }
 .timeline-month .timeline-row > :first-child {
@@ -428,21 +558,32 @@ main {
 }
 .timeline .today,
 .timeline .today-holiday {
-  background: color-mix(in srgb, var(--vscode-focusBorder) 11%, transparent);
-  box-shadow: inset 0 2px var(--vscode-focusBorder);
-}
-.timeline .today time,
-.timeline .today-holiday time {
-  color: var(--vscode-focusBorder);
+  background: color-mix(
+    in srgb,
+    var(--vscode-focusBorder) 4%,
+    var(--vscode-editor-background)
+  );
 }
 .timeline .overlap-day {
-  background: color-mix(in srgb, var(--vscode-charts-red) 16%, transparent);
+  background: color-mix(
+    in srgb,
+    var(--vscode-charts-red) 2%,
+    var(--vscode-editor-background)
+  );
+}
+.timeline .today.overlap-day,
+.timeline .today-holiday.overlap-day {
+  background: color-mix(
+    in srgb,
+    var(--vscode-focusBorder) 4%,
+    var(--vscode-editor-background)
+  );
 }
 .timeline .holiday {
   background: color-mix(
     in srgb,
-    var(--vscode-sideBar-background) 60%,
-    transparent
+    var(--vscode-foreground) 5%,
+    var(--vscode-editor-background)
   );
 }
 .timeline tbody tr:not(.pace-row) {
@@ -501,12 +642,10 @@ main {
   width: 100%;
   box-sizing: border-box;
 }
-.section-heading .inline-add > button,
-.event-details h3 .inline-add > button,
-.event-list-toolbar .inline-add > button {
-  color: var(--vscode-button-foreground);
-  background: var(--vscode-button-background);
-  border: 0;
+.inline-add-trigger {
+  color: var(--vscode-descriptionForeground);
+  background: transparent;
+  border: 1px solid var(--vscode-panel-border);
   border-radius: 4px;
   min-width: 23px;
   min-height: 23px;
@@ -564,7 +703,7 @@ main {
   border-inline-start-color: transparent;
   font-size: 12px;
 }
-.pace-row th small {
+.pace-row :where(th small) {
   display: block;
   color: var(--vscode-charts-yellow);
 }
@@ -574,11 +713,11 @@ main {
 .required-chart {
   position: relative;
   width: 100%;
-  height: 84px;
+  height: 58px;
 }
 .required-chart svg {
   width: 100%;
-  height: 84px;
+  height: 58px;
   display: block;
 }
 .chart-max {
@@ -626,9 +765,6 @@ main {
   text-transform: uppercase;
   font-size: 12px;
 }
-.event-details h3 .inline-add form {
-  right: 0;
-}
 .event-summary h2 {
   margin: 0;
   font-size: 18px;
@@ -642,6 +778,28 @@ main {
   font-weight: 700;
   margin: 18px 0;
 }
+.event-summary .event-progress {
+  display: block;
+  width: 100%;
+  height: 8px;
+  margin-top: 7px;
+  appearance: none;
+  border: 0;
+  border-radius: 5px;
+  background: var(--vscode-progressBar-background);
+}
+.event-progress::-webkit-progress-bar {
+  border-radius: 5px;
+  background: color-mix(in srgb, var(--vscode-foreground) 15%, transparent);
+}
+.event-progress::-webkit-progress-value {
+  border-radius: 5px;
+  background: var(--event-progress-color);
+}
+.event-progress::-moz-progress-bar {
+  border-radius: 5px;
+  background: var(--event-progress-color);
+}
 .story-choice {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 25px 25px;
@@ -649,10 +807,14 @@ main {
   gap: 3px;
   border-bottom: 1px solid var(--vscode-panel-border);
 }
-.event-details [aria-label="Story一覧"] .story-choice > button {
+.story-choice.selected {
+  background: var(--vscode-list-activeSelectionBackground);
+  color: var(--vscode-list-activeSelectionForeground);
+}
+.story-select {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 78px;
-  grid-template-rows: auto auto;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: auto auto auto;
   align-items: center;
   gap: 5px;
   min-width: 0;
@@ -660,32 +822,28 @@ main {
   border: 0;
   padding: 7px 4px;
 }
-.story-choice > button span {
+.story-select span {
   grid-column: 1;
   grid-row: 1;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
 }
-.story-choice > button small {
-  grid-column: 1 / 3;
+.story-select small {
+  grid-column: 1;
   grid-row: 2;
   white-space: nowrap;
   font-size: 10px;
 }
 .story-choice progress {
-  grid-column: 2;
-  grid-row: 1;
-  width: 72px;
+  grid-column: 1;
+  grid-row: 3;
+  width: 100%;
   height: 6px;
 }
 .story-choice .delete-control,
 .story-choice .detail-button {
   flex: none;
-}
-.story-choice .delete-control > button {
-  width: auto;
-  display: inline-block;
 }
 .task-line {
   display: flex;
@@ -736,17 +894,49 @@ main {
   width: min(360px, calc(100vw - 32px));
   min-width: 0;
   box-sizing: border-box;
-  padding: 18px;
-  border-radius: 8px;
+  padding: 22px;
+  border: 1px solid var(--vscode-panel-border);
+  border-radius: 10px;
+  background: var(
+    --vscode-editorWidget-background,
+    var(--vscode-editor-background)
+  );
+  color: var(--vscode-foreground);
+  box-shadow: 0 14px 48px var(--vscode-widget-shadow);
   font-size: 13px;
+}
+.delete-warning-icon {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  margin-bottom: 12px;
+  border-radius: 50%;
+  background: color-mix(
+    in srgb,
+    var(--vscode-errorForeground) 16%,
+    transparent
+  );
+  color: var(--vscode-errorForeground);
+  font-size: 22px;
+  font-weight: 700;
 }
 .delete-dialog strong {
   display: block;
   font-size: 15px;
 }
+.delete-dialog small {
+  display: block;
+  margin-top: 5px;
+  color: var(--vscode-descriptionForeground);
+}
 .delete-dialog p {
   margin: 12px 0;
   color: var(--vscode-descriptionForeground);
+}
+.delete-dialog .delete-irreversible {
+  color: var(--vscode-errorForeground);
+  font-weight: 600;
 }
 .dialog-actions {
   display: flex;
@@ -772,17 +962,59 @@ main {
 }
 .event-list-toolbar {
   position: relative;
-  display: flex;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
   align-items: center;
   gap: 6px;
   margin-bottom: 26px;
 }
 .event-list-toolbar h2 {
-  flex: 1;
+  grid-column: 1;
   margin: 0;
   font-size: 13px;
 }
+.event-list-toolbar .inline-add-embedded {
+  display: contents;
+}
+:where(.event-list-toolbar .inline-add-embedded > button) {
+  grid-column: 2;
+}
+.event-list-toolbar .inline-add-embedded form {
+  position: static;
+  grid-column: 1 / -1;
+  grid-row: 2;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  gap: 6px;
+  width: 100%;
+  padding: 10px;
+  box-sizing: border-box;
+  box-shadow: none;
+}
+.event-list-toolbar .inline-add-embedded form input[aria-label="名前"] {
+  grid-column: 1 / -1;
+}
+.event-list-toolbar .inline-add-embedded form select,
+.event-list-toolbar .inline-add-embedded form input[type="date"] {
+  width: auto;
+  min-width: 0;
+  padding: 4px;
+  border: 1px solid var(--vscode-panel-border);
+  border-radius: 4px;
+  background: var(--vscode-button-secondaryBackground);
+  color: var(--vscode-button-secondaryForeground);
+  font-size: 11px;
+}
+.event-list-toolbar .inline-add-embedded form button[type="submit"] {
+  border: 1px solid var(--vscode-panel-border);
+  border-radius: 4px;
+  background: var(--vscode-button-secondaryBackground);
+  color: var(--vscode-button-secondaryForeground);
+  cursor: pointer;
+}
 .event-list-toolbar .event-filters {
+  grid-column: 3;
+  grid-row: 1;
   position: static;
 }
 .event-filters > button {
@@ -801,7 +1033,74 @@ main {
 .filter-popover {
   right: 0;
   top: 100%;
-  min-width: 210px;
+  width: min(290px, calc(100vw - 20px));
+  box-sizing: border-box;
+  padding: 12px;
+  border-radius: 8px;
+  box-shadow: 0 8px 24px var(--vscode-widget-shadow);
+}
+.target-switch legend,
+.project-filters legend {
+  color: var(--vscode-descriptionForeground);
+  font-size: 11px;
+  font-weight: 600;
+}
+.target-switch {
+  display: flex;
+  gap: 4px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+.target-switch button {
+  flex: 1;
+  padding: 6px 4px;
+  border: 1px solid var(--vscode-panel-border);
+  border-radius: 5px;
+  background: transparent;
+  color: var(--vscode-foreground);
+  font-size: 11px;
+  cursor: pointer;
+}
+.target-switch button[aria-pressed="true"] {
+  border-color: var(--vscode-focusBorder);
+  background: color-mix(in srgb, var(--vscode-focusBorder) 14%, transparent);
+}
+.project-filters {
+  min-width: 0;
+  margin: 6px 0 0;
+  padding: 9px 0 0;
+  border: 0;
+  border-top: 1px solid var(--vscode-panel-border);
+}
+.project-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 8px;
+}
+.project-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  max-width: 100%;
+  padding: 5px 8px;
+  border: 1px solid var(--vscode-panel-border);
+  border-radius: 99px;
+  color: var(--vscode-descriptionForeground);
+  font-size: 11px;
+  cursor: pointer;
+}
+.project-chip.selected {
+  color: var(--vscode-foreground);
+  background: color-mix(in srgb, var(--vscode-focusBorder) 10%, transparent);
+  border-color: var(--vscode-focusBorder);
+}
+.project-chip input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
 }
 .event-group {
   margin-top: 7px;
@@ -852,4 +1151,20 @@ main {
 .event-list time {
   flex: none;
   margin-left: auto;
+}
+.timeline-month .timeline-heading time strong {
+  font-size: 10px;
+}
+.timeline .today time,
+.timeline .today-holiday time,
+.timeline .today time span,
+.timeline .today-holiday time span {
+  color: var(--vscode-focusBorder);
+}
+.timeline .holiday time {
+  color: var(--vscode-descriptionForeground);
+}
+.story-choice.selected .detail-button,
+.story-choice.selected .delete-control > button {
+  color: inherit;
 }

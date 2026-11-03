@@ -3,7 +3,7 @@ import { todayInTokyo } from "../../../../../shared/src/calculation/dates.js";
 import type { Project } from "../../../../../shared/src/domain/index.js";
 import { groupEvents, type TargetFilter } from "../model/groupEvents.js";
 
-type Entry = { file: string; load: boolean; name: string };
+type Entry = { file: string; load: boolean; name: string; color?: string };
 type Props = {
   target: TargetFilter;
   projects: readonly Project[];
@@ -55,31 +55,53 @@ export function EventFilters({
       </p>
       {open && (
         <div className="filter-popover">
-          <label>
-            対象
-            <select
-              aria-label="対象"
-              value={target}
-              onChange={(event) =>
-                onTargetChange(event.target.value as TargetFilter)
-              }
+          <fieldset className="target-switch">
+            <legend>対象</legend>
+            <button
+              type="button"
+              aria-pressed={target === "pending"}
+              onClick={() => onTargetChange("pending")}
             >
-              <option value="pending">未完了 + 今後</option>
-              <option value="all">すべて</option>
-            </select>
-          </label>
-          {projectEntries.map((entry) => (
-            <label key={entry.file}>
-              <input
-                type="checkbox"
-                checked={entry.load}
-                onChange={(event) =>
-                  onProjectChange?.(entry.file, event.target.checked)
-                }
-              />
-              {entry.name}
-            </label>
-          ))}
+              未完了 + 今後
+            </button>
+            <button
+              type="button"
+              aria-pressed={target === "all"}
+              onClick={() => onTargetChange("all")}
+            >
+              すべて
+            </button>
+          </fieldset>
+          <fieldset className="project-filters">
+            <legend>読み込むプロジェクト</legend>
+            <div className="project-chips">
+              {projectEntries.map((entry) => (
+                <label
+                  key={entry.file}
+                  className={`project-chip ${entry.load ? "selected" : ""}`}
+                >
+                  <input
+                    type="checkbox"
+                    checked={entry.load}
+                    onChange={(event) =>
+                      onProjectChange?.(entry.file, event.target.checked)
+                    }
+                  />
+                  <i
+                    className="project-dot"
+                    style={{
+                      backgroundColor:
+                        entry.color ??
+                        projects.find((project) => project.name === entry.name)
+                          ?.color ??
+                        "var(--vscode-descriptionForeground)",
+                    }}
+                  />
+                  {entry.name}
+                </label>
+              ))}
+            </div>
+          </fieldset>
         </div>
       )}
     </div>

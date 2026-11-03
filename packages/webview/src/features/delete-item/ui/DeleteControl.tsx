@@ -50,9 +50,11 @@ export function DeleteDialog({
         aria-label="削除確認"
         className="delete-dialog"
       >
-        <strong>
-          {deleteKindName[kind]}「{name}」を削除しますか？
-        </strong>
+        <span className="delete-warning-icon" aria-hidden="true">
+          !
+        </span>
+        <strong>「{name}」を削除しますか？</strong>
+        <small>{deleteKindName[kind]}の削除</small>
         {descendants.length > 0 && (
           <p>
             {descendants
@@ -61,6 +63,7 @@ export function DeleteDialog({
             も削除されます。
           </p>
         )}
+        <p className="delete-irreversible">元に戻せません</p>
         <div className="dialog-actions">
           <button type="button" onClick={onCancel}>
             キャンセル

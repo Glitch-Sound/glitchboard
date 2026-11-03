@@ -64,6 +64,7 @@ export function EventsApp() {
             {projects.length > 0 && (
               <InlineAdd
                 kind="event"
+                layout="embedded"
                 projects={projects.map((project) => ({
                   id: project.id,
                   name: project.name,

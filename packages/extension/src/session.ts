@@ -13,7 +13,7 @@ import { addEvent, addStory, addTask } from "./storage/hierarchy.js";
 import {
   createProject,
   loadManageFile,
-  readProjectName,
+  readProjectSummary,
   setProjectLoaded,
 } from "./storage/manage.js";
 import { updateTask } from "./storage/project.js";
@@ -24,7 +24,12 @@ export type BoardSnapshot = {
   selectedEventId: string | null;
   error: string | null;
   settings: WorkdaySettings;
-  projectEntries: { file: string; load: boolean; name: string }[];
+  projectEntries: {
+    file: string;
+    load: boolean;
+    name: string;
+    color?: string;
+  }[];
 };
 
 type Surface = "board" | "events";
@@ -261,16 +266,20 @@ export class BoardSession {
         error: null,
         settings: manage.settings,
         projectEntries: await Promise.all(
-          manage.projects.map(async (entry) => ({
-            ...entry,
-            name: entry.load
-              ? (loadedProjects[
-                  manage.projects
-                    .filter((item) => item.load)
-                    .findIndex((item) => item.file === entry.file)
-                ]?.name ?? entry.file)
-              : await readProjectName(this.managePath, entry.file),
-          })),
+          manage.projects.map(async (entry) => {
+            const loaded =
+              loadedProjects[
+                manage.projects
+                  .filter((item) => item.load)
+                  .findIndex((item) => item.file === entry.file)
+              ];
+            return {
+              ...entry,
+              ...(entry.load
+                ? { name: loaded?.name ?? entry.file, color: loaded?.color }
+                : await readProjectSummary(this.managePath, entry.file)),
+            };
+          }),
         ),
       });
     } catch (error) {

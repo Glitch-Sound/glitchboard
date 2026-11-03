@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { type CSSProperties, useEffect, useState } from "react";
 import type { EventDanger } from "../../../../../shared/src/calculation/danger.js";
 import { calendarDayDifference } from "../../../../../shared/src/calculation/dates.js";
 import {
@@ -24,6 +24,7 @@ type Props = {
   today: string;
   prediction: string | null;
   danger?: EventDanger;
+  projectColor?: string;
   onPointsChange?: (taskId: string, points: Points) => void;
   onDoneChange?: (taskId: string, done: boolean) => void;
   onAddStory?: (eventId: string, name: string) => boolean | Promise<boolean>;
@@ -31,6 +32,13 @@ type Props = {
   onDelete?: (kind: ItemKind, id: string, counts: DescendantCounts) => void;
   onOpenDetail?: (kind: "event" | "story" | "task", id: string) => void;
 };
+
+const weekdays = ["日", "月", "火", "水", "木", "金", "土"];
+
+function shortDate(date: string): string {
+  const day = new Date(`${date}T00:00:00Z`).getUTCDay();
+  return `${Number(date.slice(5, 7))}/${Number(date.slice(8, 10))}(${weekdays[day]})`;
+}
 
 function initialStoryId(event: Event): string | null {
   return (
@@ -47,6 +55,7 @@ export function EventDetails({
   today,
   prediction,
   danger,
+  projectColor,
   onPointsChange,
   onDoneChange,
   onAddStory,
@@ -71,9 +80,7 @@ export function EventDetails({
   const days = calendarDayDifference(today, event.due);
   return (
     <section className="event-details" aria-label="Event詳細">
-      <div
-        className={`event-summary ${danger?.approaching || danger?.overdue || danger?.overflow ? "danger-text" : ""}`}
-      >
+      <div className="event-summary">
         <h2>
           {onDelete ? (
             <DeleteControl
@@ -93,10 +100,16 @@ export function EventDetails({
             />
           )}
         </h2>
-        <p>{days < 0 ? `${-days}日超過` : `残り${days}日`}</p>
+        <p
+          className={`event-days ${danger?.approaching || danger?.overdue || danger?.overflow ? "danger-text" : ""}`}
+        >
+          {days < 0 ? `${-days}日超過` : `残り${days}日`}
+        </p>
         {prediction && (
-          <p>
-            完了予測: <time dateTime={prediction}>{prediction}</time>
+          <p
+            className={`event-prediction ${prediction > event.due ? "danger-text" : "success-text"}`}
+          >
+            完了予測: <time dateTime={prediction}>{shortDate(prediction)}</time>
           </p>
         )}
         <p>
@@ -105,6 +118,18 @@ export function EventDetails({
         <p>
           {points.done}pt / {points.total}pt
         </p>
+        <progress
+          className="event-progress"
+          style={
+            {
+              "--event-progress-color":
+                projectColor ?? "var(--vscode-charts-blue)",
+            } as CSSProperties
+          }
+          value={points.done}
+          max={points.total || 1}
+          aria-label="Event進捗"
+        />
       </div>
       <section aria-label="Story一覧">
         <h3>
@@ -120,8 +145,12 @@ export function EventDetails({
           const progress = storyPoints(item);
           const done = item.tasks.filter((task) => task.doneAt).length;
           return (
-            <div key={item.id} className="story-choice">
+            <div
+              key={item.id}
+              className={`story-choice ${item.id === storyId ? "selected" : ""}`}
+            >
               <button
+                className="story-select"
                 type="button"
                 aria-pressed={item.id === storyId}
                 onClick={() => setStoryId(item.id)}

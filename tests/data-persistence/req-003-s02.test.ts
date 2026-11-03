@@ -14,13 +14,13 @@ describe("REQ-003-S02 読込対象外の名前", () => {
     );
     await writeFile(
       join(root, "B.yaml"),
-      "name: Beta\nevents: [{name: 未読込}]\n",
+      "name: Beta\ncolor: '#aabbcc'\nevents: [{name: 未読込}]\n",
     );
     const session = new BoardSession(manage);
     await session.reload();
     expect(session.snapshot().projects).toEqual([]);
     expect(session.snapshot().projectEntries).toEqual([
-      { file: "B.yaml", load: false, name: "Beta" },
+      { file: "B.yaml", load: false, name: "Beta", color: "#aabbcc" },
     ]);
   });
 });

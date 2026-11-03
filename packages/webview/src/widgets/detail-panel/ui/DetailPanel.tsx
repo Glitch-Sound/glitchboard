@@ -61,8 +61,10 @@ function metrics(selection: DetailSelection): [string, string, string] {
     }
     case "task":
       return [
-        `${effectiveTaskPoints(selection.item)}pt`,
-        selection.item.doneAt ? `完了 ${selection.item.doneAt}` : "未完了",
+        `ポイント ${effectiveTaskPoints(selection.item)}pt`,
+        selection.item.doneAt
+          ? `状態 完了 ${selection.item.doneAt}`
+          : "状態 未完了",
         `期限 ${selection.parentDue ?? "なし"}`,
       ];
   }
@@ -93,6 +95,7 @@ export function DetailPanel({
     })),
   );
   const nextLinkId = useRef(links.length);
+  const pointValues = [1, 2, 3, 5, 8, 13, 21] as const;
   useEffect(() => {
     const close = (event: KeyboardEvent) => {
       if (event.key === "Escape") onClose();
@@ -108,19 +111,32 @@ export function DetailPanel({
       aria-modal="false"
     >
       <header>
-        <div>
-          <small>{selection.kind.toUpperCase()}</small>
-          <h2>{selection.item.name}</h2>
+        <div className="detail-header-content">
+          <small className={`detail-kind detail-kind-${selection.kind}`}>
+            {selection.kind.toUpperCase()}
+          </small>
+          <p className="detail-hierarchy">{selection.hierarchy.join(" / ")}</p>
+          <h2 className="detail-title">{selection.item.name}</h2>
         </div>
-        <button type="button" aria-label="詳細を閉じる" onClick={onClose}>
+        <button
+          className="detail-close"
+          type="button"
+          aria-label="詳細を閉じる"
+          onClick={onClose}
+        >
           ×
         </button>
       </header>
-      <p className="detail-hierarchy">{selection.hierarchy.join(" / ")}</p>
       <div className="detail-metrics">
-        {metrics(selection).map((metric) => (
-          <span key={metric}>{metric}</span>
-        ))}
+        {metrics(selection).map((metric) => {
+          const [label, ...value] = metric.split(" ");
+          return (
+            <span key={metric}>
+              <small>{label}</small>
+              <strong>{value.join(" ")}</strong>
+            </span>
+          );
+        })}
       </div>
       {editing && (
         <form
@@ -177,26 +193,37 @@ export function DetailPanel({
         </label>
       )}
       {selection.kind === "task" && (
-        <label>
-          ポイント{" "}
-          <select
-            value={selection.item.points ?? ""}
+        <div className="detail-points">
+          <label htmlFor="detail-point-range">
+            ポイント{" "}
+            <strong>
+              {selection.item.points === undefined
+                ? "未見積"
+                : `${selection.item.points}pt`}
+            </strong>
+          </label>
+          <input
+            id="detail-point-range"
+            type="range"
+            min="0"
+            max={pointValues.length - 1}
+            step="1"
+            value={Math.max(0, pointValues.indexOf(selection.item.points ?? 3))}
             onChange={(event) =>
               onSave?.("task", selection.item.id, {
-                points: event.target.value
-                  ? (Number(event.target.value) as 1 | 2 | 3 | 5 | 8 | 13 | 21)
-                  : null,
+                points: pointValues[Number(event.target.value)] ?? 3,
               })
             }
+          />
+          <button
+            type="button"
+            onClick={() =>
+              onSave?.("task", selection.item.id, { points: null })
+            }
           >
-            <option value="">未見積</option>
-            {[1, 2, 3, 5, 8, 13, 21].map((point) => (
-              <option key={point} value={point}>
-                {point}pt
-              </option>
-            ))}
-          </select>
-        </label>
+            未見積に戻す
+          </button>
+        </div>
       )}
       <section>
         <h3>補足</h3>
@@ -331,12 +358,20 @@ export function DetailPanel({
           </button>
         </form>
       )}
-      <footer>
-        <button type="button" onClick={() => setEditing(true)}>
+      <footer className="detail-actions">
+        <button
+          className="detail-action"
+          type="button"
+          onClick={() => setEditing(true)}
+        >
           編集
         </button>
         {onDelete && (
-          <button type="button" onClick={() => setConfirmDelete(true)}>
+          <button
+            className="detail-action detail-delete-action"
+            type="button"
+            onClick={() => setConfirmDelete(true)}
+          >
             削除
           </button>
         )}

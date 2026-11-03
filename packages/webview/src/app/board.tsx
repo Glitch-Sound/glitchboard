@@ -30,6 +30,13 @@ import { type Snapshot, subscribeSnapshots } from "./snapshot.js";
 import { useToday } from "./useToday.js";
 import "./style.css";
 
+const weekdays = ["日", "月", "火", "水", "木", "金", "土"];
+
+function displayToday(today: string): string {
+  const weekday = weekdays[new Date(`${today}T00:00:00Z`).getUTCDay()];
+  return `${today.replaceAll("-", "/")}(${weekday})`;
+}
+
 function detailFor(
   projects: readonly Project[],
   kind: ItemKind,
@@ -159,7 +166,10 @@ export function BoardApp() {
       ) : (
         <>
           <header className="board-header">
-            <h1>GlitchBoard</h1>
+            <div className="board-title">
+              <h1>GlitchBoard</h1>
+              <time dateTime={today}>{displayToday(today)}</time>
+            </div>
             <nav aria-label="表示期間" className="period-switch">
               {(
                 [
@@ -219,6 +229,11 @@ export function BoardApp() {
               today={today}
               prediction={predictions[selectedEvent.id] ?? null}
               danger={danger.events[selectedEvent.id]}
+              projectColor={
+                projects.find((project) =>
+                  project.events.some((event) => event.id === selectedEvent.id),
+                )?.color
+              }
               onPointsChange={(taskId, points) => {
                 const bridge = localBridge();
                 if (bridge) postTaskPoints(bridge, taskId, points);

@@ -9,6 +9,7 @@ export type AddValues = {
 };
 type Props = {
   kind: Kind;
+  layout?: "popover" | "embedded";
   projectId?: string;
   projects?: { id: string; name: string }[];
   usedColors?: string[];
@@ -70,6 +71,7 @@ export function nextProjectColor(usedColors: readonly string[]): string {
 
 export function InlineAdd({
   kind,
+  layout = "popover",
   projectId,
   projects = [],
   usedColors = [],
@@ -93,19 +95,28 @@ export function InlineAdd({
     setDue("");
   };
   return (
-    <span className="inline-add">
-      {!open ? (
+    <span
+      className={`inline-add ${layout === "embedded" ? "inline-add-embedded" : ""}`}
+    >
+      {(!open || layout === "embedded") && (
         <button
+          className="inline-add-trigger"
           type="button"
           onClick={() => {
+            if (open) {
+              cancel();
+              return;
+            }
             if (kind === "project") setColor(nextProjectColor(usedColors));
             setOpen(true);
           }}
           aria-label={`${names[kind]}を追加`}
+          aria-expanded={open}
         >
           +
         </button>
-      ) : (
+      )}
+      {open && (
         <form
           onKeyDown={(event) => {
             if (event.key === "Escape") {
@@ -133,6 +144,7 @@ export function InlineAdd({
           <input
             ref={nameInput}
             aria-label="名前"
+            placeholder={kind === "event" ? "Event名" : undefined}
             value={name}
             onChange={(event) => setName(event.target.value)}
           />

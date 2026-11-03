@@ -33,17 +33,23 @@ function safeProjectPath(managePath: string, file: string): string {
   return target;
 }
 
-/** 読み込みを外したProjectでも抽出条件用の名前だけを取得する。 */
-export async function readProjectName(
+/** 読み込みを外したProjectでも抽出条件用の名前と色を取得する。 */
+export async function readProjectSummary(
   managePath: string,
   file: string,
-): Promise<string> {
+): Promise<{ name: string; color?: string }> {
   const path = safeProjectPath(managePath, file);
   const document = documentFrom(await readFile(path, "utf8"), path);
   const name = document.get("name");
   if (typeof name !== "string" || !name.trim())
     throw new Error(`${path}: Project名がない`);
-  return name;
+  const color = document.get("color");
+  return {
+    name,
+    ...(typeof color === "string" && /^#[0-9a-fA-F]{6}$/.test(color)
+      ? { color }
+      : {}),
+  };
 }
 
 async function atomicWrite(path: string, content: string): Promise<void> {
