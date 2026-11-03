@@ -13,6 +13,8 @@ WHEN 各階層の見出しで追加を選んだとき、GlitchBoardは SHALL そ
 Projectは名前と色、Eventは名前、Project、期限、StoryとTaskは名前を入力する。\
 EventのProjectは選択中EventのProjectを初期値とし、Taskは未見積で作る。
 追加の入力欄は保存が成功してから閉じ、失敗時は入力値を残す。
+追加ボタンはProject、Event、Story、Taskそれぞれの見出しの右端へ置く。\
+Projectの色は現在使用していない色を初期選択する。
 
 #### Scenario: REQ-022-S01 - Event追加
 
@@ -31,6 +33,12 @@ EventのProjectは選択中EventのProjectを初期値とし、Taskは未見積�
 - **GIVEN** 追加の入力欄に名前を入力した。
 - **WHEN** 保存に失敗する。
 - **THEN** 入力欄を開いたまま入力値を残し、画面上部に失敗理由を表示する。
+
+#### Scenario: REQ-022-S04 - Project色の初期値
+
+- **GIVEN** 既存Projectが青、紫、緑を使用している。
+- **WHEN** Projectの追加欄を開く。
+- **THEN** 既存Projectが使用していない色が初期選択される。
 
 ### Requirement: REQ-023 - ポイント変更
 
@@ -63,6 +71,7 @@ WHEN Taskのチェックを切り替えたとき、GlitchBoardは SHALL 完了�
 
 WHEN Project、Event、Story、Taskの削除を選んだとき、GlitchBoardは SHALL 子孫の種類別件数を示して確認を求め、承認時だけ対象と全子孫をYAMLから物理削除する。
 保存または削除に失敗した場合は、拡張側から返された理由を画面上部に表示する。
+確認は画面中央のダイアログに日本語の種類名と名前、0件を除いた子孫件数、赤い削除ボタンを示す。
 
 #### Scenario: REQ-025-S01 - 子孫の確認
 

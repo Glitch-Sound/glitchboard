@@ -22,7 +22,7 @@ describe("REQ-025-S01 子孫の確認", () => {
     );
     fireEvent.contextMenu(screen.getByRole("button", { name: "Story" }));
     fireEvent.click(screen.getByRole("menuitem", { name: "削除" }));
-    expect(screen.getByRole("dialog").textContent).toContain("Task 12件");
+    expect(screen.getByRole("dialog").textContent).toContain("タスク 12件");
     expect(onConfirm).not.toHaveBeenCalled();
     fireEvent.click(screen.getByRole("button", { name: "削除する" }));
     expect(onConfirm).toHaveBeenCalledOnce();

@@ -137,6 +137,7 @@ export function EventDetails({
                 <DeleteControl
                   kind="story"
                   name={item.name}
+                  iconOnly
                   counts={{ events: 0, stories: 0, tasks: item.tasks.length }}
                   onConfirm={() =>
                     onDelete("story", item.id, {
@@ -180,41 +181,50 @@ export function EventDetails({
                 }
                 aria-label={`${task.name}の完了`}
               />
-              {onDelete ? (
-                <DeleteControl
-                  kind="task"
-                  name={task.name}
-                  counts={{ events: 0, stories: 0, tasks: 0 }}
-                  onConfirm={() =>
-                    onDelete("task", task.id, {
-                      events: 0,
-                      stories: 0,
-                      tasks: 0,
-                    })
-                  }
-                />
-              ) : (
-                <span>{task.name}</span>
-              )}
-              {onOpenDetail && (
-                <DetailButton
-                  name={task.name}
-                  note={task.note}
-                  onOpen={() => onOpenDetail("task", task.id)}
-                />
-              )}
+              <span
+                className="task-name"
+                style={{
+                  textDecoration: task.doneAt ? "line-through" : undefined,
+                }}
+              >
+                {task.name}
+              </span>
               {onPointsChange ? (
                 <PointSelector
                   points={task.points}
                   onChange={(points) => onPointsChange(task.id, points)}
                 />
               ) : (
-                <b className={pointTone(task.points)}>
+                <b className={`point-badge ${pointTone(task.points)}`}>
                   {task.points === undefined
                     ? "未見積"
                     : `${effectiveTaskPoints(task)}pt`}
                 </b>
               )}
+              <span className="task-actions">
+                {onDelete && (
+                  <DeleteControl
+                    kind="task"
+                    name={task.name}
+                    iconOnly
+                    counts={{ events: 0, stories: 0, tasks: 0 }}
+                    onConfirm={() =>
+                      onDelete("task", task.id, {
+                        events: 0,
+                        stories: 0,
+                        tasks: 0,
+                      })
+                    }
+                  />
+                )}
+                {onOpenDetail && (
+                  <DetailButton
+                    name={task.name}
+                    note={task.note}
+                    onOpen={() => onOpenDetail("task", task.id)}
+                  />
+                )}
+              </span>
             </div>
           ))
         ) : (

@@ -13,6 +13,7 @@ import {
 } from "../../../../../shared/src/domain/index.js";
 import { classifyLinkTarget } from "../../../../../shared/src/domain/link.js";
 import type { Operation } from "../../../../../shared/src/domain/messages.js";
+import { DeleteDialog } from "../../../features/delete-item/index.js";
 
 export type DetailSelection =
   | { kind: "project"; item: Project; hierarchy: string[] }
@@ -341,30 +342,17 @@ export function DetailPanel({
         )}
       </footer>
       {confirmDelete && (
-        <div
-          role="alertdialog"
-          aria-label="削除確認"
-          className="detail-delete-confirm"
-        >
-          <p>
-            {selection.item.name}と子孫を削除する。Event{" "}
-            {deleteCounts?.events ?? 0}件、Story {deleteCounts?.stories ?? 0}
-            件、Task {deleteCounts?.tasks ?? 0}件。
-          </p>
-          <button
-            type="button"
-            onClick={() => {
-              setConfirmDelete(false);
-              onDelete?.();
-              onClose();
-            }}
-          >
-            削除する
-          </button>
-          <button type="button" onClick={() => setConfirmDelete(false)}>
-            取消
-          </button>
-        </div>
+        <DeleteDialog
+          kind={selection.kind}
+          name={selection.item.name}
+          counts={deleteCounts ?? { events: 0, stories: 0, tasks: 0 }}
+          onCancel={() => setConfirmDelete(false)}
+          onConfirm={() => {
+            setConfirmDelete(false);
+            onDelete?.();
+            onClose();
+          }}
+        />
       )}
     </aside>
   );

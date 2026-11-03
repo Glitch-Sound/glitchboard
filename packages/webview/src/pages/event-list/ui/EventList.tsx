@@ -31,8 +31,10 @@ export function EventList({
       {(Object.keys(labels) as (keyof typeof labels)[]).map(
         (key) =>
           groups[key].length > 0 && (
-            <section key={key}>
-              <h2>{labels[key]}</h2>
+            <section key={key} className={`event-group event-group-${key}`}>
+              <h2>
+                {labels[key]} <span>{groups[key].length}件</span>
+              </h2>
               {groups[key].map(({ project, event }) => {
                 const days = calendarDayDifference(today, event.due);
                 const isDanger =
@@ -46,11 +48,19 @@ export function EventList({
                     className={isDanger ? "danger-text" : ""}
                     onClick={() => onSelect?.(event.id)}
                   >
-                    <span>{event.name}</span>
+                    <span className="event-row-name">{event.name}</span>
                     <small>
-                      {project.name}・
-                      {days < 0 ? `${-days}日超過` : `残り${days}日`}・
-                      {event.due}
+                      <span>
+                        <i
+                          className="project-dot"
+                          style={{ backgroundColor: project.color }}
+                        />
+                        {project.name}・
+                        {days < 0 ? `${-days}日超過` : `残り${days}日`}
+                      </span>
+                      <time dateTime={event.due}>
+                        {event.due.slice(5).replace("-", "/")}
+                      </time>
                     </small>
                   </button>
                 );

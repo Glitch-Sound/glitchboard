@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { createRoot } from "react-dom/client";
 import { calculateDanger } from "../../../shared/src/calculation/danger.js";
 import { calculateActualPace } from "../../../shared/src/calculation/pace.js";
+import { InlineAdd } from "../features/inline-add/index.js";
 import {
   EventFilters,
   EventList,
@@ -9,7 +10,7 @@ import {
 } from "../pages/event-list/index.js";
 import { localBridge } from "./bridge.js";
 import { ManageSetup } from "./ManageSetup.js";
-import { subscribeOperationResults } from "./operations.js";
+import { sendOperation, subscribeOperationResults } from "./operations.js";
 import { type Snapshot, subscribeSnapshots } from "./snapshot.js";
 import { useToday } from "./useToday.js";
 import "./style.css";
@@ -50,8 +51,7 @@ export function EventsApp() {
     actual.learning,
   );
   return (
-    <main>
-      <h1>EVENT一覧</h1>
+    <main className="events-page">
       {(operationError ?? snapshot?.error) && (
         <p role="alert">{operationError ?? snapshot?.error}</p>
       )}
@@ -59,20 +59,41 @@ export function EventsApp() {
         <ManageSetup />
       ) : snapshot ? (
         <>
-          <EventFilters
-            target={target}
-            projects={snapshot.projects}
-            projectEntries={snapshot.projectEntries}
-            today={today}
-            onTargetChange={setTarget}
-            onProjectChange={(file, load) =>
-              localBridge()?.postMessage({
-                type: "setProjectLoaded",
-                file,
-                load,
-              })
-            }
-          />
+          <div className="event-list-toolbar">
+            <h2>EVENT</h2>
+            {projects.length > 0 && (
+              <InlineAdd
+                kind="event"
+                projects={projects.map((project) => ({
+                  id: project.id,
+                  name: project.name,
+                }))}
+                projectId={projects[0]?.id}
+                onSubmit={({ name, due, projectId }) =>
+                  sendOperation(localBridge(), {
+                    type: "addEvent",
+                    name,
+                    due,
+                    projectId,
+                  })
+                }
+              />
+            )}
+            <EventFilters
+              target={target}
+              projects={snapshot.projects}
+              projectEntries={snapshot.projectEntries}
+              today={today}
+              onTargetChange={setTarget}
+              onProjectChange={(file, load) =>
+                localBridge()?.postMessage({
+                  type: "setProjectLoaded",
+                  file,
+                  load,
+                })
+              }
+            />
+          </div>
           <EventList
             projects={snapshot.projects}
             today={today}

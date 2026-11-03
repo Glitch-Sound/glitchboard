@@ -24,7 +24,7 @@ describe("REQ-025-S02 取消", () => {
     );
     fireEvent.contextMenu(screen.getByRole("button", { name: "Keep" }));
     fireEvent.click(screen.getByRole("menuitem", { name: "削除" }));
-    fireEvent.click(screen.getByRole("button", { name: "取消" }));
+    fireEvent.click(screen.getByRole("button", { name: "キャンセル" }));
     expect(screen.queryByRole("dialog")).toBeNull();
     expect(onConfirm).not.toHaveBeenCalled();
     expect(await readFile(path, "utf8")).toBe(yaml);

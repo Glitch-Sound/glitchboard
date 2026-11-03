@@ -11,32 +11,6 @@ body {
 main {
   padding: 12px;
 }
-.timeline {
-  border-collapse: collapse;
-  table-layout: fixed;
-  min-width: max-content;
-}
-.timeline-row > * {
-  min-width: 44px;
-  border: 1px solid var(--vscode-panel-border);
-  padding: 6px;
-  text-align: center;
-}
-.timeline-row > :first-child {
-  min-width: 120px;
-  border-inline-start: 4px solid;
-  text-align: start;
-}
-.timeline .today {
-  background: var(--vscode-editor-selectionBackground);
-}
-.timeline .holiday {
-  background: var(--vscode-sideBar-background);
-}
-.timeline .today-holiday {
-  background: var(--vscode-editor-selectionBackground);
-  box-shadow: inset 0 0 0 2px var(--vscode-focusBorder);
-}
 .marker-wrap {
   position: relative;
 }
@@ -45,12 +19,6 @@ main {
   background: transparent;
   font-size: 18px;
   cursor: pointer;
-}
-.event-marker.danger {
-  text-shadow: 0 0 6px #ff3434;
-}
-.event-marker.caution {
-  text-shadow: 0 0 6px #e8bd25;
 }
 .event-marker sup {
   font-size: 10px;
@@ -75,27 +43,8 @@ main {
   display: block;
   font-size: 11px;
 }
-.workload-summary {
-  display: flex;
-  gap: 16px;
-  align-items: center;
-}
 .danger-text {
   color: var(--vscode-errorForeground);
-}
-.completion-bars {
-  display: flex;
-  align-items: end;
-  gap: 3px;
-  height: 42px;
-}
-.completion-bars div {
-  width: 10px;
-  background: var(--vscode-charts-blue);
-}
-.workload-header svg {
-  width: 100%;
-  height: 72px;
 }
 .required-step {
   stroke: var(--vscode-charts-blue);
@@ -109,40 +58,6 @@ main {
 .overload-area {
   fill: var(--vscode-charts-red);
   opacity: 0.5;
-}
-.workload-days {
-  display: flex;
-}
-.workload-days span {
-  flex: 1;
-  text-align: center;
-}
-.overlap-day {
-  background: color-mix(in srgb, var(--vscode-charts-red) 18%, transparent);
-}
-.event-details {
-  display: grid;
-  grid-template-columns: minmax(180px, 1fr) minmax(180px, 1fr) minmax(
-      240px,
-      1.4fr
-    );
-  gap: 12px;
-  border-top: 1px solid var(--vscode-panel-border);
-  margin-top: 16px;
-  padding-top: 12px;
-}
-.event-details > div {
-  min-width: 0;
-}
-.event-details progress {
-  width: 100%;
-}
-.story-choice {
-  display: flex;
-  align-items: center;
-}
-.story-choice > button {
-  flex: 1;
 }
 .delete-control {
   position: relative;
@@ -158,8 +73,7 @@ main {
   color: var(--vscode-foreground);
   cursor: pointer;
 }
-.delete-menu,
-.delete-dialog {
+.delete-menu {
   position: absolute;
   top: 100%;
   left: 0;
@@ -173,9 +87,6 @@ main {
   color: var(--vscode-foreground);
   box-shadow: 0 4px 12px var(--vscode-widget-shadow);
   font-size: 12px;
-}
-.delete-dialog {
-  min-width: 280px;
 }
 .detail-button {
   display: inline-block;
@@ -239,23 +150,12 @@ main {
 .detail-note-form input {
   width: 100%;
 }
-.detail-delete-confirm {
-  position: sticky;
-  bottom: 0;
-  padding: 12px;
-  border: 1px solid var(--vscode-panel-border);
-  background: var(--vscode-editor-background);
-  box-shadow: 0 -4px 12px var(--vscode-widget-shadow);
-}
 .task-line {
   display: flex;
   align-items: center;
   gap: 6px;
   padding: 6px 0;
   border-bottom: 1px solid var(--vscode-panel-border);
-}
-.task-line span {
-  flex: 1;
 }
 .points-unestimated {
   color: var(--vscode-descriptionForeground);
@@ -351,24 +251,595 @@ main {
   border: 0;
   cursor: pointer;
 }
-.event-details [aria-label="Story一覧"] button {
-  display: grid;
-  width: 100%;
+.story-choice > button {
   text-align: start;
-  border: 1px solid var(--vscode-panel-border);
   color: var(--vscode-foreground);
   background: var(--vscode-editor-background);
-  padding: 6px;
 }
-.event-details [aria-label="Story一覧"] button[aria-pressed="true"] {
+.story-choice > button[aria-pressed="true"] {
   background: var(--vscode-list-activeSelectionBackground);
   color: var(--vscode-list-activeSelectionForeground);
 }
-.event-details [aria-label="Story一覧"] .delete-control > button {
-  width: auto;
-  padding: 2px 5px;
-  border: 0;
-}
 .event-summary.danger-text .delete-control > button {
   color: var(--vscode-errorForeground);
+}
+
+/* REQ-015〜019、REQ-022〜025: 3段のボードと狭いサイドバーの表示。 */
+.board-page {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 0;
+  min-height: 100vh;
+  box-sizing: border-box;
+}
+.board-header {
+  display: flex;
+  align-items: center;
+  gap: clamp(12px, 2vw, 32px);
+  padding: 10px 14px;
+  border: 1px solid var(--vscode-panel-border);
+  border-radius: 8px;
+  background: var(--vscode-sideBar-background);
+}
+.board-header h1 {
+  margin: 0;
+  font-size: 21px;
+  white-space: nowrap;
+}
+.period-switch {
+  display: flex;
+  flex: none;
+  padding: 3px;
+  gap: 3px;
+  border: 1px solid var(--vscode-panel-border);
+  border-radius: 7px;
+}
+.period-switch button {
+  border: 0;
+  border-radius: 5px;
+  background: transparent;
+  color: var(--vscode-foreground);
+  padding: 6px 11px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.period-switch button[aria-pressed="true"] {
+  background: var(--vscode-button-background);
+  color: var(--vscode-button-foreground);
+  font-weight: 700;
+}
+.workload-summary {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: clamp(12px, 2vw, 30px);
+  flex: 1;
+  min-width: 0;
+}
+.workload-metric {
+  display: grid;
+  gap: 2px;
+  white-space: nowrap;
+}
+.workload-metric small {
+  color: var(--vscode-descriptionForeground);
+  font-size: 11px;
+}
+.workload-metric strong {
+  font-size: 21px;
+  line-height: 1.2;
+}
+.actual-value {
+  display: flex;
+  align-items: end;
+  gap: 8px;
+}
+.completion-bars {
+  display: flex;
+  align-items: end;
+  gap: 2px;
+  height: 30px;
+}
+.completion-bars i {
+  display: block;
+  width: 4px;
+  flex: none;
+}
+.completion-bar {
+  background: var(--vscode-charts-blue, #4c8dff);
+  border-radius: 2px 2px 0 0;
+}
+.completion-zero {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--vscode-descriptionForeground);
+  opacity: 0.55;
+}
+.timeline {
+  width: 100%;
+  min-width: 0;
+  table-layout: fixed;
+  border-collapse: separate;
+  border-spacing: 0;
+  border: 1px solid var(--vscode-panel-border);
+  border-radius: 8px;
+  overflow: visible;
+}
+.timeline .project-col {
+  width: 170px;
+}
+.timeline .timeline-row > :first-child {
+  width: 170px;
+  min-width: 170px;
+  box-sizing: border-box;
+}
+.timeline-row > * {
+  min-width: 0;
+  padding: 7px 3px;
+  border: 0;
+  border-right: 1px solid var(--vscode-panel-border);
+  border-bottom: 1px solid var(--vscode-panel-border);
+  text-align: center;
+}
+.timeline-row > :first-child {
+  min-width: 0;
+  padding: 8px;
+  border-inline-start: 3px solid;
+  text-align: start;
+}
+.timeline-heading th {
+  font-size: 12px;
+}
+.timeline-heading th:first-child {
+  border-inline-start-color: transparent;
+}
+.timeline-heading time {
+  display: grid;
+  gap: 2px;
+  white-space: nowrap;
+}
+.timeline-heading time span {
+  font-size: 10px;
+  color: var(--vscode-descriptionForeground);
+}
+.timeline-heading time strong {
+  font-size: 12px;
+}
+.timeline-month .timeline-heading time strong {
+  font-size: 10px;
+}
+.timeline-month .timeline-row > * {
+  padding-inline: 0;
+}
+.timeline-month .timeline-row > :first-child {
+  padding-inline: 6px;
+}
+.timeline .today,
+.timeline .today-holiday {
+  background: color-mix(in srgb, var(--vscode-focusBorder) 11%, transparent);
+  box-shadow: inset 0 2px var(--vscode-focusBorder);
+}
+.timeline .today time,
+.timeline .today-holiday time {
+  color: var(--vscode-focusBorder);
+}
+.timeline .overlap-day {
+  background: color-mix(in srgb, var(--vscode-charts-red) 16%, transparent);
+}
+.timeline .holiday {
+  background: color-mix(
+    in srgb,
+    var(--vscode-sideBar-background) 60%,
+    transparent
+  );
+}
+.timeline tbody tr:not(.pace-row) {
+  height: 66px;
+}
+.project-name {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  max-width: calc(100% - 62px);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  vertical-align: middle;
+}
+.project-name i,
+.project-dot {
+  display: inline-block;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  flex: none;
+}
+.project-actions {
+  float: right;
+  display: inline-flex;
+  align-items: center;
+}
+.section-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4px;
+  text-transform: uppercase;
+}
+.inline-add {
+  position: relative;
+}
+.inline-add form {
+  position: absolute;
+  top: calc(100% + 4px);
+  right: 0;
+  z-index: 5;
+  display: grid;
+  gap: 6px;
+  width: 220px;
+  padding: 8px;
+  border: 1px solid var(--vscode-panel-border);
+  border-radius: 5px;
+  background: var(--vscode-editor-background);
+  box-shadow: 0 4px 12px var(--vscode-widget-shadow);
+}
+.inline-add form input:not([type="color"]),
+.inline-add form select {
+  min-width: 0;
+  width: 100%;
+  box-sizing: border-box;
+}
+.section-heading .inline-add > button,
+.event-details h3 .inline-add > button,
+.event-list-toolbar .inline-add > button {
+  color: var(--vscode-button-foreground);
+  background: var(--vscode-button-background);
+  border: 0;
+  border-radius: 4px;
+  min-width: 23px;
+  min-height: 23px;
+  cursor: pointer;
+}
+.event-marker {
+  position: relative;
+  font-size: 18px;
+  line-height: 1;
+  padding: 1px;
+}
+.timeline-month .event-marker {
+  font-size: 15px;
+}
+.event-marker.danger {
+  text-shadow:
+    0 0 3px #fff,
+    0 0 7px #ff3939,
+    0 0 15px #ff3939,
+    0 0 21px #ff3939;
+}
+.event-marker.caution {
+  text-shadow: 0 0 5px #e8bd25;
+}
+.event-marker sup {
+  position: absolute;
+  top: -7px;
+  right: -8px;
+  display: grid;
+  place-items: center;
+  min-width: 14px;
+  height: 14px;
+  padding: 0 2px;
+  border-radius: 9px;
+  background: var(--vscode-editor-background);
+  border: 1px solid var(--vscode-panel-border);
+  font-size: 9px;
+  line-height: 1;
+}
+.marker-label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 10px;
+}
+.timeline-month .marker-label {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  max-width: 90px;
+  background: var(--vscode-editor-background);
+  z-index: 1;
+}
+.pace-row th {
+  border-inline-start-color: transparent;
+  font-size: 12px;
+}
+.pace-row th small {
+  display: block;
+  color: var(--vscode-charts-yellow);
+}
+.pace-row td {
+  padding: 0;
+}
+.required-chart {
+  position: relative;
+  width: 100%;
+  height: 84px;
+}
+.required-chart svg {
+  width: 100%;
+  height: 84px;
+  display: block;
+}
+.chart-max {
+  position: absolute;
+  transform: translate(-50%, -5px);
+  z-index: 1;
+  padding: 1px 4px;
+  border: 1px solid var(--vscode-panel-border);
+  border-radius: 3px;
+  background: var(--vscode-editor-background);
+  color: var(--vscode-foreground);
+  font-size: 10px;
+  white-space: nowrap;
+}
+.event-details {
+  display: grid;
+  grid-template-columns: minmax(180px, 1fr) minmax(260px, 1.45fr) minmax(
+      260px,
+      1.45fr
+    );
+  gap: 0;
+  height: min(42vh, 460px);
+  min-height: 260px;
+  margin: 0;
+  padding: 0;
+  border: 1px solid var(--vscode-panel-border);
+  border-radius: 8px;
+  overflow: hidden;
+}
+.event-details > div,
+.event-details > section {
+  min-width: 0;
+  overflow-y: auto;
+  padding: 12px;
+}
+.event-details > * + * {
+  border-left: 1px solid var(--vscode-panel-border);
+}
+.event-details h3 {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin: 0 0 8px;
+  text-transform: uppercase;
+  font-size: 12px;
+}
+.event-details h3 .inline-add form {
+  right: 0;
+}
+.event-summary h2 {
+  margin: 0;
+  font-size: 18px;
+}
+.event-summary > p {
+  margin: 7px 0;
+  font-size: 12px;
+}
+.event-summary > p:first-of-type {
+  font-size: 24px;
+  font-weight: 700;
+  margin: 18px 0;
+}
+.story-choice {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 25px 25px;
+  align-items: center;
+  gap: 3px;
+  border-bottom: 1px solid var(--vscode-panel-border);
+}
+.event-details [aria-label="Story一覧"] .story-choice > button {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 78px;
+  grid-template-rows: auto auto;
+  align-items: center;
+  gap: 5px;
+  min-width: 0;
+  width: 100%;
+  border: 0;
+  padding: 7px 4px;
+}
+.story-choice > button span {
+  grid-column: 1;
+  grid-row: 1;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.story-choice > button small {
+  grid-column: 1 / 3;
+  grid-row: 2;
+  white-space: nowrap;
+  font-size: 10px;
+}
+.story-choice progress {
+  grid-column: 2;
+  grid-row: 1;
+  width: 72px;
+  height: 6px;
+}
+.story-choice .delete-control,
+.story-choice .detail-button {
+  flex: none;
+}
+.story-choice .delete-control > button {
+  width: auto;
+  display: inline-block;
+}
+.task-line {
+  display: flex;
+  gap: 5px;
+  min-width: 0;
+  padding: 6px 0;
+}
+.task-line .task-name {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.task-actions {
+  display: inline-flex;
+  align-items: center;
+  flex: none;
+}
+.point-selector > button,
+.point-badge {
+  display: inline-block;
+  padding: 3px 5px;
+  border-radius: 4px;
+  background: color-mix(in srgb, currentColor 15%, transparent);
+  font-weight: 700;
+  white-space: nowrap;
+}
+.delete-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: grid;
+  place-items: center;
+  background: #0008;
+}
+.delete-backdrop-dismiss {
+  position: absolute;
+  inset: 0;
+  border: 0;
+  background: transparent;
+  cursor: default;
+}
+.delete-dialog {
+  position: static;
+  z-index: 1;
+  display: block;
+  width: min(360px, calc(100vw - 32px));
+  min-width: 0;
+  box-sizing: border-box;
+  padding: 18px;
+  border-radius: 8px;
+  font-size: 13px;
+}
+.delete-dialog strong {
+  display: block;
+  font-size: 15px;
+}
+.delete-dialog p {
+  margin: 12px 0;
+  color: var(--vscode-descriptionForeground);
+}
+.dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 18px;
+}
+.dialog-actions button {
+  padding: 6px 10px;
+  border: 1px solid var(--vscode-panel-border);
+  border-radius: 4px;
+  background: var(--vscode-button-secondaryBackground);
+  color: var(--vscode-button-secondaryForeground);
+  cursor: pointer;
+}
+.dialog-actions .danger-button {
+  background: var(--vscode-errorForeground, #d44);
+  color: var(--vscode-editor-background);
+  border-color: transparent;
+}
+.events-page {
+  padding: 8px;
+}
+.event-list-toolbar {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 26px;
+}
+.event-list-toolbar h2 {
+  flex: 1;
+  margin: 0;
+  font-size: 13px;
+}
+.event-list-toolbar .event-filters {
+  position: static;
+}
+.event-filters > button {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px;
+  border-radius: 4px;
+}
+.event-filters p {
+  position: absolute;
+  left: 0;
+  top: 100%;
+  margin: 3px 0;
+  white-space: nowrap;
+}
+.filter-popover {
+  right: 0;
+  top: 100%;
+  min-width: 210px;
+}
+.event-group {
+  margin-top: 7px;
+}
+.event-group h2 {
+  display: flex;
+  justify-content: space-between;
+  margin: 0;
+  padding: 8px 4px 5px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--vscode-foreground);
+  background: var(--vscode-sideBar-background);
+}
+.event-group-overdue h2 {
+  color: var(--vscode-errorForeground);
+  background: color-mix(
+    in srgb,
+    var(--vscode-errorForeground) 12%,
+    transparent
+  );
+}
+.event-list button {
+  padding: 5px 4px;
+  gap: 2px;
+}
+.event-row-name {
+  font-size: 12px;
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.event-list small {
+  display: flex;
+  justify-content: space-between;
+  gap: 4px;
+  font-size: 11px;
+}
+.event-list small > span {
+  display: inline-flex;
+  align-items: center;
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.event-list time {
+  flex: none;
+  margin-left: auto;
 }

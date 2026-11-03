@@ -11,7 +11,6 @@ import {
   type ItemKind,
 } from "../../../shared/src/domain/deletion.js";
 import type { Project } from "../../../shared/src/domain/index.js";
-import { InlineAdd } from "../features/inline-add/index.js";
 import { displayDays, type Period } from "../pages/board/index.js";
 import {
   DetailPanel,
@@ -127,10 +126,6 @@ export function BoardApp() {
   const selectedEvent = projects
     .flatMap((project) => project.events)
     .find((event) => event.id === selection);
-  const selectedProjectId =
-    projects.find((project) =>
-      project.events.some((event) => event.id === selection),
-    )?.id ?? projects[0]?.id;
   const predictions = predictCompletionDates(
     projects,
     today,
@@ -154,7 +149,7 @@ export function BoardApp() {
     });
 
   return (
-    <main>
+    <main className="board-page">
       {operationError && <p role="alert">{operationError}</p>}
       {unconfigured ? (
         <>
@@ -163,67 +158,35 @@ export function BoardApp() {
         </>
       ) : (
         <>
-          <h1>
-            GlitchBoard{" "}
-            <InlineAdd
-              kind="project"
-              onSubmit={({ name, color }) =>
-                sendOperation(localBridge(), {
-                  type: "createProject",
-                  name,
-                  color,
-                })
-              }
+          <header className="board-header">
+            <h1>GlitchBoard</h1>
+            <nav aria-label="表示期間" className="period-switch">
+              {(
+                [
+                  ["three-days", "3日"],
+                  ["week", "1週間"],
+                  ["month", "月"],
+                ] as const
+              ).map(([value, label]) => (
+                <button
+                  key={value}
+                  type="button"
+                  aria-pressed={period === value}
+                  onClick={() => setPeriod(value)}
+                >
+                  {label}
+                </button>
+              ))}
+            </nav>
+            <WorkloadHeader
+              completedByDay={completedByDay}
+              pace={actual.pace}
+              learning={actual.learning}
+              periodLoad={load}
+              dangerCount={danger.count}
             />
-          </h1>
-          <WorkloadHeader
-            days={days}
-            requiredByDay={required}
-            completedByDay={completedByDay}
-            pace={actual.pace}
-            learning={actual.learning}
-            periodLoad={load}
-            dangerCount={danger.count}
-          />
-          <nav aria-label="表示期間">
-            {(
-              [
-                ["three-days", "3日"],
-                ["week", "1週間"],
-                ["month", "月"],
-              ] as const
-            ).map(([value, label]) => (
-              <button
-                key={value}
-                type="button"
-                aria-pressed={period === value}
-                onClick={() => setPeriod(value)}
-              >
-                {label}
-              </button>
-            ))}
-          </nav>
+          </header>
           {snapshot?.error && <p role="alert">{snapshot.error}</p>}
-          <h2>
-            Event{" "}
-            <InlineAdd
-              key={selectedProjectId}
-              kind="event"
-              projectId={selectedProjectId}
-              projects={projects.map((project) => ({
-                id: project.id,
-                name: project.name,
-              }))}
-              onSubmit={({ name, due, projectId }) =>
-                sendOperation(localBridge(), {
-                  type: "addEvent",
-                  name,
-                  due,
-                  projectId,
-                })
-              }
-            />
-          </h2>
           <Timeline
             projects={projects}
             days={days}
@@ -238,6 +201,16 @@ export function BoardApp() {
             danger={danger.events}
             onDelete={requestDelete}
             onOpenDetail={(kind, id) => setDetailTarget({ kind, id })}
+            requiredByDay={required}
+            pace={actual.pace}
+            learning={actual.learning}
+            onAddProject={(name, color) =>
+              sendOperation(localBridge(), {
+                type: "createProject",
+                name,
+                color,
+              })
+            }
           />
           {selectedEvent && (
             <EventDetails

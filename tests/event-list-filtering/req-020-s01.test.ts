@@ -37,6 +37,6 @@ describe("REQ-020-S01 期限切れの包含", () => {
     );
     expect(screen.getByText("期限切れ・未完了")).toBeTruthy();
     expect(screen.getByText(/未完了 \+ 今後/)).toBeTruthy();
-    expect(screen.getByText(/1件/)).toBeTruthy();
+    expect(screen.getAllByText(/1件/)).toHaveLength(2);
   });
 });

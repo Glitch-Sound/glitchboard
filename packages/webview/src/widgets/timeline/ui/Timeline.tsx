@@ -11,6 +11,7 @@ import {
 import type { Project } from "../../../../../shared/src/domain/index.js";
 import { DeleteControl } from "../../../features/delete-item/index.js";
 import { DetailButton } from "../../../features/detail-button/index.js";
+import { InlineAdd } from "../../../features/inline-add/index.js";
 
 type Period = "three-days" | "week" | "month";
 type Props = {
@@ -24,6 +25,10 @@ type Props = {
   danger?: Record<string, EventDanger>;
   onDelete?: (kind: "project", id: string, counts: DescendantCounts) => void;
   onOpenDetail?: (kind: "project", id: string) => void;
+  requiredByDay?: Readonly<Record<string, number>>;
+  pace?: number | null;
+  learning?: boolean;
+  onAddProject?: (name: string, color: string) => boolean | Promise<boolean>;
 };
 
 const defaultSettings: WorkdaySettings = {
@@ -41,6 +46,80 @@ function dayTone(
   return holiday ? "holiday" : "";
 }
 
+const weekdays = ["日", "月", "火", "水", "木", "金", "土"];
+
+function RequiredPace({
+  days,
+  requiredByDay,
+  pace,
+  learning,
+}: Pick<Props, "days" | "requiredByDay" | "pace" | "learning">) {
+  const values = days.map((day) => requiredByDay?.[day] ?? 0);
+  const maxValue = Math.max(0, ...values);
+  const scale = Math.max(1, maxValue, pace ?? 0);
+  const y = (value: number) => 76 - (value / scale) * 55;
+  const width = Math.max(1, days.length) * 100;
+  const step = values
+    .map(
+      (value, index) =>
+        `${index === 0 ? "M" : "L"}${index * 100},${y(value)} H${(index + 1) * 100}`,
+    )
+    .join(" ");
+  const maxIndex = values.indexOf(maxValue);
+  const showPace = !learning && pace !== null && pace !== undefined && pace > 0;
+  return (
+    <div className="required-chart" role="img" aria-label="日別必要ペース">
+      <svg
+        viewBox={`0 0 ${width} 84`}
+        preserveAspectRatio="none"
+        aria-hidden="true"
+      >
+        {values.map(
+          (value, index) =>
+            showPace &&
+            value > pace && (
+              <rect
+                key={days[index]}
+                className="overload-area"
+                x={index * 100}
+                y={y(value)}
+                width="100"
+                height={y(pace) - y(value)}
+              />
+            ),
+        )}
+        <path
+          className="required-step"
+          d={step}
+          fill="none"
+          vectorEffect="non-scaling-stroke"
+        />
+        {showPace && (
+          <line
+            className="pace-line"
+            x1="0"
+            x2={width}
+            y1={y(pace)}
+            y2={y(pace)}
+            vectorEffect="non-scaling-stroke"
+          />
+        )}
+      </svg>
+      {maxValue > 0 && (
+        <span
+          className="chart-max"
+          style={{
+            left: `${((maxIndex + 0.5) / days.length) * 100}%`,
+            bottom: `${((84 - y(maxValue)) / 84) * 100}%`,
+          }}
+        >
+          {maxValue.toFixed(1)}pt
+        </span>
+      )}
+    </div>
+  );
+}
+
 /** REQ-016: Project別の日付列にEvent期限をまとめて表示する。 */
 export function Timeline({
   projects,
@@ -53,16 +132,54 @@ export function Timeline({
   danger = {},
   onDelete,
   onOpenDetail,
+  requiredByDay,
+  pace,
+  learning,
+  onAddProject,
 }: Props) {
   const [open, setOpen] = useState<string | null>(null);
   return (
-    <table className="timeline" aria-label="期限タイムライン">
+    <table
+      className={`timeline timeline-${period}`}
+      aria-label="期限タイムライン"
+    >
+      <colgroup>
+        <col className="project-col" />
+        {days.map((day) => (
+          <col key={day} />
+        ))}
+      </colgroup>
       <thead>
         <tr className="timeline-row timeline-heading">
-          <th scope="col">Project</th>
+          <th scope="col">
+            <span className="section-heading">
+              Project{" "}
+              {onAddProject && (
+                <InlineAdd
+                  kind="project"
+                  usedColors={projects.map((project) => project.color)}
+                  onSubmit={({ name, color }) =>
+                    onAddProject(name, color ?? "#4c8dff")
+                  }
+                />
+              )}
+            </span>
+          </th>
           {days.map((day) => (
-            <th scope="col" key={day} className={dayTone(day, today, settings)}>
-              <time dateTime={day}>{day.slice(5)}</time>
+            <th
+              scope="col"
+              key={day}
+              data-date={day}
+              className={`${dayTone(day, today, settings)} ${!learning && pace !== null && pace !== undefined && (requiredByDay?.[day] ?? 0) > pace ? "overlap-day" : ""}`}
+            >
+              <time dateTime={day}>
+                <span>{weekdays[new Date(`${day}T12:00:00`).getDay()]}</span>
+                <strong>
+                  {period === "month"
+                    ? String(Number(day.slice(8)))
+                    : day.slice(5).replace("-", "/")}
+                </strong>
+              </time>
             </th>
           ))}
         </tr>
@@ -71,25 +188,30 @@ export function Timeline({
         {projects.map((project) => (
           <tr className="timeline-row" key={project.id}>
             <th scope="row" style={{ borderInlineStartColor: project.color }}>
-              {onDelete ? (
-                <DeleteControl
-                  kind="project"
-                  name={project.name}
-                  counts={projectCounts(project)}
-                  onConfirm={() =>
-                    onDelete("project", project.id, projectCounts(project))
-                  }
-                />
-              ) : (
-                project.name
-              )}
-              {onOpenDetail && (
-                <DetailButton
-                  name={project.name}
-                  note={project.note}
-                  onOpen={() => onOpenDetail("project", project.id)}
-                />
-              )}
+              <span className="project-name">
+                <i style={{ backgroundColor: project.color }} />
+                {project.name}
+              </span>
+              <span className="project-actions">
+                {onDelete && (
+                  <DeleteControl
+                    kind="project"
+                    name={project.name}
+                    iconOnly
+                    counts={projectCounts(project)}
+                    onConfirm={() =>
+                      onDelete("project", project.id, projectCounts(project))
+                    }
+                  />
+                )}
+                {onOpenDetail && (
+                  <DetailButton
+                    name={project.name}
+                    note={project.note}
+                    onOpen={() => onOpenDetail("project", project.id)}
+                  />
+                )}
+              </span>
             </th>
             {days.map((day) => {
               const events = project.events.filter(
@@ -105,7 +227,11 @@ export function Timeline({
               });
               const caution = events.some((event) => danger[event.id]?.caution);
               return (
-                <td key={day} className={dayTone(day, today, settings)}>
+                <td
+                  key={day}
+                  data-date={day}
+                  className={`${dayTone(day, today, settings)} ${!learning && pace !== null && pace !== undefined && (requiredByDay?.[day] ?? 0) > pace ? "overlap-day" : ""}`}
+                >
                   {events.length > 0 && (
                     <div className="marker-wrap">
                       <button
@@ -123,7 +249,7 @@ export function Timeline({
                             : events[0] && onSelect(events[0].id)
                         }
                       >
-                        ◆{events.length > 1 && <sup>{events.length}件</sup>}
+                        ◆{events.length > 1 && <sup>{events.length}</sup>}
                       </button>
                       {period === "month" ? (
                         selected && (
@@ -159,6 +285,20 @@ export function Timeline({
             })}
           </tr>
         ))}
+        <tr className="timeline-row pace-row">
+          <th scope="row">
+            <span>必要ペース</span>
+            {!learning && <small>実績 ┄</small>}
+          </th>
+          <td colSpan={days.length}>
+            <RequiredPace
+              days={days}
+              requiredByDay={requiredByDay}
+              pace={pace}
+              learning={learning}
+            />
+          </td>
+        </tr>
       </tbody>
     </table>
   );

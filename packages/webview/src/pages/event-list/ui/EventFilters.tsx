@@ -39,7 +39,16 @@ export function EventFilters({
         aria-expanded={open}
         onClick={() => setOpen(!open)}
       >
-        ▽{changed > 0 && <sup>{changed}</sup>}
+        <svg viewBox="0 0 20 20" width="16" height="16" aria-hidden="true">
+          <path
+            d="M2 4h16l-6.5 7v5l-3 2v-7z"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.7"
+            strokeLinejoin="round"
+          />
+        </svg>
+        {changed > 0 && <sup>{changed}</sup>}
       </button>
       <p>
         {target === "pending" ? "未完了 + 今後" : "すべて"}・{count}件
