@@ -1,6 +1,10 @@
+import { writeFile } from "node:fs/promises";
 import { dirname } from "node:path";
 import * as vscode from "vscode";
-import { openLinkRequestSchema } from "../../shared/src/domain/messages.js";
+import {
+  openLinkRequestSchema,
+  setupOperationSchema,
+} from "../../shared/src/domain/messages.js";
 import { openLinkedTarget } from "./links.js";
 import { navigateToEvent } from "./navigation.js";
 import { BoardSession } from "./session.js";
@@ -10,10 +14,121 @@ import { registerViews } from "./views.js";
 export function activate(context: vscode.ExtensionContext): void {
   let sidebar: vscode.WebviewView | undefined;
   let board: vscode.WebviewPanel | undefined;
-  const managePath = vscode.workspace
-    .getConfiguration("glitchboard")
-    .get<string>("manageFile");
-  const session = managePath ? new BoardSession(managePath) : undefined;
+  let session: BoardSession | undefined;
+  let watcher: vscode.FileSystemWatcher | undefined;
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  const configure = async () => {
+    watcher?.dispose();
+    if (timer) clearTimeout(timer);
+    const managePath = vscode.workspace
+      .getConfiguration("glitchboard")
+      .get<string>("manageFile");
+    session = managePath ? new BoardSession(managePath) : undefined;
+    if (session) {
+      const current = session;
+      current.subscribe("board", (snapshot) => {
+        if (session === current)
+          void board?.webview.postMessage({
+            type: "snapshot",
+            payload: snapshot,
+          });
+      });
+      current.subscribe("events", (snapshot) => {
+        if (session === current)
+          void sidebar?.webview.postMessage({
+            type: "snapshot",
+            payload: snapshot,
+          });
+      });
+      watcher = vscode.workspace.createFileSystemWatcher(
+        new vscode.RelativePattern(dirname(current.managePath), "**/*.yaml"),
+      );
+      const schedule = () => {
+        if (session !== current) return;
+        if (timer) clearTimeout(timer);
+        timer = setTimeout(() => {
+          if (session === current) void current.reload();
+        }, 80);
+      };
+      watcher.onDidChange(schedule);
+      watcher.onDidCreate(schedule);
+      watcher.onDidDelete(schedule);
+      await current.reload();
+    } else {
+      void board?.webview.postMessage({ type: "unconfigured" });
+      void sidebar?.webview.postMessage({ type: "unconfigured" });
+    }
+  };
+  void configure();
+  context.subscriptions.push(
+    vscode.workspace.onDidChangeConfiguration((event) => {
+      if (event.affectsConfiguration("glitchboard.manageFile"))
+        void configure();
+    }),
+  );
+  context.subscriptions.push({
+    dispose: () => {
+      watcher?.dispose();
+      if (timer) clearTimeout(timer);
+    },
+  });
+  const setupManage = async (
+    type: string,
+  ): Promise<{ ok: boolean; error?: string }> => {
+    try {
+      const selected =
+        type === "chooseManage"
+          ? (
+              await vscode.window.showOpenDialog({
+                canSelectMany: false,
+                filters: { YAML: ["yaml", "yml"] },
+              })
+            )?.[0]
+          : await vscode.window.showSaveDialog({
+              defaultUri:
+                vscode.workspace.workspaceFolders?.[0] &&
+                vscode.Uri.joinPath(
+                  vscode.workspace.workspaceFolders[0].uri,
+                  "manage.yaml",
+                ),
+              filters: { YAML: ["yaml"] },
+            });
+      if (!selected) return { ok: true };
+      if (type === "createManage")
+        await writeFile(
+          selected.fsPath,
+          "settings:\n  workdays_off: [sat, sun]\n  public_holidays: true\nprojects: []\n",
+          { flag: "wx" },
+        );
+      await vscode.workspace
+        .getConfiguration("glitchboard")
+        .update(
+          "manageFile",
+          selected.fsPath,
+          vscode.workspace.workspaceFolders?.length
+            ? vscode.ConfigurationTarget.Workspace
+            : vscode.ConfigurationTarget.Global,
+        );
+      return { ok: true };
+    } catch (error) {
+      return {
+        ok: false,
+        error: error instanceof Error ? error.message : String(error),
+      };
+    }
+  };
+  const isSetup = (
+    message: unknown,
+  ): message is { type: string; requestId?: number } =>
+    typeof message === "object" &&
+    message !== null &&
+    "type" in message &&
+    (message.type === "chooseManage" || message.type === "createManage");
+  const handleSetup = async (message: unknown) => {
+    const parsed = setupOperationSchema.safeParse(message);
+    if (!parsed.success) return { ok: false, error: parsed.error.message };
+    return setupManage(parsed.data.type);
+  };
   const openLink = async (
     message: unknown,
   ): Promise<{ ok: boolean; error?: string }> => {
@@ -41,37 +156,6 @@ export function activate(context: vscode.ExtensionContext): void {
       };
     }
   };
-  if (session) {
-    void session.reload();
-    const watcher = vscode.workspace.createFileSystemWatcher(
-      new vscode.RelativePattern(dirname(session.managePath), "**/*.yaml"),
-    );
-    let timer: ReturnType<typeof setTimeout> | undefined;
-    const schedule = () => {
-      if (timer) clearTimeout(timer);
-      timer = setTimeout(() => {
-        void session.reload();
-      }, 80);
-    };
-    context.subscriptions.push(watcher);
-    watcher.onDidChange(schedule, undefined, context.subscriptions);
-    watcher.onDidCreate(schedule, undefined, context.subscriptions);
-    watcher.onDidDelete(schedule, undefined, context.subscriptions);
-    context.subscriptions.push({
-      dispose: () => {
-        if (timer) clearTimeout(timer);
-      },
-    });
-    session.subscribe("board", (snapshot) => {
-      void board?.webview.postMessage({ type: "snapshot", payload: snapshot });
-    });
-    session.subscribe("events", (snapshot) => {
-      void sidebar?.webview.postMessage({
-        type: "snapshot",
-        payload: snapshot,
-      });
-    });
-  }
   registerViews({
     registerSidebar: (id) => {
       context.subscriptions.push(
@@ -92,21 +176,45 @@ export function activate(context: vscode.ExtensionContext): void {
                 type: "snapshot",
                 payload: session.snapshot(),
               });
+            else void view.webview.postMessage({ type: "unconfigured" });
             view.webview.onDidReceiveMessage(
               async (message: unknown) => {
-                if (!session) return;
+                if (isSetup(message)) {
+                  const result = await handleSetup(message);
+                  await view.webview.postMessage({
+                    type: "operationResult",
+                    payload: result,
+                    requestId: message.requestId,
+                  });
+                  return;
+                }
                 if (
                   typeof message === "object" &&
                   message !== null &&
                   "type" in message &&
                   message.type === "ready"
                 ) {
+                  await view.webview.postMessage(
+                    session
+                      ? { type: "snapshot", payload: session.snapshot() }
+                      : { type: "unconfigured" },
+                  );
+                  return;
+                }
+                if (!session) {
                   await view.webview.postMessage({
-                    type: "snapshot",
-                    payload: session.snapshot(),
+                    type: "operationResult",
+                    payload: { ok: false, error: "manage.yamlが未設定" },
+                    requestId:
+                      typeof message === "object" &&
+                      message !== null &&
+                      "requestId" in message
+                        ? message.requestId
+                        : undefined,
                   });
                   return;
                 }
+                const currentSession = session;
                 let result: { ok: boolean; error?: string };
                 if (
                   typeof message === "object" &&
@@ -119,7 +227,7 @@ export function activate(context: vscode.ExtensionContext): void {
                   try {
                     await navigateToEvent(message.eventId, {
                       selectEvent: (eventId) =>
-                        session.handleOperation({
+                        currentSession.handleOperation({
                           type: "selectEvent",
                           eventId,
                         }),
@@ -137,10 +245,16 @@ export function activate(context: vscode.ExtensionContext): void {
                         error instanceof Error ? error.message : String(error),
                     };
                   }
-                } else result = await session.handleOperation(message);
+                } else result = await currentSession.handleOperation(message);
                 await view.webview.postMessage({
                   type: "operationResult",
                   payload: result,
+                  requestId:
+                    typeof message === "object" &&
+                    message !== null &&
+                    "requestId" in message
+                      ? message.requestId
+                      : undefined,
                 });
               },
               undefined,
@@ -178,18 +292,41 @@ export function activate(context: vscode.ExtensionContext): void {
           type: "snapshot",
           payload: session.snapshot(),
         });
+      else void board.webview.postMessage({ type: "unconfigured" });
       board.webview.onDidReceiveMessage(
         async (message: unknown) => {
-          if (!session) return;
+          if (isSetup(message)) {
+            const result = await handleSetup(message);
+            await board?.webview.postMessage({
+              type: "operationResult",
+              payload: result,
+              requestId: message.requestId,
+            });
+            return;
+          }
           if (
             typeof message === "object" &&
             message !== null &&
             "type" in message &&
             message.type === "ready"
           ) {
+            await board?.webview.postMessage(
+              session
+                ? { type: "snapshot", payload: session.snapshot() }
+                : { type: "unconfigured" },
+            );
+            return;
+          }
+          if (!session) {
             await board?.webview.postMessage({
-              type: "snapshot",
-              payload: session.snapshot(),
+              type: "operationResult",
+              payload: { ok: false, error: "manage.yamlが未設定" },
+              requestId:
+                typeof message === "object" &&
+                message !== null &&
+                "requestId" in message
+                  ? message.requestId
+                  : undefined,
             });
             return;
           }
@@ -203,6 +340,12 @@ export function activate(context: vscode.ExtensionContext): void {
           await board?.webview.postMessage({
             type: "operationResult",
             payload: result,
+            requestId:
+              typeof message === "object" &&
+              message !== null &&
+              "requestId" in message
+                ? message.requestId
+                : undefined,
           });
         },
         undefined,

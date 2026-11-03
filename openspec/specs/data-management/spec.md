@@ -46,12 +46,19 @@ Projectファイルは管理モデルの全子孫を含む。
 ### Requirement: REQ-003 - 読込対象の切り替え
 
 WHEN Projectのloadを変更したとき、GlitchBoardは SHALL manage.yamlへ変更を保存し、loadがtrueのProjectだけを表示、集計、危険判定に使用する。
+loadがfalseのProjectも、抽出条件に表示する名前はProjectファイルから読み取る。
 
 #### Scenario: REQ-003-S01 - 読込を外す
 
 - **GIVEN** 2件のProjectが読み込まれている。
 - **WHEN** 片方のloadをfalseにする。
 - **THEN** そのProjectはボードと全計算から外れ、再起動後も設定が維持される。
+
+#### Scenario: REQ-003-S02 - 読込対象外の名前
+
+- **GIVEN** loadがfalseのProjectファイルに名前「B」が保存されている。
+- **WHEN** 抽出条件のProject一覧を作る。
+- **THEN** Eventを読み込まず、名前「B」だけを表示用に読み取る。
 
 ### Requirement: REQ-004 - YAML検証と保全
 

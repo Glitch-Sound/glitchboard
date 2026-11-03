@@ -4,6 +4,7 @@
 
 この文書は要件IDの採番、変更と成果物の対応、検証結果を管理する。\
 7件の変更を機能領域別に実装・検証し、正式仕様へ同期してアーカイブした。\
+その後の機能改修は現行の正式仕様へ反映し、アーカイブ済みの提案・差分仕様は当時の履歴として保持する。\
 下表の状態はアーカイブした変更のリンクを示し、実装と検証の結果は後段の対応表で管理する。
 
 | 計画領域 | 元の要件 | 主な対象 | 状態 |
@@ -60,6 +61,26 @@
 | REQ-026 | 詳細パネルの表示 | 実装済み | [提案](changes/archive/2026-11-03-detail-panel/proposal.md) | [正式仕様](specs/item-details/spec.md) |
 | REQ-027 | 詳細編集 | 実装済み | [提案](changes/archive/2026-11-03-detail-panel/proposal.md) | [正式仕様](specs/item-details/spec.md) |
 | REQ-028 | 補足とリンク | 実装済み | [提案](changes/archive/2026-11-03-detail-panel/proposal.md) | [正式仕様](specs/item-details/spec.md) |
+| REQ-029 | 管理ファイル未設定時の案内 | 実装済み | 2026-11-03の機能改修 | [正式仕様](specs/vscode-integration/spec.md) |
+
+## 2026-11-03の機能改修
+
+以下はアーカイブ後に反映した振る舞いである。既存要件のシナリオを補い、未設定時の案内にはREQ-029を採番した。
+
+| 指摘 | 要件・正式仕様 | 主な実装 | 確認 |
+| --- | --- | --- | --- |
+| 1 一覧の危険色 | [REQ-019](specs/event-navigation/spec.md) | [一覧入口](../packages/webview/src/app/events.tsx) | [Webview回帰テスト](../tests/vscode-extension-shell/regression-webview.test.ts) |
+| 2 失敗理由と追加欄 | [REQ-014](specs/vscode-integration/spec.md)、[REQ-022/025](specs/hierarchy-editing/spec.md) | [操作結果](../packages/webview/src/app/operations.ts)、[追加欄](../packages/webview/src/features/inline-add/ui/InlineAdd.tsx)、[設定操作の共有スキーマ](../packages/shared/src/domain/messages.ts) | [画面上部のエラーと入力保持](../tests/vscode-extension-shell/regression-webview.test.ts)、[追加欄の回帰テスト](../tests/hierarchy-operations/regression-inline-add.test.ts)、[設定操作の検証](../tests/vscode-extension-shell/req-014-setup-schema.test.ts) |
+| 3 月表示の期間負荷 | [REQ-010](specs/workload-analysis/spec.md) | [期間負荷](../packages/shared/src/calculation/load.ts) | [負荷の回帰テスト](../tests/workload-analytics/regressions.test.ts) |
+| 4 短期表示の名前 | [REQ-016](specs/board-visualization/spec.md) | [タイムライン](../packages/webview/src/widgets/timeline/ui/Timeline.tsx) | [ラベルの回帰テスト](../tests/board-timeline/regression-labels.test.ts) |
+| 5 Taskなしの期限判定 | [REQ-008/011](specs/workload-analysis/spec.md) | [未完了Event](../packages/shared/src/calculation/prediction.ts) | [危険判定の回帰テスト](../tests/workload-analytics/regressions.test.ts) |
+| 6 設定変更と未設定案内 | [REQ-013/029](specs/vscode-integration/spec.md) | [拡張入口](../packages/extension/src/extension.ts)、[案内](../packages/webview/src/app/ManageSetup.tsx) | [設定切替の回帰テスト](../tests/vscode-extension-shell/req-013-s03.test.ts)、[未設定案内の画面テスト](../tests/vscode-extension-shell/regression-webview.test.ts)。VS Code実機での操作確認は未実施 |
+| 7 読込対象外の名前 | [REQ-003](specs/data-management/spec.md)、[REQ-020](specs/event-navigation/spec.md) | [名前の読込](../packages/extension/src/storage/manage.ts)、[状態](../packages/extension/src/session.ts) | [ファイル名読込テスト](../tests/data-persistence/req-003-s02.test.ts)、[抽出画面テスト](../tests/vscode-extension-shell/regression-webview.test.ts) |
+| 8 Event要約の危険色 | [REQ-018](specs/board-visualization/spec.md) | [Event詳細](../packages/webview/src/widgets/event-details/ui/EventDetails.tsx) | [危険色の画面テスト](../tests/board-timeline/req-018-s03.test.ts) |
+| 9 日付変更時の更新 | [REQ-013](specs/vscode-integration/spec.md) | [日付更新](../packages/webview/src/app/useToday.ts) | [日本時間の日付境界の画面テスト](../tests/vscode-extension-shell/regression-webview.test.ts)。VS Code実機での確認は未実施 |
+| 10 休日の期限切れ残量 | [REQ-009](specs/workload-analysis/spec.md) | [必要ペース](../packages/shared/src/calculation/required.ts) | [REQ-009-S02](../tests/workload-analytics/req-009-s02.test.ts) |
+
+上記のコード変更について`npm test`で81件、`npm run typecheck`、`npm run check`、`npm run build`で成功した。REQ-009-S02の旧シナリオは今回の要件変更に合わせて正式仕様とテストを改訂した。
 
 ## 対応と検証の記録形式
 
@@ -128,6 +149,8 @@ OpenSpec変更の作成時に以下の表へ行を追加する。\
 | 2026-11-03 | 全7変更 | ローカルのVitest、TypeScript、Biome、Steiger、Vite、vsceを実行、`openspec validate board-timeline --strict` | 62テスト成功、型エラー0、Biomeエラー0・警告28、Steiger問題0、2ビルド成功、VSIX生成成功、OpenSpec厳格検証成功、pnpm実行は依存ポリシー照合で停止したため同じローカルバイナリで確認 | Node 24.18.0、VS Code 1.144.0安定版、macOS arm64 |
 | 2026-11-03 | [event-list-filtering](changes/archive/2026-11-03-event-list-filtering/proposal.md) | `openspec validate event-list-filtering --strict`、OpenSpec verify | 厳格検証に成功、REQ-019〜021とシナリオ、実装、テストの対応を確認、重大な不一致なし | Node 24.18.0、macOS arm64 |
 | 2026-11-03 | 全7変更の正式仕様化 | 差分仕様を正式仕様へ同期し、`openspec validate --specs`と各変更の厳格検証を実行、IDとリンクを確認後、全7変更をアーカイブ | 正式仕様7件と変更7件の検証に成功、要件30件、シナリオ54件のID重複・孤立なし、台帳とアーカイブ文書のリンク欠落0件 | Node 24.18.0、macOS arm64 |
+| 2026-11-03 | 10件の機能改修と正式仕様の更新 | `npm test`、`npm run typecheck`、`npm run check`、`npm run check:fsd`、`npm run build`、`openspec validate --specs` | 69テスト成功、型・Biome・Steiger失敗0件、ビルド成功、正式仕様7件の検証成功 | macOS arm64。VS Code実機での設定切替・日付境界の操作確認は未実施 |
+| 2026-11-03 | 検証警告の解消 | `npm test`、`npm run typecheck`、`npm run check`、`npm run check:fsd`、`npm run build`、`openspec validate --specs` | 81テスト成功、型・Biome・Steiger失敗0件、ビルド成功、正式仕様7件の検証成功。追加シナリオの直接テストを補完 | macOS arm64。設定切替はVS Code APIのモック、日付境界は仮想時刻で検証。VS Code実機確認は未実施 |
 
 文書だけの変更や開発基盤の変更で製品の振る舞いが変わらない場合は、製品要件IDを採番せず、変更名と根拠、検証を支援変更として記録する。
 

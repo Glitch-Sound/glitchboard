@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { createRoot } from "react-dom/client";
 import { calculateDanger } from "../../../shared/src/calculation/danger.js";
-import { todayInTokyo } from "../../../shared/src/calculation/dates.js";
 import { calculatePeriodLoad } from "../../../shared/src/calculation/load.js";
 import { calculateActualPace } from "../../../shared/src/calculation/pace.js";
 import { predictCompletionDates } from "../../../shared/src/calculation/prediction.js";
@@ -22,8 +21,14 @@ import { EventDetails } from "../widgets/event-details/index.js";
 import { Timeline } from "../widgets/timeline/index.js";
 import { WorkloadHeader } from "../widgets/workload/index.js";
 import { localBridge } from "./bridge.js";
-import { postTaskPoints } from "./operations.js";
+import { ManageSetup } from "./ManageSetup.js";
+import {
+  postTaskPoints,
+  sendOperation,
+  subscribeOperationResults,
+} from "./operations.js";
 import { type Snapshot, subscribeSnapshots } from "./snapshot.js";
+import { useToday } from "./useToday.js";
 import "./style.css";
 
 function detailFor(
@@ -61,8 +66,10 @@ function detailFor(
 }
 
 /** REQ-012: エディタタブの入口。 */
-function BoardApp() {
+export function BoardApp() {
   const [snapshot, setSnapshot] = useState<Snapshot | null>(null);
+  const [unconfigured, setUnconfigured] = useState(false);
+  const [operationError, setOperationError] = useState<string | null>(null);
   const [period, setPeriod] = useState<Period>("week");
   const [selectedEventId, setSelectedEventId] = useState<string | null>(null);
   const [detailTarget, setDetailTarget] = useState<{
@@ -70,8 +77,20 @@ function BoardApp() {
     id: string;
   } | null>(null);
   useEffect(() => subscribeSnapshots(setSnapshot), []);
+  useEffect(() => {
+    const handler = (event: MessageEvent) => {
+      if (event.data?.type === "unconfigured") {
+        setUnconfigured(true);
+        setSnapshot(null);
+      }
+      if (event.data?.type === "snapshot") setUnconfigured(false);
+    };
+    window.addEventListener("message", handler);
+    return () => window.removeEventListener("message", handler);
+  }, []);
+  useEffect(() => subscribeOperationResults(setOperationError), []);
 
-  const today = todayInTokyo();
+  const today = useToday();
   const days = displayDays(period, today);
   const projects = snapshot?.projects ?? [];
   const settings = snapshot?.settings ?? {
@@ -136,133 +155,161 @@ function BoardApp() {
 
   return (
     <main>
-      <h1>
-        GlitchBoard{" "}
-        <InlineAdd
-          kind="project"
-          onSubmit={({ name, color }) =>
-            localBridge()?.postMessage({ type: "createProject", name, color })
-          }
-        />
-      </h1>
-      <WorkloadHeader
-        days={days}
-        requiredByDay={required}
-        completedByDay={completedByDay}
-        pace={actual.pace}
-        learning={actual.learning}
-        periodLoad={load}
-        dangerCount={danger.count}
-      />
-      <nav aria-label="表示期間">
-        {(
-          [
-            ["three-days", "3日"],
-            ["week", "1週間"],
-            ["month", "月"],
-          ] as const
-        ).map(([value, label]) => (
-          <button
-            key={value}
-            type="button"
-            aria-pressed={period === value}
-            onClick={() => setPeriod(value)}
-          >
-            {label}
-          </button>
-        ))}
-      </nav>
-      {snapshot?.error && <p role="alert">{snapshot.error}</p>}
-      <h2>
-        Event{" "}
-        <InlineAdd
-          key={selectedProjectId}
-          kind="event"
-          projectId={selectedProjectId}
-          projects={projects.map((project) => ({
-            id: project.id,
-            name: project.name,
-          }))}
-          onSubmit={({ name, due, projectId }) =>
-            localBridge()?.postMessage({
-              type: "addEvent",
-              name,
-              due,
-              projectId,
-            })
-          }
-        />
-      </h2>
-      <Timeline
-        projects={projects}
-        days={days}
-        today={today}
-        period={period}
-        selectedEventId={selection ?? null}
-        onSelect={(eventId) => {
-          setSelectedEventId(eventId);
-          localBridge()?.postMessage({ type: "selectEvent", eventId });
-        }}
-        settings={settings}
-        danger={danger.events}
-        onDelete={requestDelete}
-        onOpenDetail={(kind, id) => setDetailTarget({ kind, id })}
-      />
-      {selectedEvent && (
-        <EventDetails
-          key={selectedEvent.id}
-          event={selectedEvent}
-          today={today}
-          prediction={predictions[selectedEvent.id] ?? null}
-          onPointsChange={(taskId, points) => {
-            const bridge = localBridge();
-            if (bridge) postTaskPoints(bridge, taskId, points);
-          }}
-          onDoneChange={(taskId, done) =>
-            localBridge()?.postMessage({ type: "setTaskDone", taskId, done })
-          }
-          onAddStory={(eventId, name) =>
-            localBridge()?.postMessage({ type: "addStory", eventId, name })
-          }
-          onAddTask={(storyId, name) =>
-            localBridge()?.postMessage({ type: "addTask", storyId, name })
-          }
-          onDelete={requestDelete}
-          onOpenDetail={(kind, id) => setDetailTarget({ kind, id })}
-        />
-      )}
-      {detailSelection && (
-        <DetailPanel
-          key={detailSelection.item.id}
-          selection={detailSelection}
-          onClose={() => setDetailTarget(null)}
-          onSave={(kind, id, patch) =>
-            localBridge()?.postMessage({ type: "editItem", kind, id, patch })
-          }
-          onOpenLink={(target) =>
-            localBridge()?.postMessage({ type: "openLink", target })
-          }
-          deleteCounts={
-            descendantCounts(
-              projects,
-              detailSelection.kind,
-              detailSelection.item.id,
-            ) ?? undefined
-          }
-          onDelete={() => {
-            const counts = descendantCounts(
-              projects,
-              detailSelection.kind,
-              detailSelection.item.id,
-            );
-            if (counts)
-              requestDelete(
-                detailSelection.kind,
-                detailSelection.item.id,
-                counts,
-              );
-          }}
-        />
+      {operationError && <p role="alert">{operationError}</p>}
+      {unconfigured ? (
+        <>
+          <h1>GlitchBoard</h1>
+          <ManageSetup />
+        </>
+      ) : (
+        <>
+          <h1>
+            GlitchBoard{" "}
+            <InlineAdd
+              kind="project"
+              onSubmit={({ name, color }) =>
+                sendOperation(localBridge(), {
+                  type: "createProject",
+                  name,
+                  color,
+                })
+              }
+            />
+          </h1>
+          <WorkloadHeader
+            days={days}
+            requiredByDay={required}
+            completedByDay={completedByDay}
+            pace={actual.pace}
+            learning={actual.learning}
+            periodLoad={load}
+            dangerCount={danger.count}
+          />
+          <nav aria-label="表示期間">
+            {(
+              [
+                ["three-days", "3日"],
+                ["week", "1週間"],
+                ["month", "月"],
+              ] as const
+            ).map(([value, label]) => (
+              <button
+                key={value}
+                type="button"
+                aria-pressed={period === value}
+                onClick={() => setPeriod(value)}
+              >
+                {label}
+              </button>
+            ))}
+          </nav>
+          {snapshot?.error && <p role="alert">{snapshot.error}</p>}
+          <h2>
+            Event{" "}
+            <InlineAdd
+              key={selectedProjectId}
+              kind="event"
+              projectId={selectedProjectId}
+              projects={projects.map((project) => ({
+                id: project.id,
+                name: project.name,
+              }))}
+              onSubmit={({ name, due, projectId }) =>
+                sendOperation(localBridge(), {
+                  type: "addEvent",
+                  name,
+                  due,
+                  projectId,
+                })
+              }
+            />
+          </h2>
+          <Timeline
+            projects={projects}
+            days={days}
+            today={today}
+            period={period}
+            selectedEventId={selection ?? null}
+            onSelect={(eventId) => {
+              setSelectedEventId(eventId);
+              localBridge()?.postMessage({ type: "selectEvent", eventId });
+            }}
+            settings={settings}
+            danger={danger.events}
+            onDelete={requestDelete}
+            onOpenDetail={(kind, id) => setDetailTarget({ kind, id })}
+          />
+          {selectedEvent && (
+            <EventDetails
+              key={selectedEvent.id}
+              event={selectedEvent}
+              today={today}
+              prediction={predictions[selectedEvent.id] ?? null}
+              danger={danger.events[selectedEvent.id]}
+              onPointsChange={(taskId, points) => {
+                const bridge = localBridge();
+                if (bridge) postTaskPoints(bridge, taskId, points);
+              }}
+              onDoneChange={(taskId, done) =>
+                localBridge()?.postMessage({
+                  type: "setTaskDone",
+                  taskId,
+                  done,
+                })
+              }
+              onAddStory={(eventId, name) =>
+                sendOperation(localBridge(), {
+                  type: "addStory",
+                  eventId,
+                  name,
+                })
+              }
+              onAddTask={(storyId, name) =>
+                sendOperation(localBridge(), { type: "addTask", storyId, name })
+              }
+              onDelete={requestDelete}
+              onOpenDetail={(kind, id) => setDetailTarget({ kind, id })}
+            />
+          )}
+          {detailSelection && (
+            <DetailPanel
+              key={detailSelection.item.id}
+              selection={detailSelection}
+              onClose={() => setDetailTarget(null)}
+              onSave={(kind, id, patch) =>
+                localBridge()?.postMessage({
+                  type: "editItem",
+                  kind,
+                  id,
+                  patch,
+                })
+              }
+              onOpenLink={(target) =>
+                localBridge()?.postMessage({ type: "openLink", target })
+              }
+              deleteCounts={
+                descendantCounts(
+                  projects,
+                  detailSelection.kind,
+                  detailSelection.item.id,
+                ) ?? undefined
+              }
+              onDelete={() => {
+                const counts = descendantCounts(
+                  projects,
+                  detailSelection.kind,
+                  detailSelection.item.id,
+                );
+                if (counts)
+                  requestDelete(
+                    detailSelection.kind,
+                    detailSelection.item.id,
+                    counts,
+                  );
+              }}
+            />
+          )}
+        </>
       )}
     </main>
   );

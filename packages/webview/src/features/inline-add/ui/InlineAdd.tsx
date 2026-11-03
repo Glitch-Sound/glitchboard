@@ -11,7 +11,7 @@ type Props = {
   kind: Kind;
   projectId?: string;
   projects?: { id: string; name: string }[];
-  onSubmit(values: AddValues): void | Promise<void>;
+  onSubmit(values: AddValues): boolean | Promise<boolean>;
 };
 const names = {
   project: "Project",
@@ -26,6 +26,7 @@ export function InlineAdd({ kind, projectId, projects = [], onSubmit }: Props) {
   const [name, setName] = useState("");
   const [color, setColor] = useState("#4c8dff");
   const [due, setDue] = useState("");
+  const [saving, setSaving] = useState(false);
   const [selectedProjectId, setSelectedProjectId] = useState(
     projectId ?? projects[0]?.id ?? "",
   );
@@ -56,16 +57,21 @@ export function InlineAdd({ kind, projectId, projects = [], onSubmit }: Props) {
               cancel();
             }
           }}
-          onSubmit={(event) => {
+          onSubmit={async (event) => {
             event.preventDefault();
-            if (!name.trim() || (kind === "event" && !due)) return;
-            void onSubmit({
-              name: name.trim(),
-              color: kind === "project" ? color : undefined,
-              due: kind === "event" ? due : undefined,
-              projectId: kind === "event" ? selectedProjectId : undefined,
-            });
-            cancel();
+            if (saving || !name.trim() || (kind === "event" && !due)) return;
+            setSaving(true);
+            try {
+              const saved = await onSubmit({
+                name: name.trim(),
+                color: kind === "project" ? color : undefined,
+                due: kind === "event" ? due : undefined,
+                projectId: kind === "event" ? selectedProjectId : undefined,
+              });
+              if (saved) cancel();
+            } finally {
+              setSaving(false);
+            }
           }}
         >
           <input
@@ -103,7 +109,9 @@ export function InlineAdd({ kind, projectId, projects = [], onSubmit }: Props) {
               />
             </>
           )}
-          <button type="submit">追加</button>
+          <button type="submit" disabled={saving}>
+            追加
+          </button>
         </form>
       )}
     </span>

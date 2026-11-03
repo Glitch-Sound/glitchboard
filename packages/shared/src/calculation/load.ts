@@ -8,7 +8,10 @@ export function calculatePeriodLoad(
   settings: WorkdaySettings,
   pace: number | null,
 ): number | null {
-  const workdayCount = workdaysBetween(start, end, settings).length;
+  const firstRequiredDay = Object.keys(requiredByDay).sort()[0];
+  const effectiveStart =
+    firstRequiredDay && firstRequiredDay > start ? firstRequiredDay : start;
+  const workdayCount = workdaysBetween(effectiveStart, end, settings).length;
   if (pace === null || pace <= 0 || workdayCount === 0) return null;
   const required = Object.entries(requiredByDay).reduce(
     (sum, [date, points]) => sum + (date >= start && date <= end ? points : 0),

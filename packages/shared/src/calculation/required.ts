@@ -1,6 +1,7 @@
 import type { Project } from "../domain/index.js";
 import {
   addCalendarDays,
+  isWorkday,
   type WorkdaySettings,
   workdaysBetween,
 } from "./dates.js";
@@ -17,10 +18,13 @@ export function calculateRequiredPace(
   for (let day = today; day <= displayEnd; day = addCalendarDays(day, 1))
     daily[day] = 0;
   for (const item of pendingWork(projects)) {
+    if (item.remaining <= 0) continue;
     const available = workdaysBetween(today, item.due, settings);
     if (item.due < today || available.length === 0) {
-      if (today <= displayEnd)
-        daily[today] = (daily[today] ?? 0) + item.remaining;
+      let next = today;
+      while (next <= displayEnd && !isWorkday(next, settings))
+        next = addCalendarDays(next, 1);
+      if (next <= displayEnd) daily[next] = (daily[next] ?? 0) + item.remaining;
       continue;
     }
     const perDay = item.remaining / available.length;

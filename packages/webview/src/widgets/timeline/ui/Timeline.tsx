@@ -125,10 +125,15 @@ export function Timeline({
                       >
                         ◆{events.length > 1 && <sup>{events.length}件</sup>}
                       </button>
-                      {selected &&
-                        (period === "month" || events.length === 1) && (
+                      {period === "month" ? (
+                        selected && (
                           <span className="marker-label">{selected.name}</span>
-                        )}
+                        )
+                      ) : (
+                        <span className="marker-label">
+                          {events.map((event) => event.name).join("、")}
+                        </span>
+                      )}
                       {open === key && (
                         <div role="listbox" className="marker-list">
                           {events.map((event) => (

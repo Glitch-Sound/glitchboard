@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import type { EventDanger } from "../../../../../shared/src/calculation/danger.js";
 import { calendarDayDifference } from "../../../../../shared/src/calculation/dates.js";
 import {
   type DescendantCounts,
@@ -22,10 +23,11 @@ type Props = {
   event: Event;
   today: string;
   prediction: string | null;
+  danger?: EventDanger;
   onPointsChange?: (taskId: string, points: Points) => void;
   onDoneChange?: (taskId: string, done: boolean) => void;
-  onAddStory?: (eventId: string, name: string) => void;
-  onAddTask?: (storyId: string, name: string) => void;
+  onAddStory?: (eventId: string, name: string) => boolean | Promise<boolean>;
+  onAddTask?: (storyId: string, name: string) => boolean | Promise<boolean>;
   onDelete?: (kind: ItemKind, id: string, counts: DescendantCounts) => void;
   onOpenDetail?: (kind: "event" | "story" | "task", id: string) => void;
 };
@@ -44,6 +46,7 @@ export function EventDetails({
   event,
   today,
   prediction,
+  danger,
   onPointsChange,
   onDoneChange,
   onAddStory,
@@ -68,7 +71,9 @@ export function EventDetails({
   const days = calendarDayDifference(today, event.due);
   return (
     <section className="event-details" aria-label="Event詳細">
-      <div className="event-summary">
+      <div
+        className={`event-summary ${danger?.approaching || danger?.overdue || danger?.overflow ? "danger-text" : ""}`}
+      >
         <h2>
           {onDelete ? (
             <DeleteControl

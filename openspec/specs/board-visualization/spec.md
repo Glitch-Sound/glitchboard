@@ -22,6 +22,7 @@ WHEN 表示期間を切り替えたとき、GlitchBoardは SHALL 3日を今日�
 WHILE ボードを表示するとき、GlitchBoardは SHALL Projectごとの行と日付列を示し、期限日のEventをProject色の◆で示す。\
 今日と休日の列は異なる背景で示し、同じProject・同じ日付のEventは件数バッジ付きでまとめる。\
 月表示では選択中Eventだけにマーカーのラベルを出す。\
+3日と1週間の表示では、選択状態にかかわらず各◆に含まれる全Eventの名前を示す。\
 期限接近、期限切れ、溢れのEventの◆には赤い光を付け、期限まで4～7暦日の注意は黄色で示す。
 
 #### Scenario: REQ-016-S01 - 同日の複数Event
@@ -35,6 +36,12 @@ WHILE ボードを表示するとき、GlitchBoardは SHALL Projectごとの行�
 - **GIVEN** 月表示で3件のEventがあり1件が選択中である。
 - **WHEN** タイムラインを描く。
 - **THEN** 選択中のEventだけにラベルが付く。
+
+#### Scenario: REQ-016-S03 - 短期表示
+
+- **GIVEN** 3日または1週間の表示に、未選択のEventがある。
+- **WHEN** タイムラインを描く。
+- **THEN** 未選択のEventを含む◆にも名前が表示される。
 
 ### Requirement: REQ-017 - ヘッダーと必要ペースグラフ
 
@@ -60,6 +67,7 @@ WHEN Eventを選択したとき、GlitchBoardは SHALL Event要約、Story一覧
 Event要約には残り暦日または超過日数、算出可能な完了予測日、残りptと未見積件数、済pt/全ptを示す。\
 Storyには完了Task数とpt進捗バー、Taskには完了チェックとポイントバッジを示す。\
 残り日数が負なら「n日超過」とし、学習中または実績0pt/日の完了予測日は表示しない。
+期限接近、期限切れ、溢れのいずれかに当てはまるEventの要約は赤で示す。
 
 #### Scenario: REQ-018-S01 - 未完了Taskを選ぶ
 
@@ -72,6 +80,12 @@ Storyには完了Task数とpt進捗バー、Taskには完了チェックとポ�
 - **GIVEN** Eventの全Taskが完了している。
 - **WHEN** Eventを選ぶ。
 - **THEN** 先頭Storyを選び、StoryがなければTask一覧を空にする。
+
+#### Scenario: REQ-018-S03 - 危険なEventの要約
+
+- **GIVEN** Eventの完了予測日が期限より後である。
+- **WHEN** Event詳細を表示する。
+- **THEN** 完了予測日を含む要約を赤で示す。
 
 ### Requirement: NREQ-003 - テーマ追従
 

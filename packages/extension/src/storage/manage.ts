@@ -33,6 +33,19 @@ function safeProjectPath(managePath: string, file: string): string {
   return target;
 }
 
+/** 読み込みを外したProjectでも抽出条件用の名前だけを取得する。 */
+export async function readProjectName(
+  managePath: string,
+  file: string,
+): Promise<string> {
+  const path = safeProjectPath(managePath, file);
+  const document = documentFrom(await readFile(path, "utf8"), path);
+  const name = document.get("name");
+  if (typeof name !== "string" || !name.trim())
+    throw new Error(`${path}: Project名がない`);
+  return name;
+}
+
 async function atomicWrite(path: string, content: string): Promise<void> {
   const temp = `${path}.${randomUUID()}.tmp`;
   await writeFile(temp, content, { flag: "wx" });

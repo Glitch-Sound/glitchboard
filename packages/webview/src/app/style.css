@@ -369,3 +369,6 @@ main {
   padding: 2px 5px;
   border: 0;
 }
+.event-summary.danger-text .delete-control > button {
+  color: var(--vscode-errorForeground);
+}

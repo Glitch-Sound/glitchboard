@@ -10,6 +10,7 @@ import { addEvent, addStory, addTask } from "./storage/hierarchy.js";
 import {
   createProject,
   loadManageFile,
+  readProjectName,
   setProjectLoaded,
 } from "./storage/manage.js";
 import { updateTask } from "./storage/project.js";
@@ -217,15 +218,18 @@ export class BoardSession {
         selectedEventId: selected,
         error: null,
         settings: manage.settings,
-        projectEntries: manage.projects.map((entry) => ({
-          ...entry,
-          name:
-            loadedProjects[
-              manage.projects
-                .filter((item) => item.load)
-                .findIndex((item) => item.file === entry.file)
-            ]?.name ?? entry.file,
-        })),
+        projectEntries: await Promise.all(
+          manage.projects.map(async (entry) => ({
+            ...entry,
+            name: entry.load
+              ? (loadedProjects[
+                  manage.projects
+                    .filter((item) => item.load)
+                    .findIndex((item) => item.file === entry.file)
+                ]?.name ?? entry.file)
+              : await readProjectName(this.managePath, entry.file),
+          })),
+        ),
       });
     } catch (error) {
       this.publish({

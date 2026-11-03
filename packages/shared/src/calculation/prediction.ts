@@ -15,7 +15,10 @@ export function pendingWork(projects: readonly Project[]): WorkItem[] {
     for (const event of project.events) {
       const points = eventPoints(event);
       const remaining = points.total - points.done;
-      if (remaining > 0)
+      if (
+        remaining > 0 ||
+        event.stories.flatMap((story) => story.tasks).length === 0
+      )
         work.push({
           projectId: project.id,
           eventId: event.id,
@@ -39,7 +42,7 @@ export function predictCompletionDates(
   settings: WorkdaySettings,
   pace: number | null,
 ): Record<string, string | null> {
-  const work = pendingWork(projects);
+  const work = pendingWork(projects).filter((item) => item.remaining > 0);
   const result: Record<string, string | null> = Object.fromEntries(
     work.map((item) => [item.eventId, null]),
   );

@@ -119,6 +119,18 @@ export const operationSchema = z.discriminatedUnion("type", [
 
 export type Operation = z.infer<typeof operationSchema>;
 
+/** REQ-014/REQ-029: 初期設定操作も共有境界で検証する。 */
+export const setupOperationSchema = z.discriminatedUnion("type", [
+  z.strictObject({
+    type: z.literal("chooseManage"),
+    requestId: z.number().int().positive().optional(),
+  }),
+  z.strictObject({
+    type: z.literal("createManage"),
+    requestId: z.number().int().positive().optional(),
+  }),
+]);
+
 /** REQ-028: VS Codeで開くリンク要求の境界検証。 */
 export const openLinkRequestSchema = z.object({
   type: z.literal("openLink"),
