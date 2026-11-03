@@ -21,6 +21,7 @@ WHEN 表示期間を切り替えたとき、GlitchBoardは SHALL 3日を今日�
 ### Requirement: REQ-016 - Project別の期限タイムライン
 
 WHILE ボードを表示するとき、GlitchBoardは SHALL Projectごとの行と日付列を示し、期限日のEventをProject色の◆で示す。\
+日付列より前に期限を過ぎたEventは、日付列の左にある「期限切れ」列へProjectごとにまとめて示す。\
 今日と休日の列は異なる背景で示し、同じProject・同じ日付のEventは件数バッジ付きでまとめる。\
 月表示では選択中Eventだけにマーカーのラベルを出す。\
 3日と1週間の表示では、選択状態にかかわらず各◆に含まれる全Eventの名前を示す。\
@@ -48,6 +49,12 @@ Project名の前に色の丸を置き、操作ボタンを右端にまとめる�
 - **WHEN** タイムラインを描く。
 - **THEN** 未選択のEventを含む◆にも名前が表示される。
 
+#### Scenario: REQ-016-S04 - 期限切れのEvent
+
+- **GIVEN** 今日より前に期限を過ぎたEventが同じProjectに2件ある。
+- **WHEN** ボードを表示する。
+- **THEN** 一番左の「期限切れ」列に件数付きの◆を示し、2件から選択できる。
+
 ### Requirement: REQ-017 - ヘッダーと必要ペースグラフ
 
 WHILE ボードを表示するとき、GlitchBoardは SHALL 実績ペース、直近10稼働日の完了ポイントの棒、期間負荷、危険件数と、日別必要ペースの階段状SVGを表示する。\
@@ -73,6 +80,8 @@ WHILE ボードを表示するとき、GlitchBoardは SHALL 実績ペース、�
 ### Requirement: REQ-018 - Event詳細エリア
 
 WHEN Eventを選択したとき、GlitchBoardは SHALL Event要約、Story一覧、Task一覧を3列で表示し、未完了Taskを持つ最初のStoryを初期選択する。\
+ボードを開いたときは期限が近い順で最初の危険な未完了Eventを選び、なければ期限が最も近いEventを選ぶ。\
+StoryがないEventのTask欄には「まずはStoryを追加してください」と案内する。\
 Event要約には残り暦日または超過日数、算出可能な完了予測日、残りptと未見積件数、済pt/全ptを示す。\
 Storyには完了Task数とpt進捗バー、Taskには完了チェックとポイントバッジを示す。\
 残り日数が負なら「n日超過」とし、学習中または実績0pt/日の完了予測日は表示しない。
@@ -91,7 +100,13 @@ Taskはチェック、名前、色付きポイント、操作ボタンの順に1
 
 - **GIVEN** Eventの全Taskが完了している。
 - **WHEN** Eventを選ぶ。
-- **THEN** 先頭Storyを選び、StoryがなければTask一覧を空にする。
+- **THEN** 先頭Storyを選び、StoryがなければTask欄に「まずはStoryを追加してください」と示す。
+
+#### Scenario: REQ-018-S04 - 初期選択
+
+- **GIVEN** 期限切れの未完了Eventと、より後の期限を持つEventがある。
+- **WHEN** ボードを開く。
+- **THEN** 期限切れのEventを選択して詳細を表示する。
 
 #### Scenario: REQ-018-S03 - 危険なEventの要約
 

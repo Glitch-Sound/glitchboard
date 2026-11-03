@@ -138,6 +138,7 @@ export function Timeline({
   onAddProject,
 }: Props) {
   const [open, setOpen] = useState<string | null>(null);
+  const columns: (string | null)[] = [null, ...days];
   return (
     <table
       className={`timeline timeline-${period}`}
@@ -145,6 +146,7 @@ export function Timeline({
     >
       <colgroup>
         <col className="project-col" />
+        <col className="overdue-col" />
         {days.map((day) => (
           <col key={day} />
         ))}
@@ -164,6 +166,9 @@ export function Timeline({
                 />
               )}
             </span>
+          </th>
+          <th scope="col" className="overdue-heading">
+            期限切れ
           </th>
           {days.map((day) => (
             <th
@@ -213,11 +218,13 @@ export function Timeline({
                 )}
               </span>
             </th>
-            {days.map((day) => {
-              const events = project.events.filter(
-                (event) => event.due === day,
+            {columns.map((day) => {
+              const events = project.events.filter((event) =>
+                day === null
+                  ? event.due < today
+                  : event.due === day && day >= today,
               );
-              const key = `${project.id}:${day}`;
+              const key = `${project.id}:${day ?? "overdue"}`;
               const selected = events.find(
                 (event) => event.id === selectedEventId,
               );
@@ -228,9 +235,13 @@ export function Timeline({
               const caution = events.some((event) => danger[event.id]?.caution);
               return (
                 <td
-                  key={day}
-                  data-date={day}
-                  className={`${dayTone(day, today, settings)} ${!learning && pace !== null && pace !== undefined && (requiredByDay?.[day] ?? 0) > pace ? "overlap-day" : ""}`}
+                  key={day ?? "overdue"}
+                  data-date={day ?? undefined}
+                  className={
+                    day === null
+                      ? "overdue-cell"
+                      : `${dayTone(day, today, settings)} ${!learning && pace !== null && pace !== undefined && (requiredByDay?.[day] ?? 0) > pace ? "overlap-day" : ""}`
+                  }
                 >
                   {events.length > 0 && (
                     <div className="marker-wrap">
@@ -290,6 +301,7 @@ export function Timeline({
             <span>必要ペース</span>
             {!learning && <small>実績 ┄</small>}
           </th>
+          <td className="overdue-cell" />
           <td colSpan={days.length}>
             <RequiredPace
               days={days}

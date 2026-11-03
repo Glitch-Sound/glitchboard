@@ -4,6 +4,8 @@ import {
   type Task,
 } from "../domain/index.js";
 import {
+  addCalendarDays,
+  isWorkday,
   previousWorkdays,
   type WorkdaySettings,
   workdaysBetween,
@@ -30,20 +32,32 @@ export function calculateActualPace(
   today: string,
   settings: WorkdaySettings,
 ): ActualPace {
+  if (settings.workdays_off.length === 7)
+    return { learning: true, pace: null, total: 0, daily: [] };
   const completed = allTasks(projects).filter(
     (task) => task.doneAt && task.doneAt <= today,
   );
-  const first = completed.map((task) => task.doneAt as string).sort()[0];
+  const creditedDate = (date: string): string => {
+    let day = date;
+    while (!isWorkday(day, settings)) day = addCalendarDays(day, 1);
+    return day;
+  };
+  const credits = completed.map((task) => ({
+    date: creditedDate(task.doneAt as string),
+    points: effectiveTaskPoints(task),
+  }));
+  const first = credits.map((item) => item.date).sort()[0];
+  // 休日の今日に完了した分も、次の稼働日の棒とペースへ即時反映する。
+  const latest = creditedDate(today);
   const observedDays = first
-    ? workdaysBetween(first, today, settings).length
+    ? workdaysBetween(first, latest, settings).length
     : 0;
   const learning = observedDays < 10;
-  const dates = previousWorkdays(today, 10, settings);
+  const dates = previousWorkdays(latest, 10, settings);
   const daily = dates.map((date) => ({
     date,
-    points: completed.reduce(
-      (sum, task) =>
-        sum + (task.doneAt === date ? effectiveTaskPoints(task) : 0),
+    points: credits.reduce(
+      (sum, item) => sum + (item.date === date ? item.points : 0),
       0,
     ),
   }));

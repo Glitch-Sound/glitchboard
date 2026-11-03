@@ -370,6 +370,16 @@ main {
 .timeline .project-col {
   width: 170px;
 }
+.timeline .overdue-col {
+  width: 76px;
+}
+.timeline .overdue-heading,
+.timeline .overdue-cell {
+  background: color-mix(in srgb, var(--vscode-charts-red) 9%, transparent);
+}
+.timeline .overdue-heading {
+  color: var(--vscode-charts-red);
+}
 .timeline .timeline-row > :first-child {
   width: 170px;
   min-width: 170px;

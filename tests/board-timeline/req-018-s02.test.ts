@@ -39,6 +39,8 @@ describe("REQ-018-S02 未完了Taskがない", () => {
         prediction: null,
       }),
     );
-    expect(screen.getByLabelText("Task一覧").textContent).toContain("Taskなし");
+    expect(screen.getByLabelText("Task一覧").textContent).toContain(
+      "まずはStoryを追加してください",
+    );
   });
 });

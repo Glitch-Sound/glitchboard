@@ -228,7 +228,7 @@ export function EventDetails({
             </div>
           ))
         ) : (
-          <p>Taskなし</p>
+          <p>まずはStoryを追加してください</p>
         )}
       </section>
     </section>

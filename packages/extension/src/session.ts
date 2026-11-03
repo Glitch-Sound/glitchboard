@@ -1,6 +1,9 @@
 import { dirname, resolve } from "node:path";
+import { calculateDanger } from "../../shared/src/calculation/danger.js";
 import type { WorkdaySettings } from "../../shared/src/calculation/dates.js";
 import { todayInTokyo } from "../../shared/src/calculation/dates.js";
+import { calculateActualPace } from "../../shared/src/calculation/pace.js";
+import { pendingWork } from "../../shared/src/calculation/prediction.js";
 import { descendantCounts } from "../../shared/src/domain/deletion.js";
 import type { Project } from "../../shared/src/domain/index.js";
 import { operationSchema } from "../../shared/src/domain/messages.js";
@@ -212,10 +215,49 @@ export class BoardSession {
       )
         ? this.state.selectedEventId
         : null;
+      const today = todayInTokyo();
+      const actual = calculateActualPace(
+        loadedProjects,
+        today,
+        manage.settings,
+      );
+      const danger = calculateDanger(
+        loadedProjects,
+        today,
+        today,
+        today,
+        manage.settings,
+        actual.pace,
+        actual.learning,
+      ).events;
+      const work = pendingWork(loadedProjects);
+      const firstDanger = work.find((item) => {
+        const flag = danger[item.eventId];
+        return flag?.approaching || flag?.overdue || flag?.overflow;
+      });
+      const firstEvent = loadedProjects
+        .flatMap((project) =>
+          project.events.map((event) => ({
+            projectId: project.id,
+            eventId: event.id,
+            due: event.due,
+          })),
+        )
+        .sort(
+          (a, b) =>
+            a.due.localeCompare(b.due) ||
+            a.projectId.localeCompare(b.projectId) ||
+            a.eventId.localeCompare(b.eventId),
+        )[0];
       this.publish({
         version: this.state.version + 1,
         projects: loadedProjects,
-        selectedEventId: selected,
+        selectedEventId:
+          selected ??
+          firstDanger?.eventId ??
+          work[0]?.eventId ??
+          firstEvent?.eventId ??
+          null,
         error: null,
         settings: manage.settings,
         projectEntries: await Promise.all(
