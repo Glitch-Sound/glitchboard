@@ -470,8 +470,8 @@ main {
   white-space: nowrap;
 }
 .period-switch button[aria-pressed="true"] {
-  background: var(--vscode-button-background);
-  color: var(--vscode-button-foreground);
+  background: var(--vscode-charts-blue, #4c8dff);
+  color: #fff;
   font-weight: 700;
 }
 .workload-summary {
@@ -494,10 +494,12 @@ main {
 .workload-metric strong {
   font-size: 21px;
   line-height: 1.2;
+  text-align: right;
 }
 .actual-value {
   display: flex;
   align-items: end;
+  justify-content: flex-end;
   gap: 8px;
 }
 .completion-bars {
@@ -692,6 +694,10 @@ main {
   min-width: 23px;
   min-height: 23px;
   cursor: pointer;
+}
+:where(.timeline) .inline-add-trigger {
+  color: var(--vscode-charts-blue, #4c8dff);
+  border-color: currentColor;
 }
 .event-marker {
   position: relative;
