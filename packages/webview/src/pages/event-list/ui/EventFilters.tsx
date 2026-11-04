@@ -51,7 +51,11 @@ export function EventFilters({
         {changed > 0 && <sup>{changed}</sup>}
       </button>
       <p>
-        {target === "pending" ? "未完了 + 今後" : "すべて"}・{count}件
+        {target === "pending" ? "未完了 + 今後" : "すべて"}・
+        {projectEntries.every((entry) => entry.load)
+          ? "全プロジェクト"
+          : `${projectEntries.filter((entry) => entry.load).length}プロジェクト`}
+        ・{count}件
       </p>
       {open && (
         <div className="filter-popover">

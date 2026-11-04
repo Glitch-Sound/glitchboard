@@ -33,7 +33,11 @@ export function EventList({
           groups[key].length > 0 && (
             <section key={key} className={`event-group event-group-${key}`}>
               <h2>
-                {labels[key]} <span>{groups[key].length}件</span>
+                {labels[key]}{" "}
+                <span>
+                  {groups[key].length}
+                  <span className="visually-hidden">件</span>
+                </span>
               </h2>
               {groups[key].map(({ project, event }) => {
                 const days = calendarDayDifference(today, event.due);
@@ -45,23 +49,26 @@ export function EventList({
                   <button
                     type="button"
                     key={event.id}
-                    className={isDanger ? "danger-text" : ""}
+                    className={`event-row${isDanger ? " danger-text" : ""}`}
                     onClick={() => onSelect?.(event.id)}
                   >
-                    <span className="event-row-name">{event.name}</span>
-                    <small>
-                      <span>
-                        <i
-                          className="project-dot"
-                          style={{ backgroundColor: project.color }}
-                        />
+                    <span
+                      className="event-project-marker"
+                      style={{ borderColor: project.color }}
+                      aria-hidden="true"
+                    >
+                      <i style={{ backgroundColor: project.color }} />
+                    </span>
+                    <span className="event-row-content">
+                      <span className="event-row-name">{event.name}</span>
+                      <small>
                         {project.name}・
                         {days < 0 ? `${-days}日超過` : `残り${days}日`}
-                      </span>
-                      <time dateTime={event.due}>
-                        {event.due.slice(5).replace("-", "/")}
-                      </time>
-                    </small>
+                      </small>
+                    </span>
+                    <time dateTime={event.due}>
+                      {event.due.slice(5).replace("-", "/")}
+                    </time>
                   </button>
                 );
               })}

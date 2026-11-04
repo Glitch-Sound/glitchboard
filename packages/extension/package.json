@@ -2,8 +2,8 @@
   "name": "glitchboard",
   "displayName": "GlitchBoard",
   "description": "個人用プロジェクト管理ツール",
-  "publisher": "glitchboard",
-  "version": "0.1.0",
+  "publisher": "Glitch-Sound",
+  "version": "0.0.1",
   "type": "module",
   "main": "./dist/extension.js",
   "engines": {

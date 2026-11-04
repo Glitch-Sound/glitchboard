@@ -113,7 +113,9 @@ export function InlineAdd({
           aria-label={`${names[kind]}を追加`}
           aria-expanded={open}
         >
-          +
+          <span className="inline-add-plus" aria-hidden="true">
+            +
+          </span>
         </button>
       )}
       {open && (
