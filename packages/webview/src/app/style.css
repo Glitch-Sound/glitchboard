@@ -562,6 +562,7 @@ main {
   box-sizing: border-box;
   padding: 8px;
   border-inline-start: 3px solid;
+  border-inline-start-color: transparent;
   text-align: start;
 }
 .timeline-heading th {
@@ -619,7 +620,7 @@ main {
   );
 }
 .timeline tbody tr:not(.pace-row):not(.timeline-spacer) {
-  height: 87px;
+  height: 65px;
 }
 .timeline-spacer {
   height: 100%;

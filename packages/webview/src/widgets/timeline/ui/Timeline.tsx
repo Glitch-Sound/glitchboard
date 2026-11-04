@@ -190,7 +190,16 @@ export function Timeline({
       <tbody>
         {projects.map((project) => (
           <tr className="timeline-row" key={project.id}>
-            <th scope="row" style={{ borderInlineStartColor: project.color }}>
+            <th
+              scope="row"
+              style={{
+                borderInlineStartColor: project.events.some(
+                  (event) => event.id === selectedEventId,
+                )
+                  ? project.color
+                  : "transparent",
+              }}
+            >
               <span className="project-name">
                 <i style={{ backgroundColor: project.color }} />
                 {project.name}
