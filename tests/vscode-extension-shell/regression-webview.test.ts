@@ -93,8 +93,8 @@ describe("正式仕様のWebview回帰", () => {
   it("REQ-025-S03: 削除拒否の理由を上部に示す", () => {
     render(createElement(BoardApp));
     emit({ type: "snapshot", payload: snapshot() });
-    fireEvent.click(screen.getByRole("button", { name: "Alphaの操作" }));
-    fireEvent.click(screen.getByRole("menuitem", { name: "削除" }));
+    fireEvent.click(screen.getByRole("button", { name: "Alphaの詳細" }));
+    fireEvent.click(screen.getByRole("button", { name: "削除" }));
     fireEvent.click(screen.getByRole("button", { name: "削除する" }));
     expect(
       postMessage.mock.calls.some(([message]) => message.type === "deleteItem"),
