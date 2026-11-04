@@ -5,16 +5,20 @@ import { pointTone } from "../../../shared/lib/pointTone.js";
 type Points = 1 | 2 | 3 | 5 | 8 | 13 | 21;
 type Props = {
   points: Points | undefined;
+  disabled?: boolean;
   onChange(points: Points | null): void;
 };
 const values: Points[] = [1, 2, 3, 5, 8, 13, 21];
 
 /** REQ-023: 7つの許可値からTaskポイントを選ぶ。 */
-export function PointSelector({ points, onChange }: Props) {
+export function PointSelector({ points, disabled = false, onChange }: Props) {
   const [open, setOpen] = useState(false);
   const root = useRef<HTMLSpanElement>(null);
   const menu = useRef<HTMLSpanElement>(null);
   const [position, setPosition] = useState({ top: 0, left: 0 });
+  useEffect(() => {
+    if (disabled) setOpen(false);
+  }, [disabled]);
   useEffect(() => {
     if (!open) return;
     const onKeyDown = (event: KeyboardEvent) => {
@@ -42,7 +46,8 @@ export function PointSelector({ points, onChange }: Props) {
       <button
         type="button"
         className={pointTone(points)}
-        aria-expanded={open}
+        disabled={disabled}
+        aria-expanded={open && !disabled}
         onClick={() => {
           if (open) {
             setOpen(false);
@@ -66,11 +71,15 @@ export function PointSelector({ points, onChange }: Props) {
         {points === undefined ? "未見積" : `${points}pt`}
       </button>
       {open &&
+        !disabled &&
         createPortal(
           <span ref={menu} className="point-options" style={position}>
-            <strong className={`point-current ${pointTone(points)}`}>
-              {points === undefined ? "未見積" : `${points}pt`}
-            </strong>
+            <span className="point-options-header">
+              <span>ポイント</span>
+              <strong className={`point-current ${pointTone(points)}`}>
+                {points === undefined ? "未見積" : `${points}pt`}
+              </strong>
+            </span>
             <input
               type="range"
               min="0"
@@ -88,6 +97,7 @@ export function PointSelector({ points, onChange }: Props) {
                   key={value}
                   className={pointTone(value)}
                   type="button"
+                  aria-pressed={points === value}
                   onClick={() => {
                     onChange(value);
                     setOpen(false);

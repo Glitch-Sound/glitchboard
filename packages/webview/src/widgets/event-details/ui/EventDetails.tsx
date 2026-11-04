@@ -24,6 +24,7 @@ type Props = {
   today: string;
   prediction: string | null;
   danger?: EventDanger;
+  projectName?: string;
   projectColor?: string;
   onPointsChange?: (taskId: string, points: Points) => void;
   onDoneChange?: (taskId: string, done: boolean) => void;
@@ -55,6 +56,7 @@ export function EventDetails({
   today,
   prediction,
   danger,
+  projectName,
   projectColor,
   onPointsChange,
   onDoneChange,
@@ -79,57 +81,93 @@ export function EventDetails({
   );
   const days = calendarDayDifference(today, event.due);
   return (
-    <section className="event-details" aria-label="Event詳細">
+    <section
+      className="event-details"
+      aria-label="Event詳細"
+      style={
+        {
+          "--event-accent": projectColor ?? "var(--vscode-charts-blue)",
+        } as CSSProperties
+      }
+    >
       <div className="event-summary">
-        <h2>
-          {onDelete ? (
-            <DeleteControl
-              kind="event"
-              name={event.name}
-              counts={eventCounts(event)}
-              onConfirm={() => onDelete("event", event.id, eventCounts(event))}
-            />
-          ) : (
-            event.name
+        <div className="event-summary-heading">
+          {projectName && (
+            <p className="event-project-label">
+              <i style={{ backgroundColor: projectColor }} aria-hidden="true" />
+              {projectName}
+            </p>
           )}
-          {onOpenDetail && (
-            <DetailButton
-              name={event.name}
-              note={event.note}
-              onOpen={() => onOpenDetail("event", event.id)}
-            />
-          )}
-        </h2>
+          <h2>
+            {onDelete ? (
+              <DeleteControl
+                kind="event"
+                name={event.name}
+                counts={eventCounts(event)}
+                onConfirm={() =>
+                  onDelete("event", event.id, eventCounts(event))
+                }
+              />
+            ) : (
+              event.name
+            )}
+            {onOpenDetail && (
+              <DetailButton
+                name={event.name}
+                note={event.note}
+                icon="document"
+                onOpen={() => onOpenDetail("event", event.id)}
+              />
+            )}
+          </h2>
+          <p className="event-due">
+            期限 <time dateTime={event.due}>{shortDate(event.due)}</time>
+          </p>
+        </div>
         <p
           className={`event-days ${danger?.approaching || danger?.overdue || danger?.overflow ? "danger-text" : ""}`}
         >
-          {days < 0 ? `${-days}日超過` : `残り${days}日`}
+          <span className="visually-hidden">
+            {days < 0 ? `${-days}日超過` : `残り${days}日`}
+          </span>
+          <span aria-hidden="true">{days < 0 ? "超過" : "残り"}</span>
+          <strong aria-hidden="true">{Math.abs(days)}</strong>
+          <span aria-hidden="true">日</span>
         </p>
-        {prediction && (
-          <p
-            className={`event-prediction ${prediction > event.due ? "danger-text" : "success-text"}`}
-          >
-            完了予測: <time dateTime={prediction}>{shortDate(prediction)}</time>
+        <div className="event-summary-metrics">
+          {prediction && (
+            <p
+              className={`event-prediction ${prediction > event.due ? "danger-text" : "success-text"}`}
+            >
+              <span>完了予測</span>
+              <time dateTime={prediction}>{shortDate(prediction)}</time>
+            </p>
+          )}
+          <p>
+            <span>残りポイント</span>
+            <strong>
+              {remaining}pt (未見積{unestimated})
+            </strong>
           </p>
-        )}
-        <p>
-          残り{remaining}pt・未見積{unestimated}件
-        </p>
-        <p>
-          {points.done}pt / {points.total}pt
-        </p>
-        <progress
-          className="event-progress"
-          style={
-            {
-              "--event-progress-color":
-                projectColor ?? "var(--vscode-charts-blue)",
-            } as CSSProperties
-          }
-          value={points.done}
-          max={points.total || 1}
-          aria-label="Event進捗"
-        />
+          <p>
+            <span>消化</span>
+            <strong>
+              {points.done}/{points.total}pt
+            </strong>
+          </p>
+          <progress
+            className="event-progress"
+            style={
+              {
+                "--event-progress-color":
+                  projectColor ?? "var(--vscode-charts-blue)",
+              } as CSSProperties
+            }
+            value={points.done}
+            max={points.total || 1}
+            aria-label="Event進捗"
+          />
+        </div>
       </div>
       <section aria-label="Story一覧">
         <h3>
@@ -155,12 +193,14 @@ export function EventDetails({
                 aria-pressed={item.id === storyId}
                 onClick={() => setStoryId(item.id)}
               >
-                <span>{item.name}</span>
+                <span className="story-name">{item.name}</span>
                 <small>
-                  {done}/{item.tasks.length} Task・{progress.done}/
-                  {progress.total}pt
+                  {done}/{item.tasks.length} Task
                 </small>
                 <progress value={progress.done} max={progress.total || 1} />
+                <strong className="story-points">
+                  {progress.done}/{progress.total}pt
+                </strong>
               </button>
               {onDelete && (
                 <DeleteControl
@@ -181,6 +221,7 @@ export function EventDetails({
                 <DetailButton
                   name={item.name}
                   note={item.note}
+                  icon="document"
                   onOpen={() => onOpenDetail("story", item.id)}
                 />
               )}
@@ -190,7 +231,7 @@ export function EventDetails({
       </section>
       <section aria-label="Task一覧">
         <h3>
-          Task{" "}
+          Task{story ? `・${story.name}` : ""}{" "}
           {onAddTask && story && (
             <InlineAdd
               kind="task"
@@ -200,7 +241,10 @@ export function EventDetails({
         </h3>
         {story ? (
           story.tasks.map((task) => (
-            <div key={task.id} className="task-line">
+            <div
+              key={task.id}
+              className={`task-line${task.doneAt ? " completed" : ""}`}
+            >
               <input
                 type="checkbox"
                 checked={Boolean(task.doneAt)}
@@ -221,6 +265,7 @@ export function EventDetails({
               {onPointsChange ? (
                 <PointSelector
                   points={task.points}
+                  disabled={Boolean(task.doneAt)}
                   onChange={(points) => onPointsChange(task.id, points)}
                 />
               ) : (
@@ -250,6 +295,7 @@ export function EventDetails({
                   <DetailButton
                     name={task.name}
                     note={task.note}
+                    icon="document"
                     onOpen={() => onOpenDetail("task", task.id)}
                   />
                 )}

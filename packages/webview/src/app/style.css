@@ -351,6 +351,14 @@ main {
   gap: 12px;
   padding: 14px;
 }
+.point-options-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 12px;
+  font-weight: 700;
+}
 .point-current {
   font-size: 24px;
   line-height: 1;
@@ -372,9 +380,16 @@ main {
   border-radius: 5px;
   cursor: pointer;
 }
+.point-options-values button[aria-pressed="true"] {
+  border-color: currentColor;
+  box-shadow: 0 0 0 1px currentColor;
+}
 .point-options .point-unestimated-option {
-  width: 100%;
+  justify-self: end;
+  width: auto;
+  padding: 4px 8px;
   color: var(--vscode-descriptionForeground);
+  font-size: 11px;
   white-space: nowrap;
 }
 .story-select {
@@ -734,13 +749,13 @@ main {
 }
 .event-details {
   display: grid;
-  grid-template-columns: minmax(180px, 1fr) minmax(260px, 1.45fr) minmax(
-      260px,
-      1.45fr
+  grid-template-columns: minmax(220px, 0.75fr) minmax(300px, 1.65fr) minmax(
+      300px,
+      1.65fr
     );
   gap: 0;
   height: min(42vh, 460px);
-  min-height: 260px;
+  min-height: 300px;
   margin: 0;
   padding: 0;
   border: 1px solid var(--vscode-panel-border);
@@ -751,7 +766,7 @@ main {
 .event-details > section {
   min-width: 0;
   overflow-y: auto;
-  padding: 12px;
+  padding: 0;
 }
 .event-details > * + * {
   border-left: 1px solid var(--vscode-panel-border);
@@ -761,32 +776,138 @@ main {
   align-items: center;
   justify-content: space-between;
   gap: 8px;
-  margin: 0 0 8px;
+  min-height: 48px;
+  margin: 0;
+  padding: 8px 16px;
+  box-sizing: border-box;
   text-transform: uppercase;
+  font-size: 13px;
+  color: var(--vscode-descriptionForeground);
+  border-bottom: 1px solid var(--vscode-panel-border);
+}
+:where(.event-details) .inline-add-trigger {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  color: var(--vscode-charts-blue, #4c8dff);
+  border-color: var(--vscode-charts-blue, #4c8dff);
+}
+.event-details > .event-summary {
+  display: flex;
+  flex-direction: column;
+  padding: 16px;
+}
+.event-project-label {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  min-width: 0;
+  margin: 0 0 8px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
   font-size: 12px;
+  font-weight: 600;
+  color: var(--vscode-descriptionForeground);
+}
+.event-project-label i {
+  flex: none;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
 }
 .event-summary h2 {
+  display: flex;
+  align-items: center;
+  gap: 6px;
   margin: 0;
-  font-size: 18px;
+  font-size: 20px;
+  line-height: 1.2;
 }
-.event-summary > p {
-  margin: 7px 0;
+.event-summary h2 .delete-control > button:first-child {
+  padding: 0;
+  font: inherit;
+  font-weight: 700;
+  text-align: left;
+}
+.event-summary h2 .delete-control > button:last-of-type {
+  width: 0;
+  padding: 0;
+  overflow: hidden;
+  opacity: 0;
+}
+.event-summary h2 .delete-control:hover > button:last-of-type,
+.event-summary h2 .delete-control:focus-within > button:last-of-type {
+  width: auto;
+  padding: 2px 5px;
+  opacity: 1;
+}
+.event-details .detail-button {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border: 1px solid var(--vscode-panel-border);
+  border-radius: 5px;
+}
+.event-due {
+  margin: 9px 0 0;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--vscode-descriptionForeground);
+}
+.event-due time {
+  margin-left: 5px;
+}
+.event-summary .event-days {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  margin: 22px 0 0;
+  font-size: 12px;
+  font-weight: 700;
+}
+.event-days strong {
+  font-size: 48px;
+  line-height: 1;
+}
+.event-summary-metrics {
+  display: grid;
+  gap: 10px;
+  margin-top: auto;
+}
+.event-summary-metrics p {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) max-content;
+  align-items: baseline;
+  gap: 8px;
+  width: 100%;
+  margin: 0;
   font-size: 12px;
 }
-.event-summary > p:first-of-type {
-  font-size: 24px;
+.event-summary-metrics p > span {
+  color: var(--vscode-descriptionForeground);
+}
+.event-summary-metrics :where(p strong, p time) {
+  grid-column: 2;
+  justify-self: end;
+  text-align: right;
   font-weight: 700;
-  margin: 18px 0;
+  white-space: nowrap;
 }
 .event-summary .event-progress {
   display: block;
   width: 100%;
-  height: 8px;
-  margin-top: 7px;
+  height: 6px;
+  margin-top: 1px;
   appearance: none;
   border: 0;
   border-radius: 5px;
-  background: var(--vscode-progressBar-background);
+  background: color-mix(in srgb, var(--vscode-foreground) 15%, transparent);
 }
 .event-progress::-webkit-progress-bar {
   border-radius: 5px;
@@ -802,27 +923,41 @@ main {
 }
 .story-choice {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 25px 25px;
+  grid-template-columns: minmax(0, 1fr) 4px 30px;
   align-items: center;
-  gap: 3px;
-  border-bottom: 1px solid var(--vscode-panel-border);
+  gap: 2px;
+  min-height: 66px;
+  padding: 0 12px 0 16px;
+  border-bottom: 0;
 }
 .story-choice.selected {
-  background: var(--vscode-list-activeSelectionBackground);
+  background: color-mix(
+    in srgb,
+    var(--vscode-list-activeSelectionBackground) 35%,
+    transparent
+  );
   color: var(--vscode-list-activeSelectionForeground);
+  outline: 1px solid
+    color-mix(in srgb, var(--vscode-focusBorder) 40%, transparent);
+  outline-offset: -1px;
 }
 .story-select {
   display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  grid-template-rows: auto auto auto;
+  grid-template-columns: minmax(0, 1fr) minmax(60px, 0.7fr) auto;
+  grid-template-rows: auto auto;
   align-items: center;
-  gap: 5px;
+  column-gap: 12px;
+  row-gap: 3px;
   min-width: 0;
   width: 100%;
   border: 0;
-  padding: 7px 4px;
+  padding: 9px 0;
+  background: transparent;
 }
-.story-select span {
+.story-choice .story-select[aria-pressed="true"] {
+  background: transparent;
+}
+.story-select .story-name {
   grid-column: 1;
   grid-row: 1;
   overflow: hidden;
@@ -833,34 +968,101 @@ main {
   grid-column: 1;
   grid-row: 2;
   white-space: nowrap;
-  font-size: 10px;
+  font-size: 11px;
+  color: var(--vscode-descriptionForeground);
 }
 .story-choice progress {
-  grid-column: 1;
-  grid-row: 3;
-  width: 100%;
+  grid-column: 2;
+  grid-row: 1 / 3;
+  justify-self: end;
+  width: 66.667%;
   height: 6px;
+  appearance: none;
+  border: 0;
+  border-radius: 5px;
+  background: color-mix(in srgb, var(--vscode-foreground) 15%, transparent);
+}
+.story-choice progress::-webkit-progress-bar {
+  border-radius: 5px;
+  background: color-mix(in srgb, var(--vscode-foreground) 15%, transparent);
+}
+.story-choice progress::-webkit-progress-value {
+  border-radius: 5px;
+  background: var(--event-accent);
+}
+.story-choice progress::-moz-progress-bar {
+  border-radius: 5px;
+  background: var(--event-accent);
+}
+.story-points {
+  grid-column: 3;
+  grid-row: 1 / 3;
+  white-space: nowrap;
+  font-size: 12px;
+  color: var(--vscode-descriptionForeground);
 }
 .story-choice .delete-control,
 .story-choice .detail-button {
   flex: none;
 }
+.story-choice .delete-control,
+.task-actions .delete-control {
+  width: 4px;
+  opacity: 0;
+}
+.story-choice .delete-control:hover,
+.story-choice .delete-control:focus-within,
+.task-actions .delete-control:hover,
+.task-actions .delete-control:focus-within {
+  opacity: 1;
+}
 .task-line {
-  display: flex;
-  gap: 5px;
+  display: grid;
+  grid-template-columns: 18px minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: 2px;
   min-width: 0;
-  padding: 6px 0;
+  min-height: 48px;
+  padding: 7px 16px;
+  box-sizing: border-box;
+  border-bottom: 0;
+}
+.task-line:hover {
+  background: color-mix(
+    in srgb,
+    var(--vscode-list-hoverBackground) 55%,
+    transparent
+  );
+}
+.task-line:focus-within {
+  background: color-mix(
+    in srgb,
+    var(--vscode-list-activeSelectionBackground) 35%,
+    transparent
+  );
+  outline: 1px solid
+    color-mix(in srgb, var(--vscode-focusBorder) 40%, transparent);
+  outline-offset: -1px;
 }
 .task-line .task-name {
-  flex: 1;
   min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+.task-line.completed .task-name {
+  color: var(--vscode-descriptionForeground);
+}
+.task-line.completed :where(.point-selector > button, .point-badge) {
+  opacity: 0.5;
+}
+.point-selector > button:disabled {
+  cursor: default;
+}
 .task-actions {
   display: inline-flex;
   align-items: center;
+  gap: 2px;
   flex: none;
 }
 .point-selector > button,
@@ -1004,7 +1206,8 @@ main {
   color: var(--vscode-charts-blue, #4c8dff);
   border-color: var(--vscode-charts-blue, #4c8dff);
 }
-.event-list-toolbar .inline-add-plus {
+.event-list-toolbar .inline-add-plus,
+.event-details .inline-add-plus {
   position: relative;
   display: block;
   width: 14px;
@@ -1012,7 +1215,9 @@ main {
   font-size: 0;
 }
 .event-list-toolbar .inline-add-plus::before,
-.event-list-toolbar .inline-add-plus::after {
+.event-list-toolbar .inline-add-plus::after,
+.event-details .inline-add-plus::before,
+.event-details .inline-add-plus::after {
   content: "";
   position: absolute;
   top: 50%;
@@ -1021,11 +1226,13 @@ main {
   background: currentColor;
   transform: translate(-50%, -50%);
 }
-.event-list-toolbar .inline-add-plus::before {
+.event-list-toolbar .inline-add-plus::before,
+.event-details .inline-add-plus::before {
   width: 14px;
   height: 2px;
 }
-.event-list-toolbar .inline-add-plus::after {
+.event-list-toolbar .inline-add-plus::after,
+.event-details .inline-add-plus::after {
   width: 2px;
   height: 14px;
 }

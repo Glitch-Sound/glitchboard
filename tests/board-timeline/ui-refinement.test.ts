@@ -30,6 +30,7 @@ describe("Event詳細の視覚情報", () => {
         today: "2026-11-03",
         prediction: "2026-11-16",
         projectColor: "#123456",
+        onPointsChange: vi.fn(),
       }),
     );
     expect(screen.getByText("11/16(月)")).toBeTruthy();
@@ -45,6 +46,17 @@ describe("Event詳細の視覚情報", () => {
       ),
     ).toBe("#123456");
     expect(container.querySelector(".story-choice.selected")).toBeTruthy();
+    expect(
+      (screen.getByRole("button", { name: "13pt" }) as HTMLButtonElement)
+        .disabled,
+    ).toBe(true);
+    expect(
+      (screen.getByRole("button", { name: "21pt" }) as HTMLButtonElement)
+        .disabled,
+    ).toBe(false);
+    expect(screen.getByText("完了").closest(".task-line")?.classList).toContain(
+      "completed",
+    );
   });
 
   it("ポイントカードのスライダーと7値の選択を使える", () => {

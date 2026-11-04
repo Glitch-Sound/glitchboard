@@ -229,6 +229,11 @@ export function BoardApp() {
               today={today}
               prediction={predictions[selectedEvent.id] ?? null}
               danger={danger.events[selectedEvent.id]}
+              projectName={
+                projects.find((project) =>
+                  project.events.some((event) => event.id === selectedEvent.id),
+                )?.name
+              }
               projectColor={
                 projects.find((project) =>
                   project.events.some((event) => event.id === selectedEvent.id),
