@@ -211,7 +211,6 @@ export function BoardApp() {
                 }}
                 settings={settings}
                 danger={danger.events}
-                onDelete={requestDelete}
                 onOpenDetail={(kind, id) => setDetailTarget({ kind, id })}
                 requiredByDay={required}
                 pace={actual.pace}

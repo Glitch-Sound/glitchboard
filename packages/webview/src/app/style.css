@@ -534,7 +534,7 @@ main {
   overflow: visible;
 }
 .timeline .project-col {
-  width: 170px;
+  width: clamp(170px, 15%, 260px);
 }
 .timeline .overdue-col {
   width: 76px;
@@ -555,7 +555,7 @@ main {
   text-align: center;
 }
 .timeline-row > :first-child {
-  width: 170px;
+  width: clamp(170px, 15%, 260px);
   min-width: 170px;
   box-sizing: border-box;
   padding: 8px;
@@ -617,7 +617,7 @@ main {
   );
 }
 .timeline tbody tr:not(.pace-row):not(.timeline-spacer) {
-  height: 66px;
+  height: 87px;
 }
 .timeline-spacer {
   height: 100%;
@@ -644,6 +644,15 @@ main {
   float: right;
   display: inline-flex;
   align-items: center;
+}
+.project-actions .detail-button {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border: 1px solid var(--vscode-panel-border);
+  border-radius: 5px;
 }
 .section-heading {
   display: flex;

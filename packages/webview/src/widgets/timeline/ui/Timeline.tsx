@@ -4,12 +4,7 @@ import {
   isWorkday,
   type WorkdaySettings,
 } from "../../../../../shared/src/calculation/dates.js";
-import {
-  type DescendantCounts,
-  projectCounts,
-} from "../../../../../shared/src/domain/deletion.js";
 import type { Project } from "../../../../../shared/src/domain/index.js";
-import { DeleteControl } from "../../../features/delete-item/index.js";
 import { DetailButton } from "../../../features/detail-button/index.js";
 import { InlineAdd } from "../../../features/inline-add/index.js";
 
@@ -23,7 +18,6 @@ type Props = {
   onSelect(eventId: string): void;
   settings?: WorkdaySettings;
   danger?: Record<string, EventDanger>;
-  onDelete?: (kind: "project", id: string, counts: DescendantCounts) => void;
   onOpenDetail?: (kind: "project", id: string) => void;
   requiredByDay?: Readonly<Record<string, number>>;
   pace?: number | null;
@@ -130,7 +124,6 @@ export function Timeline({
   onSelect,
   settings = defaultSettings,
   danger = {},
-  onDelete,
   onOpenDetail,
   requiredByDay,
   pace,
@@ -138,7 +131,10 @@ export function Timeline({
   onAddProject,
 }: Props) {
   const [open, setOpen] = useState<string | null>(null);
-  const columns: (string | null)[] = [null, ...days];
+  const hasOverdue = projects.some((project) =>
+    project.events.some((event) => event.due < today),
+  );
+  const columns: (string | null)[] = hasOverdue ? [null, ...days] : [...days];
   return (
     <table
       className={`timeline timeline-${period}`}
@@ -146,7 +142,7 @@ export function Timeline({
     >
       <colgroup>
         <col className="project-col" />
-        <col className="overdue-col" />
+        {hasOverdue && <col className="overdue-col" />}
         {days.map((day) => (
           <col key={day} />
         ))}
@@ -167,9 +163,11 @@ export function Timeline({
               )}
             </span>
           </th>
-          <th scope="col" className="overdue-heading">
-            期限切れ
-          </th>
+          {hasOverdue && (
+            <th scope="col" className="overdue-heading">
+              期限切れ
+            </th>
+          )}
           {days.map((day) => (
             <th
               scope="col"
@@ -198,21 +196,11 @@ export function Timeline({
                 {project.name}
               </span>
               <span className="project-actions">
-                {onDelete && (
-                  <DeleteControl
-                    kind="project"
-                    name={project.name}
-                    iconOnly
-                    counts={projectCounts(project)}
-                    onConfirm={() =>
-                      onDelete("project", project.id, projectCounts(project))
-                    }
-                  />
-                )}
                 {onOpenDetail && (
                   <DetailButton
                     name={project.name}
                     note={project.note}
+                    icon="document"
                     onOpen={() => onOpenDetail("project", project.id)}
                   />
                 )}
@@ -298,7 +286,7 @@ export function Timeline({
         ))}
         <tr className="timeline-row timeline-spacer">
           <th />
-          <td className="overdue-cell" />
+          {hasOverdue && <td className="overdue-cell" />}
           {days.map((day) => (
             <td key={day} className={dayTone(day, today, settings)} />
           ))}
@@ -308,7 +296,7 @@ export function Timeline({
             <span>必要ペース</span>
             {!learning && <small>実績 ┄</small>}
           </th>
-          <td className="overdue-cell" />
+          {hasOverdue && <td className="overdue-cell" />}
           <td colSpan={days.length}>
             <RequiredPace
               days={days}

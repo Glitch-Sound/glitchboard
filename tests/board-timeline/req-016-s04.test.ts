@@ -7,6 +7,29 @@ import type { Project } from "../../packages/shared/src/domain/index.js";
 import { Timeline } from "../../packages/webview/src/widgets/timeline/ui/Timeline.js";
 
 describe("REQ-016-S04 期限切れのEvent", () => {
+  it("期限切れがなければ日付列がProjectの直後から始まる", () => {
+    render(
+      createElement(Timeline, {
+        projects: [
+          { id: "project", name: "Alpha", color: "#123456", events: [] },
+        ] as Project[],
+        days: ["2026-11-03"],
+        today: "2026-11-03",
+        period: "week",
+        selectedEventId: null,
+        onSelect: () => {},
+      }),
+    );
+    expect(screen.queryByRole("columnheader", { name: "期限切れ" })).toBeNull();
+    expect(
+      (
+        screen.getByRole("columnheader", {
+          name: /11\/03/,
+        }) as HTMLTableCellElement
+      ).cellIndex,
+    ).toBe(1);
+  });
+
   it("日付列より左の期限切れ列へまとめ、一覧から選択できる", () => {
     const projects = [
       {

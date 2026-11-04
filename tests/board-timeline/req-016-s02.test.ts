@@ -51,9 +51,11 @@ describe("REQ-016-S02 月表示", () => {
         '.today-holiday:has(time[datetime="2026-11-01"])',
       ),
     ).toHaveLength(1);
-    expect(container.querySelectorAll("tbody td.today-holiday")).toHaveLength(
-      1,
-    );
+    expect(
+      container.querySelectorAll(
+        "tbody tr:not(.timeline-spacer) td.today-holiday",
+      ),
+    ).toHaveLength(1);
     expect(container.querySelector("tbody td.holiday")).toBeNull();
   });
 });
