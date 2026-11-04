@@ -197,73 +197,87 @@ export function BoardApp() {
             />
           </header>
           {snapshot?.error && <p role="alert">{snapshot.error}</p>}
-          <Timeline
-            projects={projects}
-            days={days}
-            today={today}
-            period={period}
-            selectedEventId={selection ?? null}
-            onSelect={(eventId) => {
-              setSelectedEventId(eventId);
-              localBridge()?.postMessage({ type: "selectEvent", eventId });
-            }}
-            settings={settings}
-            danger={danger.events}
-            onDelete={requestDelete}
-            onOpenDetail={(kind, id) => setDetailTarget({ kind, id })}
-            requiredByDay={required}
-            pace={actual.pace}
-            learning={actual.learning}
-            onAddProject={(name, color) =>
-              sendOperation(localBridge(), {
-                type: "createProject",
-                name,
-                color,
-              })
-            }
-          />
-          {selectedEvent && (
-            <EventDetails
-              key={selectedEvent.id}
-              event={selectedEvent}
-              today={today}
-              prediction={predictions[selectedEvent.id] ?? null}
-              danger={danger.events[selectedEvent.id]}
-              projectName={
-                projects.find((project) =>
-                  project.events.some((event) => event.id === selectedEvent.id),
-                )?.name
-              }
-              projectColor={
-                projects.find((project) =>
-                  project.events.some((event) => event.id === selectedEvent.id),
-                )?.color
-              }
-              onPointsChange={(taskId, points) => {
-                const bridge = localBridge();
-                if (bridge) postTaskPoints(bridge, taskId, points);
-              }}
-              onDoneChange={(taskId, done) =>
-                localBridge()?.postMessage({
-                  type: "setTaskDone",
-                  taskId,
-                  done,
-                })
-              }
-              onAddStory={(eventId, name) =>
-                sendOperation(localBridge(), {
-                  type: "addStory",
-                  eventId,
-                  name,
-                })
-              }
-              onAddTask={(storyId, name) =>
-                sendOperation(localBridge(), { type: "addTask", storyId, name })
-              }
-              onDelete={requestDelete}
-              onOpenDetail={(kind, id) => setDetailTarget({ kind, id })}
-            />
-          )}
+          <div className="board-content">
+            <div className="timeline-panel">
+              <Timeline
+                projects={projects}
+                days={days}
+                today={today}
+                period={period}
+                selectedEventId={selection ?? null}
+                onSelect={(eventId) => {
+                  setSelectedEventId(eventId);
+                  localBridge()?.postMessage({ type: "selectEvent", eventId });
+                }}
+                settings={settings}
+                danger={danger.events}
+                onDelete={requestDelete}
+                onOpenDetail={(kind, id) => setDetailTarget({ kind, id })}
+                requiredByDay={required}
+                pace={actual.pace}
+                learning={actual.learning}
+                onAddProject={(name, color) =>
+                  sendOperation(localBridge(), {
+                    type: "createProject",
+                    name,
+                    color,
+                  })
+                }
+              />
+            </div>
+            <div className="board-details-panel">
+              {selectedEvent && (
+                <EventDetails
+                  key={selectedEvent.id}
+                  event={selectedEvent}
+                  today={today}
+                  prediction={predictions[selectedEvent.id] ?? null}
+                  danger={danger.events[selectedEvent.id]}
+                  projectName={
+                    projects.find((project) =>
+                      project.events.some(
+                        (event) => event.id === selectedEvent.id,
+                      ),
+                    )?.name
+                  }
+                  projectColor={
+                    projects.find((project) =>
+                      project.events.some(
+                        (event) => event.id === selectedEvent.id,
+                      ),
+                    )?.color
+                  }
+                  onPointsChange={(taskId, points) => {
+                    const bridge = localBridge();
+                    if (bridge) postTaskPoints(bridge, taskId, points);
+                  }}
+                  onDoneChange={(taskId, done) =>
+                    localBridge()?.postMessage({
+                      type: "setTaskDone",
+                      taskId,
+                      done,
+                    })
+                  }
+                  onAddStory={(eventId, name) =>
+                    sendOperation(localBridge(), {
+                      type: "addStory",
+                      eventId,
+                      name,
+                    })
+                  }
+                  onAddTask={(storyId, name) =>
+                    sendOperation(localBridge(), {
+                      type: "addTask",
+                      storyId,
+                      name,
+                    })
+                  }
+                  onDelete={requestDelete}
+                  onOpenDetail={(kind, id) => setDetailTarget({ kind, id })}
+                />
+              )}
+            </div>
+          </div>
           {detailSelection && (
             <DetailPanel
               key={detailSelection.item.id}

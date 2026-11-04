@@ -296,6 +296,13 @@ export function Timeline({
             })}
           </tr>
         ))}
+        <tr className="timeline-row timeline-spacer">
+          <th />
+          <td className="overdue-cell" />
+          {days.map((day) => (
+            <td key={day} className={dayTone(day, today, settings)} />
+          ))}
+        </tr>
         <tr className="timeline-row pace-row">
           <th scope="row">
             <span>必要ペース</span>
