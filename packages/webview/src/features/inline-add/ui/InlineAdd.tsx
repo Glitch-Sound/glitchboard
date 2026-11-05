@@ -11,7 +11,7 @@ type Props = {
   kind: Kind;
   layout?: "popover" | "embedded";
   projectId?: string;
-  projects?: { id: string; name: string }[];
+  projects?: { id: string; name: string; color?: string }[];
   usedColors?: string[];
   onSubmit(values: AddValues): boolean | Promise<boolean>;
 };
@@ -21,6 +21,12 @@ const names = {
   story: "Story",
   task: "Task",
 };
+const weekdays = ["日", "月", "火", "水", "木", "金", "土"];
+
+function displayDue(due: string): string {
+  const weekday = weekdays[new Date(`${due}T00:00:00Z`).getUTCDay()];
+  return `${Number(due.slice(5, 7))}/${Number(due.slice(8, 10))}(${weekday})`;
+}
 
 /** REQ-022: 見出しの追加ボタンから入力しEnterで保存、Escで破棄する。 */
 const projectColors = [
@@ -86,6 +92,7 @@ export function InlineAdd({
     projectId ?? projects[0]?.id ?? "",
   );
   const nameInput = useRef<HTMLInputElement>(null);
+  const dateInput = useRef<HTMLInputElement>(null);
   useEffect(() => {
     if (open) nameInput.current?.focus();
   }, [open]);
@@ -128,7 +135,11 @@ export function InlineAdd({
           }}
           onSubmit={async (event) => {
             event.preventDefault();
-            if (saving || !name.trim() || (kind === "event" && !due)) return;
+            if (saving || !name.trim()) return;
+            if (kind === "event" && !due) {
+              dateInput.current?.showPicker?.();
+              return;
+            }
             setSaving(true);
             try {
               const saved = await onSubmit({
@@ -142,11 +153,22 @@ export function InlineAdd({
               setSaving(false);
             }
           }}
+          className={
+            kind === "event" && layout === "embedded"
+              ? "inline-event-form"
+              : undefined
+          }
         >
           <input
             ref={nameInput}
             aria-label="名前"
-            placeholder={kind === "event" ? "Event名" : undefined}
+            placeholder={
+              kind === "event" && layout === "embedded"
+                ? "Event名 — Enterで追加 / Escで取消"
+                : kind === "event"
+                  ? "Event名"
+                  : undefined
+            }
             value={name}
             onChange={(event) => setName(event.target.value)}
           />
@@ -158,30 +180,92 @@ export function InlineAdd({
               onChange={(event) => setColor(event.target.value)}
             />
           )}
-          {kind === "event" && (
-            <>
-              <select
-                aria-label="Project"
-                value={selectedProjectId}
-                onChange={(event) => setSelectedProjectId(event.target.value)}
-              >
-                {projects.map((project) => (
-                  <option key={project.id} value={project.id}>
-                    {project.name}
-                  </option>
-                ))}
-              </select>
-              <input
-                type="date"
-                aria-label="期限"
-                value={due}
-                onChange={(event) => setDue(event.target.value)}
-              />
-            </>
+          {kind === "event" &&
+            (layout === "embedded" ? (
+              <div className="inline-event-controls">
+                <span className="inline-event-project">
+                  <span
+                    className="inline-event-project-dot"
+                    style={{
+                      backgroundColor: projects.find(
+                        (project) => project.id === selectedProjectId,
+                      )?.color,
+                    }}
+                    aria-hidden="true"
+                  />
+                  <select
+                    aria-label="Project"
+                    value={selectedProjectId}
+                    onChange={(event) =>
+                      setSelectedProjectId(event.target.value)
+                    }
+                  >
+                    {projects.map((project) => (
+                      <option key={project.id} value={project.id}>
+                        {project.name}
+                      </option>
+                    ))}
+                  </select>
+                </span>
+                <span className="inline-event-due">
+                  <button
+                    type="button"
+                    className="inline-event-date-trigger"
+                    aria-label={due ? `期限 ${displayDue(due)}` : "期限を選ぶ"}
+                    onClick={() => dateInput.current?.showPicker?.()}
+                  >
+                    <svg
+                      aria-hidden="true"
+                      width="16"
+                      height="16"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <rect x="3" y="5" width="18" height="16" rx="2" />
+                      <path d="M7 3v4M17 3v4M3 10h18" />
+                    </svg>
+                    {due ? displayDue(due) : "期限を選ぶ"}
+                  </button>
+                  <input
+                    ref={dateInput}
+                    type="date"
+                    aria-label="期限"
+                    tabIndex={-1}
+                    value={due}
+                    onChange={(event) => setDue(event.target.value)}
+                  />
+                </span>
+              </div>
+            ) : (
+              <>
+                <select
+                  aria-label="Project"
+                  value={selectedProjectId}
+                  onChange={(event) => setSelectedProjectId(event.target.value)}
+                >
+                  {projects.map((project) => (
+                    <option key={project.id} value={project.id}>
+                      {project.name}
+                    </option>
+                  ))}
+                </select>
+                <input
+                  type="date"
+                  aria-label="期限"
+                  value={due}
+                  onChange={(event) => setDue(event.target.value)}
+                />
+              </>
+            ))}
+          {(kind !== "event" || layout !== "embedded" || due) && (
+            <button type="submit" disabled={saving}>
+              追加
+            </button>
           )}
-          <button type="submit" disabled={saving}>
-            追加
-          </button>
         </form>
       )}
     </span>

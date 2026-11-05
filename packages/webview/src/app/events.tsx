@@ -68,6 +68,7 @@ export function EventsApp() {
                 projects={projects.map((project) => ({
                   id: project.id,
                   name: project.name,
+                  color: project.color,
                 }))}
                 projectId={projects[0]?.id}
                 onSubmit={({ name, due, projectId }) =>
