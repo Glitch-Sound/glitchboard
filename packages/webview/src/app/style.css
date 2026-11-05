@@ -536,7 +536,7 @@ main {
   overflow: visible;
 }
 .timeline .project-col {
-  width: clamp(170px, 15%, 260px);
+  width: 340px;
 }
 .timeline .overdue-col {
   width: 76px;
@@ -557,8 +557,8 @@ main {
   text-align: center;
 }
 .timeline-row > :first-child {
-  width: clamp(170px, 15%, 260px);
-  min-width: 170px;
+  width: 340px;
+  min-width: 340px;
   box-sizing: border-box;
   padding: 8px;
   border-inline-start: 3px solid;
@@ -783,9 +783,9 @@ main {
 }
 .event-details {
   display: grid;
-  grid-template-columns: minmax(220px, 0.75fr) minmax(300px, 1.65fr) minmax(
+  grid-template-columns: minmax(220px, 3fr) minmax(300px, 4fr) minmax(
       300px,
-      1.65fr
+      4fr
     );
   gap: 0;
   height: 100%;
