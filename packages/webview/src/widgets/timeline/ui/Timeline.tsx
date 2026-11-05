@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { EventDanger } from "../../../../../shared/src/calculation/danger.js";
 import {
   isWorkday,
@@ -6,7 +6,7 @@ import {
 } from "../../../../../shared/src/calculation/dates.js";
 import type { Project } from "../../../../../shared/src/domain/index.js";
 import { DetailButton } from "../../../features/detail-button/index.js";
-import { InlineAdd } from "../../../features/inline-add/index.js";
+import { nextProjectColor } from "../../../features/inline-add/index.js";
 
 type Period = "three-days" | "week" | "month";
 type Props = {
@@ -131,6 +131,20 @@ export function Timeline({
   onAddProject,
 }: Props) {
   const [open, setOpen] = useState<string | null>(null);
+  const [addingProject, setAddingProject] = useState(false);
+  const [projectName, setProjectName] = useState("");
+  const [projectColor, setProjectColor] = useState(() =>
+    nextProjectColor(projects.map((project) => project.color)),
+  );
+  const [savingProject, setSavingProject] = useState(false);
+  const projectNameInput = useRef<HTMLInputElement>(null);
+  useEffect(() => {
+    if (addingProject) projectNameInput.current?.focus();
+  }, [addingProject]);
+  const cancelProject = () => {
+    setAddingProject(false);
+    setProjectName("");
+  };
   const hasOverdue = projects.some((project) =>
     project.events.some((event) => event.due < today),
   );
@@ -153,13 +167,28 @@ export function Timeline({
             <span className="section-heading">
               Project{" "}
               {onAddProject && (
-                <InlineAdd
-                  kind="project"
-                  usedColors={projects.map((project) => project.color)}
-                  onSubmit={({ name, color }) =>
-                    onAddProject(name, color ?? "#4c8dff")
-                  }
-                />
+                <button
+                  className="inline-add-trigger"
+                  type="button"
+                  aria-label="Projectを追加"
+                  aria-expanded={addingProject}
+                  onClick={() => {
+                    if (addingProject) {
+                      cancelProject();
+                      return;
+                    }
+                    setProjectColor(
+                      nextProjectColor(
+                        projects.map((project) => project.color),
+                      ),
+                    );
+                    setAddingProject(true);
+                  }}
+                >
+                  <span className="inline-add-plus" aria-hidden="true">
+                    +
+                  </span>
+                </button>
               )}
             </span>
           </th>
@@ -293,6 +322,66 @@ export function Timeline({
             })}
           </tr>
         ))}
+        {addingProject && onAddProject && (
+          <tr className="timeline-row timeline-project-add-row">
+            <td>
+              <form
+                className="timeline-project-add-form"
+                onKeyDown={(event) => {
+                  if (event.key === "Escape") {
+                    event.preventDefault();
+                    cancelProject();
+                  }
+                }}
+                onSubmit={async (event) => {
+                  event.preventDefault();
+                  if (savingProject || !projectName.trim()) return;
+                  setSavingProject(true);
+                  try {
+                    const saved = await onAddProject(
+                      projectName.trim(),
+                      projectColor,
+                    );
+                    if (saved) cancelProject();
+                  } finally {
+                    setSavingProject(false);
+                  }
+                }}
+              >
+                <label className="timeline-project-color">
+                  <span
+                    className="timeline-project-color-dot"
+                    style={{ backgroundColor: projectColor }}
+                    aria-hidden="true"
+                  />
+                  <input
+                    type="color"
+                    aria-label="色"
+                    value={projectColor}
+                    onChange={(event) => setProjectColor(event.target.value)}
+                  />
+                </label>
+                <input
+                  ref={projectNameInput}
+                  type="text"
+                  aria-label="名前"
+                  placeholder="プロジェクト名 — Enterで追加"
+                  value={projectName}
+                  onChange={(event) => setProjectName(event.target.value)}
+                />
+                {projectName.trim() && (
+                  <button type="submit" disabled={savingProject}>
+                    追加
+                  </button>
+                )}
+              </form>
+            </td>
+            {hasOverdue && <td className="overdue-cell" />}
+            {days.map((day) => (
+              <td key={day} className={dayTone(day, today, settings)} />
+            ))}
+          </tr>
+        )}
         <tr className="timeline-row timeline-spacer">
           <th />
           {hasOverdue && <td className="overdue-cell" />}

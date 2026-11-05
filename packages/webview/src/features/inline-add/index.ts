@@ -1,1 +1,1 @@
-export { type AddValues, InlineAdd } from "./ui/InlineAdd.js";
+export { type AddValues, InlineAdd, nextProjectColor } from "./ui/InlineAdd.js";
