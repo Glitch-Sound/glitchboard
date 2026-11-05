@@ -893,7 +893,7 @@ main {
   color: var(--vscode-charts-blue, #4c8dff);
   border-color: var(--vscode-charts-blue, #4c8dff);
 }
-.story-add-form {
+.section-add-form {
   display: flex;
   align-items: center;
   gap: 8px;
@@ -907,7 +907,7 @@ main {
   box-shadow: 0 0 0 2px
     color-mix(in srgb, var(--vscode-focusBorder) 16%, transparent);
 }
-.story-add-form input[type="text"] {
+.section-add-form input[type="text"] {
   flex: 1;
   width: 100%;
   min-width: 0;
@@ -918,11 +918,11 @@ main {
   color: var(--vscode-foreground);
   font-size: 13px;
 }
-.story-add-form input[type="text"]::placeholder {
+.section-add-form input[type="text"]::placeholder {
   color: var(--vscode-descriptionForeground);
   opacity: 1;
 }
-.story-add-form button[type="submit"] {
+.section-add-form button[type="submit"] {
   flex: none;
   padding: 5px 12px;
   border: 1px solid var(--vscode-panel-border);

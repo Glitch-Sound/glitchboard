@@ -14,7 +14,6 @@ import {
 } from "../../../../../shared/src/domain/index.js";
 import { DeleteControl } from "../../../features/delete-item/index.js";
 import { DetailButton } from "../../../features/detail-button/index.js";
-import { InlineAdd } from "../../../features/inline-add/index.js";
 import { pointTone } from "../model/pointTone.js";
 import { PointSelector } from "./PointSelector.js";
 
@@ -72,13 +71,28 @@ export function EventDetails({
   const [storyName, setStoryName] = useState("");
   const [savingStory, setSavingStory] = useState(false);
   const storyNameInput = useRef<HTMLInputElement>(null);
-  useEffect(() => setStoryId(initialStoryId(event)), [event]);
+  const [addingTask, setAddingTask] = useState(false);
+  const [taskName, setTaskName] = useState("");
+  const [savingTask, setSavingTask] = useState(false);
+  const taskNameInput = useRef<HTMLInputElement>(null);
+  useEffect(() => {
+    setStoryId(initialStoryId(event));
+    setAddingTask(false);
+    setTaskName("");
+  }, [event]);
   useEffect(() => {
     if (addingStory) storyNameInput.current?.focus();
   }, [addingStory]);
+  useEffect(() => {
+    if (addingTask) taskNameInput.current?.focus();
+  }, [addingTask]);
   const cancelStory = () => {
     setAddingStory(false);
     setStoryName("");
+  };
+  const cancelTask = () => {
+    setAddingTask(false);
+    setTaskName("");
   };
   const story = event.stories.find((item) => item.id === storyId);
   const points = eventPoints(event);
@@ -201,7 +215,7 @@ export function EventDetails({
         </h3>
         {addingStory && onAddStory && (
           <form
-            className="story-add-form"
+            className="story-add-form section-add-form"
             onKeyDown={(keyEvent) => {
               if (keyEvent.key === "Escape") {
                 keyEvent.preventDefault();
@@ -247,7 +261,10 @@ export function EventDetails({
                 className="story-select"
                 type="button"
                 aria-pressed={item.id === storyId}
-                onClick={() => setStoryId(item.id)}
+                onClick={() => {
+                  setStoryId(item.id);
+                  cancelTask();
+                }}
               >
                 <span className="story-name">{item.name}</span>
                 <small>
@@ -289,12 +306,55 @@ export function EventDetails({
         <h3>
           Task{story ? `・${story.name}` : ""}{" "}
           {onAddTask && story && (
-            <InlineAdd
-              kind="task"
-              onSubmit={({ name }) => onAddTask(story.id, name)}
-            />
+            <button
+              className="inline-add-trigger"
+              type="button"
+              aria-label="Taskを追加"
+              aria-expanded={addingTask}
+              onClick={() => (addingTask ? cancelTask() : setAddingTask(true))}
+            >
+              <span className="inline-add-plus" aria-hidden="true">
+                +
+              </span>
+            </button>
           )}
         </h3>
+        {addingTask && onAddTask && story && (
+          <form
+            className="task-add-form section-add-form"
+            onKeyDown={(keyEvent) => {
+              if (keyEvent.key === "Escape") {
+                keyEvent.preventDefault();
+                cancelTask();
+              }
+            }}
+            onSubmit={async (submitEvent) => {
+              submitEvent.preventDefault();
+              if (savingTask || !taskName.trim()) return;
+              setSavingTask(true);
+              try {
+                const saved = await onAddTask(story.id, taskName.trim());
+                if (saved) cancelTask();
+              } finally {
+                setSavingTask(false);
+              }
+            }}
+          >
+            <input
+              ref={taskNameInput}
+              type="text"
+              aria-label="名前"
+              placeholder="Task名 — Enterで追加 / Escで取消"
+              value={taskName}
+              onChange={(changeEvent) => setTaskName(changeEvent.target.value)}
+            />
+            {taskName.trim() && (
+              <button type="submit" disabled={savingTask}>
+                追加
+              </button>
+            )}
+          </form>
+        )}
         {story ? (
           story.tasks.map((task) => (
             <div
