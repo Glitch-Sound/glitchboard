@@ -1,4 +1,4 @@
-import { type CSSProperties, useEffect, useState } from "react";
+import { type CSSProperties, useEffect, useRef, useState } from "react";
 import type { EventDanger } from "../../../../../shared/src/calculation/danger.js";
 import { calendarDayDifference } from "../../../../../shared/src/calculation/dates.js";
 import {
@@ -68,7 +68,18 @@ export function EventDetails({
   const [storyId, setStoryId] = useState<string | null>(() =>
     initialStoryId(event),
   );
+  const [addingStory, setAddingStory] = useState(false);
+  const [storyName, setStoryName] = useState("");
+  const [savingStory, setSavingStory] = useState(false);
+  const storyNameInput = useRef<HTMLInputElement>(null);
   useEffect(() => setStoryId(initialStoryId(event)), [event]);
+  useEffect(() => {
+    if (addingStory) storyNameInput.current?.focus();
+  }, [addingStory]);
+  const cancelStory = () => {
+    setAddingStory(false);
+    setStoryName("");
+  };
   const story = event.stories.find((item) => item.id === storyId);
   const points = eventPoints(event);
   const remaining = points.total - points.done;
@@ -173,12 +184,57 @@ export function EventDetails({
         <h3>
           Story{" "}
           {onAddStory && (
-            <InlineAdd
-              kind="story"
-              onSubmit={({ name }) => onAddStory(event.id, name)}
-            />
+            <button
+              className="inline-add-trigger"
+              type="button"
+              aria-label="Storyを追加"
+              aria-expanded={addingStory}
+              onClick={() =>
+                addingStory ? cancelStory() : setAddingStory(true)
+              }
+            >
+              <span className="inline-add-plus" aria-hidden="true">
+                +
+              </span>
+            </button>
           )}
         </h3>
+        {addingStory && onAddStory && (
+          <form
+            className="story-add-form"
+            onKeyDown={(keyEvent) => {
+              if (keyEvent.key === "Escape") {
+                keyEvent.preventDefault();
+                cancelStory();
+              }
+            }}
+            onSubmit={async (submitEvent) => {
+              submitEvent.preventDefault();
+              if (savingStory || !storyName.trim()) return;
+              setSavingStory(true);
+              try {
+                const saved = await onAddStory(event.id, storyName.trim());
+                if (saved) cancelStory();
+              } finally {
+                setSavingStory(false);
+              }
+            }}
+          >
+            <input
+              ref={storyNameInput}
+              type="text"
+              aria-label="名前"
+              placeholder="Story名 — Enterで追加 / Escで取消"
+              value={storyName}
+              onChange={(changeEvent) => setStoryName(changeEvent.target.value)}
+            />
+            {storyName.trim() && (
+              <button type="submit" disabled={savingStory}>
+                追加
+              </button>
+            )}
+          </form>
+        )}
         {event.stories.map((item) => {
           const progress = storyPoints(item);
           const done = item.tasks.filter((task) => task.doneAt).length;
