@@ -1,39 +1,15 @@
 # GlitchBoard
 
-GlitchBoardは、1人で複数のProjectを管理するためのVS Code拡張機能である。\
-Project、Event、Story、Taskの4階層で作業を整理し、期限、残りポイント、負荷、危険をボードとサイドバーで確認できる。\
-管理データは指定した`manage.yaml`とProjectごとのYAMLファイルに保存する。
+GlitchBoardは、複数のProjectをひとつの画面で見渡せるVS Code拡張機能です。作業を **Project → Event → Story → Task** の順に整理し、期限と進み具合を確認できます。データは`manage.yaml`とProjectごとのYAMLファイルに保存されます。
 
-## 主な機能
+## 使い始める
 
-- エディタのボードで、3日・1週間・月のタイムラインとProjectごとのEvent期限を表示する。
-- 3日・1週間では全Event名、月表示では選択中のEvent名を期限の◆に表示する。
-- ヘッダーで実績ペース、必要ペース、期間負荷、危険件数を確認する。
-- サイドバーのEVENT一覧で期限順のEventを見て、表示対象とProjectを切り替える。
-- 期限が危険なEventは一覧と詳細で赤く示し、Task未登録のEventも期限切れ判定に含める。
-- ボードからProject、Event、Story、Taskを追加し、Taskのポイントと完了状態を変更する。
-- 詳細パネルで名前、期限、色、補足、リンクを編集し、子孫件数を確認して削除する。
-- VS Codeのライトテーマとダークテーマに追従する。
-- 保存や削除に失敗した場合は画面上部に理由を表示し、追加の入力欄は保存成功後に閉じる。
+1. VS Codeのアクティビティバーで **GlitchBoard** を開きます。サイドバーに「EVENT一覧」が表示されます。
+2. 初回は **「manage.yamlを選ぶ」** で既存の管理ファイルを指定するか、**「新しく作る」** で作成します。VS Codeの設定`glitchboard.manageFile`に`manage.yaml`の絶対パスを指定することもできます。
+3. コマンドパレットで **「GlitchBoardを開く」** を実行すると、エディタにボードが開きます。
+4. ボードでProjectを追加し、その中にEvent、Story、Taskを作成します。
 
-## 利用を始める
-
-このリポジトリから拡張機能を試すには、VS Code 1.105以降とNode.js 24を用意する。\
-このリポジトリのルートで依存関係を取得し、拡張機能をビルドする。
-
-```sh
-corepack pnpm install --frozen-lockfile
-corepack pnpm build
-```
-
-VS Codeの`code`コマンドが使える環境では、リポジトリのルートから拡張機能開発ホストを開く。
-
-```sh
-code --new-window --extensionDevelopmentPath="$PWD/packages/extension" .
-```
-
-管理データ用のディレクトリを作り、次の内容で`manage.yaml`を置く。\
-最初はProjectがなくてもよい。
+管理ファイルは、現在VS Codeで開いている作業フォルダとは別の場所に置けます。空の管理ファイルを手で作る場合は、次の内容から始められます。
 
 ```yaml
 settings:
@@ -42,25 +18,83 @@ settings:
 projects: []
 ```
 
-VS Codeの設定`glitchboard.manageFile`に、その`manage.yaml`の絶対パスを指定する。\
-未設定の場合はGlitchBoardの画面から既存の`manage.yaml`を選ぶか、新しく作ることもできる。\
-設定先を変更するとVS Codeの再起動なしで新しい管理データに切り替わる。\
-Projectを追加すると、`projects/0001_名前.yaml`の形式でProjectファイルが作られ、`manage.yaml`に相対パスが記録される。
+Projectを追加すると`projects/0001_名前.yaml`のようなファイルが作られ、その相対パスが`manage.yaml`に記録されます。
 
-## 基本操作
+## ボードの見方
 
-アクティビティバーの「GlitchBoard」でEVENT一覧を開く。\
-コマンドパレットの「GlitchBoardを開く」でエディタにボードを開く。\
-ボードの「Projectを追加」ボタンからProjectを追加し、Project内にEvent、Story、Taskを追加する。\
-Eventには期限日を設定し、Taskには必要に応じてポイントを設定する。\
-Taskのチェックを切り替えると完了状態と負荷の計算が更新される。\
-月表示の期間負荷は今日以降の稼働日数で計算し、休日の今日に残る期限切れ作業は次の稼働日に割り当てる。\
-画面を開いたまま日付が変わった場合も、今日に基づく表示と計算を更新する。\
-EVENT一覧でEventを選ぶと、ボードでそのEventの詳細を開く。\
-`manage.yaml`とProjectファイルは、VS Codeで開いている作業フォルダとは別の場所に置ける。\
-管理データをGitで履歴管理する場合は、そのディレクトリを別のリポジトリにできる。
+画面例はダークテーマとサンプルデータを使用しています。上段に期間の指標とタイムライン、下段に選択したEventの詳細、Story一覧、Task一覧が並びます。
 
-## 開発と仕様
+![ボード全体。上段にタイムライン、下段にEvent詳細・Story一覧・Task一覧](artifacts/readme-board-full.png)
+
+### 期間と指標
+
+![ボード上部の期間切り替えと指標](artifacts/readme-header.png)
+
+**3日・1週間・月** を切り替えて、見たい期間の予定を確認できます。実績ペース、期間負荷、危険件数などは、現在の作業量と期限を把握するための目安です。完了した作業が少ない間は、実績ペースが「学習中」と表示されます。
+
+### Projectとタイムライン
+
+![Project列とEvent期限を示すタイムライン](artifacts/readme-timeline.png)
+
+左のPROJECT列にはProjectが並び、横方向にはEventの期限が◆で表示されます。期限切れのEventは専用の列でも確認できます。Eventを選ぶと、下段にそのEventの内容が表示されます。PROJECT列の **＋** からProjectを追加できます。
+
+![PROJECT列に収まるProject追加フォーム](artifacts/project-add-dark-timeline.png)
+
+### Event詳細
+
+![選択したEventの期限と進捗を示す詳細ブロック](artifacts/readme-event-summary.png)
+
+選択したEventの期限、残り日数または超過日数、残りポイント、進捗を確認できます。見積もりに必要な情報がそろうと、完了予測も表示されます。
+
+### Story一覧
+
+![選択したEventに属するStory一覧](artifacts/readme-story-list.png)
+
+StoryはEvent内の作業をまとめる単位です。Storyを選ぶと、右隣にそのStoryのTaskが表示されます。見出しの **＋** でStoryを追加できます。入力後はEnterで保存、Escで取り消します。
+
+![Storyの追加フォーム](artifacts/story-add-dark-panel.png)
+
+### Task一覧
+
+![選択したStoryに属するTask一覧](artifacts/readme-task-list.png)
+
+Taskのチェックで完了状態を切り替えられます。ポイントを設定すると、残り作業量や期間負荷の計算に反映されます。見出しの **＋** でTaskを追加できます。入力後はEnterで保存、Escで取り消します。
+
+![Taskの追加フォーム](artifacts/task-add-dark-panel.png)
+
+## サイドバーのEVENT一覧
+
+![期限別に並ぶサイドバーのEVENT一覧](artifacts/readme-event-list.png)
+
+Eventは期限切れ、今週、今後、完了済みなどに分かれて表示されます。Eventを選ぶとボードが開き、そのEventに移動します。上部のフィルターでは、表示対象とProjectを切り替えられます。
+
+![EVENT一覧の表示対象とProjectを選ぶフィルター](artifacts/readme-event-filters.png)
+
+**＋** でEventを追加します。Projectを選んで名前を入力し、**「期限を選ぶ」** を押すとカレンダーから日付を選べます。
+
+![EVENT追加フォーム](artifacts/event-add-dark-updated.png)
+
+![EVENTの期限を選ぶカレンダー](artifacts/event-add-datepicker-dark-updated.png)
+
+## 項目を編集する
+
+Project、Event、Story、Taskの詳細パネルから、名前、色、期限、補足、リンクなど、その項目に対応する情報を編集できます。Taskではポイントも変更できます。削除時は対象に含まれる子項目の件数を確認できます。
+
+![Eventの詳細パネル](artifacts/readme-detail-panel.png)
+
+変更は管理ファイルに保存されます。保存や削除に失敗した場合は画面上部に理由が表示されます。VS Codeのライトテーマとダークテーマの両方に対応しています。
+
+## リポジトリから試す
+
+開発用に動かす場合は、VS Code 1.105以降とNode.js 24を用意し、リポジトリのルートで次を実行します。
+
+```sh
+corepack pnpm install --frozen-lockfile
+corepack pnpm build
+code --new-window --extensionDevelopmentPath="$PWD/packages/extension" .
+```
+
+開発用の確認コマンド:
 
 ```sh
 corepack pnpm test
@@ -69,4 +103,4 @@ corepack pnpm check
 corepack pnpm check:fsd
 ```
 
-製品の目的は[product.md](openspec/product.md)、正式仕様の関係と読み順は[仕様の案内](openspec/specs/README.md)、要件と実装・テストの対応は[traceability.md](openspec/traceability.md)を参照する。
+製品の目的は[product.md](openspec/product.md)、仕様の読み順は[仕様の案内](openspec/specs/README.md)、要件と実装・テストの対応は[traceability.md](openspec/traceability.md)を参照してください。
