@@ -133,6 +133,7 @@ OpenSpec変更の作成時に以下の表へ行を追加する。\
 
 | 実施日 | 変更 | 実行コマンド | 結果 | 環境 |
 | --- | --- | --- | --- | --- |
+| 2026-11-06 | 必要ペースグラフの表示 | `corepack pnpm test tests/board-timeline/req-017-s01.test.ts tests/board-timeline/req-017-s02.test.ts`、`corepack pnpm typecheck`、`corepack pnpm check`、`corepack pnpm build`、`openspec validate --specs`、`git diff --check` | 関連2テスト成功、型・Biome・ビルド失敗0件、正式仕様7件の検証成功、[ダークテーマの画面例](../artifacts/readme-timeline.png)で青い必要量、黄色の実績線、赤い超過部分を確認 | Node 24.18.0、macOS arm64 |
 | 2026-11-06 | EVENT一覧を含む画面キャプチャ、Event要約、補足情報 | `corepack pnpm test`、`corepack pnpm typecheck`、`corepack pnpm check`、`corepack pnpm check:fsd`、`corepack pnpm build`、`openspec validate --specs`、`git diff --check` | 全96テスト成功、型・Biome・Steiger失敗0件、ビルド成功、正式仕様7件の検証成功、差分の空白エラー0件、ダークテーマの画面例でEVENT一覧とEvent要約の配置を確認 | Node 24.18.0、macOS arm64 |
 | 2026-11-03 | [data-persistence](changes/archive/2026-11-03-data-persistence/proposal.md) | `corepack pnpm test`、`corepack pnpm typecheck`、`corepack pnpm check`、`corepack pnpm check:fsd` | 9テスト成功、型・Biome・Steiger失敗0件 | Node 24.18.0、pnpm 12.16.1、macOS arm64 |
 | 2026-11-03 | [workload-analytics](changes/archive/2026-11-03-workload-analytics/proposal.md) | `corepack pnpm test`、`corepack pnpm typecheck`、`corepack pnpm check`、`corepack pnpm check:fsd` | 全23テスト成功、型・Biome・Steiger失敗0件、Steigerは同時実行時にOSのファイル監視上限で一度失敗し、単独再実行で成功 | Node 24.18.0、pnpm 12.16.1、macOS arm64 |

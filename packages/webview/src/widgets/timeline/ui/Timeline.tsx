@@ -68,6 +68,19 @@ function RequiredPace({
         preserveAspectRatio="none"
         aria-hidden="true"
       >
+        {values.map((value, index) => {
+          const top = showPace ? Math.max(y(value), y(pace)) : y(value);
+          return (
+            <rect
+              key={days[index]}
+              className="required-area"
+              x={index * 100}
+              y={top}
+              width="100"
+              height={y(0) - top}
+            />
+          );
+        })}
         {values.map(
           (value, index) =>
             showPace &&
@@ -88,6 +101,21 @@ function RequiredPace({
           fill="none"
           vectorEffect="non-scaling-stroke"
         />
+        {values.map(
+          (value, index) =>
+            showPace &&
+            value > pace && (
+              <line
+                key={days[index]}
+                className="overload-step"
+                x1={index * 100}
+                x2={(index + 1) * 100}
+                y1={y(value)}
+                y2={y(value)}
+                vectorEffect="non-scaling-stroke"
+              />
+            ),
+        )}
         {showPace && (
           <line
             className="pace-line"
@@ -101,7 +129,7 @@ function RequiredPace({
       </svg>
       {maxValue > 0 && (
         <span
-          className="chart-max"
+          className={`chart-max ${showPace && maxValue > pace ? "chart-max-overload" : ""}`}
           style={{
             left: `${((maxIndex + 0.5) / days.length) * 100}%`,
             bottom: `${((58 - y(maxValue)) / 58) * 100}%`,

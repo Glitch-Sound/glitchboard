@@ -47,8 +47,12 @@ main {
   color: var(--vscode-errorForeground);
 }
 .required-step {
-  stroke: var(--vscode-charts-blue);
+  stroke: color-mix(in srgb, var(--vscode-charts-blue) 45%, white);
   stroke-width: 2;
+}
+.required-area {
+  fill: var(--vscode-charts-blue);
+  opacity: 0.24;
 }
 .pace-line {
   stroke: var(--vscode-charts-yellow);
@@ -57,7 +61,11 @@ main {
 }
 .overload-area {
   fill: var(--vscode-charts-red);
-  opacity: 0.5;
+  opacity: 0.58;
+}
+.overload-step {
+  stroke: var(--vscode-charts-red);
+  stroke-width: 2.5;
 }
 .delete-control {
   position: relative;
@@ -845,6 +853,9 @@ main {
   color: var(--vscode-foreground);
   font-size: 10px;
   white-space: nowrap;
+}
+.chart-max-overload {
+  color: var(--vscode-charts-red);
 }
 .event-details {
   display: grid;
