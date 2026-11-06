@@ -39,7 +39,7 @@ flowchart LR
 | [board-visualization](board-visualization/spec.md) | 表示期間、タイムライン、ヘッダー、詳細エリア | workload-analysis、vscode-integration、item-details |
 | [event-navigation](event-navigation/spec.md) | EVENT一覧、抽出、ボードへの移動 | vscode-integration、board-visualization |
 | [hierarchy-editing](hierarchy-editing/spec.md) | 追加、ポイント変更、完了、確認付き削除 | data-management、item-details |
-| [item-details](item-details/spec.md) | 詳細パネル、編集、補足、リンク | board-visualization、hierarchy-editing |
+| [item-details](item-details/spec.md) | 詳細パネル、編集、補足 | board-visualization、hierarchy-editing |
 
 ## 目的別の読み順
 

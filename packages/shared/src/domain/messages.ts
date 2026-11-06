@@ -64,7 +64,7 @@ export const operationSchema = z.discriminatedUnion("type", [
     kind: z.enum(["project", "event", "story", "task"]),
     id: z.uuid(),
     patch: z
-      .object({
+      .strictObject({
         name: z.string().trim().min(1).optional(),
         due: z.string().optional(),
         color: z.string().optional(),
@@ -81,14 +81,6 @@ export const operationSchema = z.discriminatedUnion("type", [
           ])
           .optional(),
         note: z.string().optional(),
-        links: z
-          .array(
-            z.object({
-              label: z.string().trim().min(1),
-              target: z.string().trim().min(1),
-            }),
-          )
-          .optional(),
       })
       .refine((value) => Object.keys(value).length > 0),
   }),
@@ -120,7 +112,6 @@ export const operationSchema = z.discriminatedUnion("type", [
     name: z.string().trim().min(1),
   }),
 ]);
-
 export type Operation = z.infer<typeof operationSchema>;
 
 /** REQ-014/REQ-029: 初期設定操作も共有境界で検証する。 */
@@ -134,9 +125,3 @@ export const setupOperationSchema = z.discriminatedUnion("type", [
     requestId: z.number().int().positive().optional(),
   }),
 ]);
-
-/** REQ-028: VS Codeで開くリンク要求の境界検証。 */
-export const openLinkRequestSchema = z.object({
-  type: z.literal("openLink"),
-  target: z.string().min(1),
-});

@@ -28,9 +28,9 @@ Projectを追加すると`projects/0001_名前.yaml`のようなファイルが�
 ## ボードの見方
 
 画面例にはダークテーマとサンプルデータを使用している。\
-上段に期間の指標とタイムライン、下段に選択したEventの詳細、Story一覧、Task一覧が並ぶ。
+左側にEVENT一覧、右側のボード上段に期間の指標とタイムライン、下段に選択したEventの詳細、Story一覧、Task一覧が並ぶ。
 
-![上段にタイムライン、下段にEvent詳細・Story一覧・Task一覧を表示するボード全体](artifacts/readme-board-full.png)
+![左側のEVENT一覧と、タイムライン・Event詳細・Story一覧・Task一覧を表示する画面全体](artifacts/readme-board-full.png)
 
 ### 期間と指標
 
@@ -99,7 +99,7 @@ Projectを選んで名前を入力し、**「期限を選ぶ」** を押すと�
 
 ## 項目を編集する
 
-Project、Event、Story、Taskの詳細パネルから、名前、色、期限、補足、リンクなど、その項目に対応する情報を編集できる。\
+Project、Event、Story、Taskの詳細パネルから、名前、色、期限、補足など、その項目に対応する情報を編集できる。\
 Taskではポイントも変更できる。\
 削除時は対象に含まれる子項目の件数を確認できる。
 

@@ -9,7 +9,7 @@
 
 ### Requirement: REQ-026 - 詳細パネルの表示
 
-WHEN どの階層の詳細ボタンを押したときも、GlitchBoardは SHALL 右側のパネルに種別と階層、主要指標3つ、補足、リンク、編集と削除を示す。\
+WHEN どの階層の詳細ボタンを押したときも、GlitchBoardは SHALL 右側のパネルに種別と階層、主要指標3つ、補足、編集と削除を示す。\
 補足があれば詳細ボタンを青、なければ灰色とし、補足なしでは「+ 補足を追加」を示す。\
 Taskにはポイント、Projectには色の編集部品を示し、Escまたは×で閉じる。
 上部は色付き種別タグ、階層、タイトルの順とし、主要指標は3枚のカードで示す。\
@@ -43,19 +43,20 @@ WHEN 詳細パネルで編集を保存したとき、GlitchBoardは SHALL 名前
 - **WHEN** パネルで緑を選ぶ。
 - **THEN** Project色が保存されマーカーも緑になる。
 
-### Requirement: REQ-028 - 補足とリンク
+### Requirement: REQ-028 - 補足
 
-WHEN 詳細パネルで補足を保存したとき、GlitchBoardは SHALL `note`の文章と箇条書き、および`links`配列の`label`と`target`をProject YAMLに保存する。\
-リンク先は管理リポジトリ内の相対パスまたはhttp/https URLだけを許可し、相対パスの`..`による管理リポジトリ外への移動を拒否する。
+WHEN 詳細パネルで補足を保存したとき、GlitchBoardは SHALL `note`の文章と箇条書きをProject YAMLに保存する。\
+詳細パネルにリンク情報を表示せず、編集要求に`links`があれば拒否する。\
+既存のProject YAMLに`links`が残っている場合は、読み込み時に全階層から除去する。
 
-#### Scenario: REQ-028-S01 - 相対リンク
+#### Scenario: REQ-028-S03 - 補足の保存
 
-- **GIVEN** noteとlinksにprojects/guide.mdがある。
-- **WHEN** リンクを押す。
-- **THEN** 管理リポジトリ内の該当ファイルをVS Codeで開く。
+- **GIVEN** 補足のないProjectを表示している。
+- **WHEN** 文章と箇条書きを補足として保存する。
+- **THEN** `note`だけを保存要求に含め、リンク入力を表示しない。
 
-#### Scenario: REQ-028-S02 - 危険なリンク
+#### Scenario: REQ-028-S04 - 旧リンク情報の除去
 
-- **GIVEN** linksにjavascript: URLがある。
-- **WHEN** パネルを開く。
-- **THEN** リンクを無効として開かず診断を示す。
+- **GIVEN** Project YAMLの各階層に`links`がある。
+- **WHEN** Projectを読み込む。
+- **THEN** 補足とコメントを保持し、全階層の`links`をProject YAMLから除去する。

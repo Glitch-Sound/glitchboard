@@ -58,6 +58,32 @@ async function atomicWrite(path: string, content: string): Promise<void> {
   await rename(temp, path);
 }
 
+/** 旧Project YAMLに残ったlinksを階層から除き、コメントを保って保存する。 */
+function removeLegacyLinks(
+  document: Document.Parsed,
+  project: Project,
+): boolean {
+  const paths: (string | number)[][] = [[]];
+  for (const [eventIndex, event] of project.events.entries()) {
+    const eventPath = ["events", eventIndex] as (string | number)[];
+    paths.push(eventPath);
+    for (const [storyIndex, story] of event.stories.entries()) {
+      const storyPath = [...eventPath, "stories", storyIndex];
+      paths.push(storyPath);
+      for (const [taskIndex] of story.tasks.entries())
+        paths.push([...storyPath, "tasks", taskIndex]);
+    }
+  }
+  let changed = false;
+  for (const path of paths) {
+    const linkPath = [...path, "links"];
+    if (!document.hasIn(linkPath)) continue;
+    document.deleteIn(linkPath);
+    changed = true;
+  }
+  return changed;
+}
+
 /** REQ-002/REQ-003/REQ-004: manage.yamlを基準に読込対象だけを解決する。 */
 export async function loadManageFile(
   managePath: string,
@@ -69,11 +95,17 @@ export async function loadManageFile(
   const manage = manageSchema.parse(document.toJS());
   const loadedProjects: Project[] = [];
   for (const entry of manage.projects) {
-    if (!entry.load) continue;
-    const path = safeProjectPath(managePath, entry.file);
     try {
-      loadedProjects.push(parseProjectYaml(await readFile(path, "utf8")));
+      const path = safeProjectPath(managePath, entry.file);
+      const projectSource = await readFile(path, "utf8");
+      const project = parseProjectYaml(projectSource);
+      const projectDocument = documentFrom(projectSource, path);
+      if (removeLegacyLinks(projectDocument, project))
+        await atomicWrite(path, String(projectDocument));
+      if (entry.load) loadedProjects.push(project);
     } catch (error) {
+      if (!entry.load) continue;
+      const path = safeProjectPath(managePath, entry.file);
       throw new Error(
         `${path}: ${error instanceof Error ? error.message : String(error)}`,
       );

@@ -12,8 +12,7 @@ const isoDate = z
 
 const id = z.uuid();
 const name = z.string().trim().min(1);
-const links = z.array(z.object({ label: name, target: name })).optional();
-const common = { id, name, note: z.string().optional(), links };
+const common = { id, name, note: z.string().optional() };
 
 export const taskSchema = z.object({
   ...common,

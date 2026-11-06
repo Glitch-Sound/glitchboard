@@ -11,7 +11,7 @@
 
 WHILE 管理データを扱う間、GlitchBoardは SHALL Project > Event > Story > Task の親子関係を保持する。\
 Projectは`id`、`name`、`color`と`events`配列、Eventは`id`、`name`、`due`と`stories`配列、Storyは`id`、`name`と`tasks`配列、Taskは`id`、`name`と任意の`points`、`doneAt`を持つ。\
-全階層で任意の`note`文字列と`links`配列を許可し、StoryとEventのポイントはTaskから集計する。
+全階層で任意の`note`文字列を許可し、StoryとEventのポイントはTaskから集計する。
 
 #### Scenario: REQ-001-S01 - 階層を読み込む
 

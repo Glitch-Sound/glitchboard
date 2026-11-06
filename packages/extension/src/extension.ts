@@ -1,11 +1,7 @@
 import { writeFile } from "node:fs/promises";
 import { dirname } from "node:path";
 import * as vscode from "vscode";
-import {
-  openLinkRequestSchema,
-  setupOperationSchema,
-} from "../../shared/src/domain/messages.js";
-import { openLinkedTarget } from "./links.js";
+import { setupOperationSchema } from "../../shared/src/domain/messages.js";
 import { navigateToEvent } from "./navigation.js";
 import { BoardSession } from "./session.js";
 import { registerViews } from "./views.js";
@@ -128,33 +124,6 @@ export function activate(context: vscode.ExtensionContext): void {
     const parsed = setupOperationSchema.safeParse(message);
     if (!parsed.success) return { ok: false, error: parsed.error.message };
     return setupManage(parsed.data.type);
-  };
-  const openLink = async (
-    message: unknown,
-  ): Promise<{ ok: boolean; error?: string }> => {
-    if (!session) return { ok: false, error: "manage.yamlが未設定" };
-    const parsed = openLinkRequestSchema.safeParse(message);
-    if (!parsed.success) return { ok: false, error: parsed.error.message };
-    try {
-      await openLinkedTarget(
-        session.managePath,
-        parsed.data.target,
-        async (path) => {
-          await vscode.window.showTextDocument(
-            await vscode.workspace.openTextDocument(vscode.Uri.file(path)),
-          );
-        },
-        async (url) => {
-          await vscode.env.openExternal(vscode.Uri.parse(url));
-        },
-      );
-      return { ok: true };
-    } catch (error) {
-      return {
-        ok: false,
-        error: error instanceof Error ? error.message : String(error),
-      };
-    }
   };
   registerViews({
     registerSidebar: (id) => {
@@ -330,13 +299,7 @@ export function activate(context: vscode.ExtensionContext): void {
             });
             return;
           }
-          const result =
-            typeof message === "object" &&
-            message !== null &&
-            "type" in message &&
-            message.type === "openLink"
-              ? await openLink(message)
-              : await session.handleOperation(message);
+          const result = await session.handleOperation(message);
           await board?.webview.postMessage({
             type: "operationResult",
             payload: result,

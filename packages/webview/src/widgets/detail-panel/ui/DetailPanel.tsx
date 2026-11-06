@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import type { DescendantCounts } from "../../../../../shared/src/domain/deletion.js";
 import type {
   Event,
@@ -11,7 +11,6 @@ import {
   eventPoints,
   storyPoints,
 } from "../../../../../shared/src/domain/index.js";
-import { classifyLinkTarget } from "../../../../../shared/src/domain/link.js";
 import type { Operation } from "../../../../../shared/src/domain/messages.js";
 import { DeleteDialog } from "../../../features/delete-item/index.js";
 
@@ -30,7 +29,6 @@ type Props = {
     id: string,
     patch: EditPatch,
   ) => void;
-  onOpenLink?: (target: string) => void;
   onDelete?: () => void;
   deleteCounts?: DescendantCounts;
 };
@@ -70,31 +68,22 @@ function metrics(selection: DetailSelection): [string, string, string] {
   }
 }
 
-/** REQ-026/REQ-027/REQ-028: 全階層に共通する詳細、編集、補足とリンク。 */
+/** REQ-026/REQ-027/REQ-028: 全階層に共通する詳細、編集、補足。 */
 export function DetailPanel({
   selection,
   onClose,
   onSave,
-  onOpenLink,
   onDelete,
   deleteCounts,
 }: Props) {
   const [editing, setEditing] = useState(false);
   const [editingNote, setEditingNote] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState(false);
-  const [noteError, setNoteError] = useState("");
   const [name, setName] = useState(selection.item.name);
   const [due, setDue] = useState(
     selection.kind === "event" ? selection.item.due : "",
   );
   const [note, setNote] = useState(selection.item.note ?? "");
-  const [links, setLinks] = useState(
-    (selection.item.links ?? []).map((link, index) => ({
-      ...link,
-      key: String(index),
-    })),
-  );
-  const nextLinkId = useRef(links.length);
   const pointValues = [1, 2, 3, 5, 8, 13, 21] as const;
   useEffect(() => {
     const close = (event: KeyboardEvent) => {
@@ -240,56 +229,12 @@ export function DetailPanel({
           </button>
         )}
       </section>
-      <section>
-        <h3>リンク</h3>
-        {selection.item.links?.length ? (
-          <ul>
-            {selection.item.links.map((link) => {
-              const safe = classifyLinkTarget(link.target);
-              return (
-                <li key={`${link.label}-${link.target}`}>
-                  <button
-                    type="button"
-                    disabled={!safe}
-                    onClick={() => {
-                      if (safe) onOpenLink?.(link.target);
-                    }}
-                  >
-                    {link.label}
-                  </button>
-                  {!safe && (
-                    <span role="alert">無効なリンク: {link.target}</span>
-                  )}
-                </li>
-              );
-            })}
-          </ul>
-        ) : (
-          <p>リンクなし</p>
-        )}
-        <button type="button" onClick={() => setEditingNote(true)}>
-          リンクを編集
-        </button>
-      </section>
       {editingNote && (
         <form
           className="detail-note-form"
           onSubmit={(event) => {
             event.preventDefault();
-            if (
-              links.some(
-                (link) =>
-                  !classifyLinkTarget(link.target) || !link.label.trim(),
-              )
-            ) {
-              setNoteError("無効なリンクを修正する");
-              return;
-            }
-            setNoteError("");
-            onSave?.(selection.kind, selection.item.id, {
-              note,
-              links: links.map(({ label, target }) => ({ label, target })),
-            });
+            onSave?.(selection.kind, selection.item.id, { note });
             setEditingNote(false);
           }}
         >
@@ -300,58 +245,6 @@ export function DetailPanel({
               onChange={(event) => setNote(event.target.value)}
             />
           </label>
-          {links.map((link, index) => (
-            <div key={link.key}>
-              <label>
-                ラベル{" "}
-                <input
-                  value={link.label}
-                  onChange={(event) =>
-                    setLinks(
-                      links.map((item, i) =>
-                        i === index
-                          ? { ...item, label: event.target.value }
-                          : item,
-                      ),
-                    )
-                  }
-                />
-              </label>
-              <label>
-                リンク先{" "}
-                <input
-                  value={link.target}
-                  onChange={(event) =>
-                    setLinks(
-                      links.map((item, i) =>
-                        i === index
-                          ? { ...item, target: event.target.value }
-                          : item,
-                      ),
-                    )
-                  }
-                />
-              </label>
-              <button
-                type="button"
-                onClick={() => setLinks(links.filter((_, i) => i !== index))}
-              >
-                リンクを削除
-              </button>
-            </div>
-          ))}
-          <button
-            type="button"
-            onClick={() =>
-              setLinks([
-                ...links,
-                { label: "", target: "", key: String(nextLinkId.current++) },
-              ])
-            }
-          >
-            リンクを追加
-          </button>
-          {noteError && <p role="alert">{noteError}</p>}
           <button type="submit">補足を保存</button>
           <button type="button" onClick={() => setEditingNote(false)}>
             取消

@@ -290,9 +290,6 @@ export function BoardApp() {
                   patch,
                 })
               }
-              onOpenLink={(target) =>
-                localBridge()?.postMessage({ type: "openLink", target })
-              }
               deleteCounts={
                 descendantCounts(
                   projects,

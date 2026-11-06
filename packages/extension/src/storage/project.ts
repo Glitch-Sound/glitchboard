@@ -35,7 +35,7 @@ export function parseProjectYaml(source: string): Project {
 export async function updateTask(
   path: string,
   taskId: string,
-  patch: Partial<Pick<Task, "name" | "points" | "doneAt" | "note" | "links">>,
+  patch: Partial<Pick<Task, "name" | "points" | "doneAt" | "note">>,
 ): Promise<void> {
   const source = await readFile(path, "utf8");
   const project = parseProjectYaml(source);
@@ -45,13 +45,7 @@ export async function updateTask(
       const taskIndex = story.tasks.findIndex((task) => task.id === taskId);
       if (taskIndex < 0) continue;
       const task = taskSchema.parse({ ...story.tasks[taskIndex], ...patch });
-      for (const key of [
-        "name",
-        "points",
-        "doneAt",
-        "note",
-        "links",
-      ] as const) {
+      for (const key of ["name", "points", "doneAt", "note"] as const) {
         if (!Object.hasOwn(patch, key)) continue;
         const target = [
           "events",

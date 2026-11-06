@@ -7,16 +7,15 @@ import {
   storySchema,
   taskSchema,
 } from "../../../shared/src/domain/index.js";
-import { classifyLinkTarget } from "../../../shared/src/domain/link.js";
 import type { Operation } from "../../../shared/src/domain/messages.js";
 import { parseProjectYaml } from "./project.js";
 
 type Edit = Extract<Operation, { type: "editItem" }>;
 const allowed = {
-  project: ["name", "color", "note", "links"],
-  event: ["name", "due", "note", "links"],
-  story: ["name", "note", "links"],
-  task: ["name", "points", "note", "links"],
+  project: ["name", "color", "note"],
+  event: ["name", "due", "note"],
+  story: ["name", "note"],
+  task: ["name", "points", "note"],
 } as const;
 
 /** REQ-027/REQ-028: 階層項目の検証済みフィールドをコメント保持して保存する。 */
@@ -29,9 +28,6 @@ export async function editProjectItem(
   for (const key of Object.keys(patch))
     if (!(allowed[kind] as readonly string[]).includes(key))
       throw new Error(`${kind}では${key}を編集できない`);
-  for (const link of patch.links ?? [])
-    if (!classifyLinkTarget(link.target))
-      throw new Error(`無効なリンク: ${link.target}`);
   const source = await readFile(path, "utf8");
   const project = parseProjectYaml(source);
   const document = parseDocument(source, { uniqueKeys: true });

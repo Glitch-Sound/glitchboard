@@ -21,7 +21,7 @@ Vitestの全82件、型検査、ビルドを実行し、月表示30列が1280px�
 | EVENT一覧と抽出 | 4.4 | 期限順、グループ、対象・Projectの切り替え | [アーカイブ済み](changes/archive/2026-11-03-event-list-filtering/proposal.md) |
 | 詳細エリア | 4.5 | Event要約、Story、Task、選択状態 | [アーカイブ済み](changes/archive/2026-11-03-board-timeline/proposal.md) |
 | 追加・変更・削除 | 4.6〜4.8 | インライン追加、ポイント、完了、確認付き削除 | [アーカイブ済み](changes/archive/2026-11-03-hierarchy-operations/proposal.md) |
-| 詳細パネル | 4.9 | 補足、リンク、編集、削除、Project色 | [アーカイブ済み](changes/archive/2026-11-03-detail-panel/proposal.md) |
+| 詳細パネル | 4.9 | 補足、編集、削除、Project色 | [アーカイブ済み](changes/archive/2026-11-03-detail-panel/proposal.md) |
 | 稼働日と実績ペース | 5.1〜5.3 | 休日、祝日、10稼働日、学習中 | [アーカイブ済み](changes/archive/2026-11-03-workload-analytics/proposal.md) |
 | 予測・必要ペース・危険 | 5.4〜5.7 | 完了予測、負荷グラフ、期間負荷、4種類の危険 | [アーカイブ済み](changes/archive/2026-11-03-workload-analytics/proposal.md) |
 | 品質と開発基盤 | 7〜9 | 3パッケージ、FSD、検証、性能、pre-commit | [アーカイブ済み](changes/archive/2026-11-03-vscode-extension-shell/proposal.md) |
@@ -66,7 +66,7 @@ Vitestの全82件、型検査、ビルドを実行し、月表示30列が1280px�
 | REQ-025 | 確認付き物理削除 | 実装済み | [提案](changes/archive/2026-11-03-hierarchy-operations/proposal.md) | [正式仕様](specs/hierarchy-editing/spec.md) |
 | REQ-026 | 詳細パネルの表示 | 実装済み | [提案](changes/archive/2026-11-03-detail-panel/proposal.md) | [正式仕様](specs/item-details/spec.md) |
 | REQ-027 | 詳細編集 | 実装済み | [提案](changes/archive/2026-11-03-detail-panel/proposal.md) | [正式仕様](specs/item-details/spec.md) |
-| REQ-028 | 補足とリンク | 実装済み | [提案](changes/archive/2026-11-03-detail-panel/proposal.md) | [正式仕様](specs/item-details/spec.md) |
+| REQ-028 | 補足 | 実装済み | [提案](changes/archive/2026-11-03-detail-panel/proposal.md) | [正式仕様](specs/item-details/spec.md) |
 | REQ-029 | 管理ファイル未設定時の案内 | 実装済み | 2026-11-03の機能改修 | [正式仕様](specs/vscode-integration/spec.md) |
 
 ## 2026-11-03の機能改修
@@ -126,13 +126,14 @@ OpenSpec変更の作成時に以下の表へ行を追加する。\
 | [hierarchy-operations](changes/archive/2026-11-03-hierarchy-operations/proposal.md) | REQ-025、REQ-025-S01、REQ-025-S02 | [仕様](specs/hierarchy-editing/spec.md) | [設計](changes/archive/2026-11-03-hierarchy-operations/design.md)、[タスク](changes/archive/2026-11-03-hierarchy-operations/tasks.md) | [確認UI](../packages/webview/src/features/delete-item/ui/DeleteControl.tsx)、[子孫件数](../packages/shared/src/domain/deletion.ts)、[再確認](../packages/extension/src/session.ts)、[物理削除](../packages/extension/src/storage/delete.ts) | [S01](../tests/hierarchy-operations/req-025-s01.test.ts)、[S02](../tests/hierarchy-operations/req-025-s02.test.ts) | 2026-11-03、`corepack pnpm test tests/hierarchy-operations/req-025-s01.test.ts tests/hierarchy-operations/req-025-s02.test.ts`で4件成功、12件表示、承認時削除、取消時不変更、古い版の拒否を確認、Node 24.18.0 |
 | [detail-panel](changes/archive/2026-11-03-detail-panel/proposal.md) | REQ-026、REQ-026-S01、REQ-026-S02 | [仕様](specs/item-details/spec.md) | [設計](changes/archive/2026-11-03-detail-panel/design.md)、[タスク](changes/archive/2026-11-03-detail-panel/tasks.md) | [詳細パネル](../packages/webview/src/widgets/detail-panel/ui/DetailPanel.tsx)、[詳細ボタン](../packages/webview/src/features/detail-button/ui/DetailButton.tsx)、[ボード接続](../packages/webview/src/app/board.tsx) | [S01](../tests/detail-panel/req-026-s01.test.ts)、[S02](../tests/detail-panel/req-026-s02.test.ts) | 2026-11-03、`corepack pnpm test tests/detail-panel/req-026-s01.test.ts tests/detail-panel/req-026-s02.test.ts`で2件成功、補足色、階層、補足追加、Escを確認、Node 24.18.0 |
 | [detail-panel](changes/archive/2026-11-03-detail-panel/proposal.md) | REQ-027、REQ-027-S01、REQ-027-S02 | [仕様](specs/item-details/spec.md) | [設計](changes/archive/2026-11-03-detail-panel/design.md)、[タスク](changes/archive/2026-11-03-detail-panel/tasks.md) | [編集パネル](../packages/webview/src/widgets/detail-panel/ui/DetailPanel.tsx)、[保存](../packages/extension/src/storage/edit.ts)、[通信と再配信](../packages/extension/src/session.ts) | [S01](../tests/detail-panel/req-027-s01.test.ts)、[S02](../tests/detail-panel/req-027-s02.test.ts) | 2026-11-03、`corepack pnpm test tests/detail-panel/req-027-s01.test.ts tests/detail-panel/req-027-s02.test.ts`で4件成功、期限保存と危険再計算、色保存とマーカー更新を確認、Node 24.18.0 |
-| [detail-panel](changes/archive/2026-11-03-detail-panel/proposal.md) | REQ-028、REQ-028-S01、REQ-028-S02 | [仕様](specs/item-details/spec.md) | [設計](changes/archive/2026-11-03-detail-panel/design.md)、[タスク](changes/archive/2026-11-03-detail-panel/tasks.md) | [補足とリンクUI](../packages/webview/src/widgets/detail-panel/ui/DetailPanel.tsx)、[リンク判定](../packages/shared/src/domain/link.ts)、[保存](../packages/extension/src/storage/edit.ts)、[VS Codeで開く](../packages/extension/src/links.ts) | [S01](../tests/detail-panel/req-028-s01.test.ts)、[S02](../tests/detail-panel/req-028-s02.test.ts) | 2026-11-03、`corepack pnpm test tests/detail-panel/req-028-s01.test.ts tests/detail-panel/req-028-s02.test.ts`で5件成功、相対リンク、補足保存、危険なURLとパス移動の拒否を確認、Node 24.18.0 |
+| [detail-panel](changes/archive/2026-11-03-detail-panel/proposal.md) | REQ-028、REQ-028-S03、REQ-028-S04 | [仕様](specs/item-details/spec.md) | [設計](changes/archive/2026-11-03-detail-panel/design.md)、[タスク](changes/archive/2026-11-03-detail-panel/tasks.md) | [補足UI](../packages/webview/src/widgets/detail-panel/ui/DetailPanel.tsx)、[編集境界](../packages/shared/src/domain/messages.ts)、[旧データ移行](../packages/extension/src/storage/manage.ts) | [S03](../tests/detail-panel/req-028-s03.test.ts)、[S04](../tests/detail-panel/req-028-s04.test.ts) | 2026-11-06、補足の保存と旧リンク情報の除去を確認、旧S01・S02は廃止 |
 
 検証結果には、実施日、実行コマンドまたは手順、結果、対象環境を記録する。\
 実測値を伴う非機能要件は、データ規模、測定区間、統計値も記す。
 
 | 実施日 | 変更 | 実行コマンド | 結果 | 環境 |
 | --- | --- | --- | --- | --- |
+| 2026-11-06 | EVENT一覧を含む画面キャプチャ、Event要約、補足情報 | `corepack pnpm test`、`corepack pnpm typecheck`、`corepack pnpm check`、`corepack pnpm check:fsd`、`corepack pnpm build`、`openspec validate --specs`、`git diff --check` | 全96テスト成功、型・Biome・Steiger失敗0件、ビルド成功、正式仕様7件の検証成功、差分の空白エラー0件、ダークテーマの画面例でEVENT一覧とEvent要約の配置を確認 | Node 24.18.0、macOS arm64 |
 | 2026-11-03 | [data-persistence](changes/archive/2026-11-03-data-persistence/proposal.md) | `corepack pnpm test`、`corepack pnpm typecheck`、`corepack pnpm check`、`corepack pnpm check:fsd` | 9テスト成功、型・Biome・Steiger失敗0件 | Node 24.18.0、pnpm 12.16.1、macOS arm64 |
 | 2026-11-03 | [workload-analytics](changes/archive/2026-11-03-workload-analytics/proposal.md) | `corepack pnpm test`、`corepack pnpm typecheck`、`corepack pnpm check`、`corepack pnpm check:fsd` | 全23テスト成功、型・Biome・Steiger失敗0件、Steigerは同時実行時にOSのファイル監視上限で一度失敗し、単独再実行で成功 | Node 24.18.0、pnpm 12.16.1、macOS arm64 |
 | 2026-11-03 | [vscode-extension-shell](changes/archive/2026-11-03-vscode-extension-shell/proposal.md) | `corepack pnpm test`、`corepack pnpm typecheck`、`corepack pnpm check`、`corepack pnpm check:fsd` | 全28テスト成功、型・Biome・Steiger失敗0件 | Node 24.18.0、pnpm 12.16.1、macOS arm64 |
@@ -173,7 +174,7 @@ OpenSpec変更の作成時に以下の表へ行を追加する。\
 - 「今日から期限まで」の稼働日数が0になる場合の必要ペースの配分と、期限日が非稼働日の場合の扱い。
 - 日付と祝日の基準となるタイムゾーン、`doneAt`と`due`の保存形式。
 - 期限までの日数が暦日か稼働日か、および「今週」の週境界。
-- `note`内のリンクの記述形式、Projectファイル名の安全な変換と名称変更時の扱い。
+- Projectファイル名の安全な変換と名称変更時の扱い。
 - YAMLの配列構造、IDの一意性の範囲、読み込みエラーや外部変更時の振る舞い。
 - 「未完了 + 今後」の抽出条件と「期限切れ・未完了」グループの包含関係。
 - 期間負荷の分母が0になる場合、および期間外の期限切れEventを表示する場合の集計範囲。
