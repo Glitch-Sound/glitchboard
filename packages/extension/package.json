@@ -3,7 +3,13 @@
   "displayName": "GlitchBoard",
   "description": "個人用プロジェクト管理ツール",
   "publisher": "Glitch-Sound",
-  "version": "0.0.3",
+  "version": "0.1.1",
+  "icon": "media/icon.png",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Glitch-Sound/glitchboard.git",
+    "directory": "packages/extension"
+  },
   "type": "module",
   "main": "./dist/extension.js",
   "engines": {
