@@ -1,15 +1,35 @@
 {
   "name": "glitchboard",
   "displayName": "GlitchBoard",
-  "description": "個人用プロジェクト管理ツール",
+  "description": "Manage personal projects, tasks, and deadlines with timelines and workload insights in VS Code.",
   "publisher": "Glitch-Sound",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "icon": "media/icon.png",
   "repository": {
     "type": "git",
     "url": "https://github.com/Glitch-Sound/glitchboard.git",
     "directory": "packages/extension"
   },
+  "homepage": "https://github.com/Glitch-Sound/glitchboard#readme",
+  "bugs": {
+    "url": "https://github.com/Glitch-Sound/glitchboard/issues"
+  },
+  "keywords": [
+    "project management",
+    "project-management",
+    "task management",
+    "task tracker",
+    "timeline",
+    "deadline",
+    "workload",
+    "story points",
+    "yaml",
+    "glitchboard"
+  ],
+  "categories": [
+    "Visualization",
+    "Other"
+  ],
   "type": "module",
   "main": "./dist/extension.js",
   "engines": {
