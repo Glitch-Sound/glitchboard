@@ -84,13 +84,33 @@ function removeLegacyLinks(
   return changed;
 }
 
-/** REQ-002/REQ-003/REQ-004: manage.yamlを基準に読込対象だけを解決する。 */
+/** REQ-029: 管理ファイル自身の欠落をProjectの読込エラーと区別する。 */
+export class MissingManageFileError extends Error {
+  constructor(readonly path: string) {
+    super(`manage.yamlが見つかりません: ${path}`);
+    this.name = "MissingManageFileError";
+  }
+}
+
+/** REQ-002/REQ-003/REQ-004/REQ-029: manage.yamlを基準に読込対象だけを解決する。 */
 export async function loadManageFile(
   managePath: string,
 ): Promise<{ manage: Manage; loadedProjects: Project[] }> {
   if (!isAbsolute(managePath))
     throw new Error("manage.yamlには絶対パスを指定する");
-  const source = await readFile(managePath, "utf8");
+  let source: string;
+  try {
+    source = await readFile(managePath, "utf8");
+  } catch (error) {
+    if (
+      error &&
+      typeof error === "object" &&
+      "code" in error &&
+      error.code === "ENOENT"
+    )
+      throw new MissingManageFileError(managePath);
+    throw error;
+  }
   const document = documentFrom(source, managePath);
   const manage = manageSchema.parse(document.toJS());
   const loadedProjects: Project[] = [];

@@ -68,6 +68,7 @@ export function activate(context: vscode.ExtensionContext): void {
       if (timer) clearTimeout(timer);
     },
   });
+  /** REQ-029: 作成・選択後に接続し、同じ設定先の作成でも再読込する。 */
   const setupManage = async (
     type: string,
   ): Promise<{ ok: boolean; error?: string }> => {
@@ -105,6 +106,7 @@ export function activate(context: vscode.ExtensionContext): void {
             ? vscode.ConfigurationTarget.Workspace
             : vscode.ConfigurationTarget.Global,
         );
+      if (session?.managePath === selected.fsPath) await session.reload();
       return { ok: true };
     } catch (error) {
       return {

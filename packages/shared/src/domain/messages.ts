@@ -2,7 +2,7 @@ import { z } from "zod";
 import { projectSchema } from "./index.js";
 import { manageSchema } from "./manage.js";
 
-/** REQ-013: Extensionから両Webviewへ配信する版番号付き状態を検証する。 */
+/** REQ-013/REQ-029: Extensionから両Webviewへ配信する版番号付き状態と不在情報を検証する。 */
 export const snapshotMessageSchema = z.object({
   type: z.literal("snapshot"),
   payload: z.object({
@@ -10,6 +10,12 @@ export const snapshotMessageSchema = z.object({
     projects: z.array(projectSchema),
     selectedEventId: z.uuid().nullable(),
     error: z.string().nullable(),
+    manageAvailability: z
+      .discriminatedUnion("status", [
+        z.object({ status: z.literal("ready") }),
+        z.object({ status: z.literal("missing"), path: z.string().min(1) }),
+      ])
+      .optional(),
     settings: manageSchema.shape.settings,
     projectEntries: z.array(
       z.object({

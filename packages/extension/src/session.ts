@@ -1,36 +1,26 @@
 import { dirname, resolve } from "node:path";
 import { calculateDanger } from "../../shared/src/calculation/danger.js";
-import type { WorkdaySettings } from "../../shared/src/calculation/dates.js";
 import { todayInTokyo } from "../../shared/src/calculation/dates.js";
 import { calculateActualPace } from "../../shared/src/calculation/pace.js";
 import { pendingWork } from "../../shared/src/calculation/prediction.js";
 import { descendantCounts } from "../../shared/src/domain/deletion.js";
-import type { Project } from "../../shared/src/domain/index.js";
-import { operationSchema } from "../../shared/src/domain/messages.js";
+import {
+  operationSchema,
+  type Snapshot,
+} from "../../shared/src/domain/messages.js";
 import { deleteProjectFile, deleteProjectItem } from "./storage/delete.js";
 import { editProjectItem } from "./storage/edit.js";
 import { addEvent, addStory, addTask } from "./storage/hierarchy.js";
 import {
   createProject,
   loadManageFile,
+  MissingManageFileError,
   readProjectSummary,
   setProjectLoaded,
 } from "./storage/manage.js";
 import { updateTask } from "./storage/project.js";
 
-export type BoardSnapshot = {
-  version: number;
-  projects: Project[];
-  selectedEventId: string | null;
-  error: string | null;
-  settings: WorkdaySettings;
-  projectEntries: {
-    file: string;
-    load: boolean;
-    name: string;
-    color?: string;
-  }[];
-};
+export type BoardSnapshot = Snapshot;
 
 type Surface = "board" | "events";
 type Listener = (snapshot: BoardSnapshot) => void;
@@ -212,6 +202,7 @@ export class BoardSession {
     }
   }
 
+  /** REQ-013/REQ-029: 読込状態と直前の有効なデータを両画面へ配信する。 */
   async reload(): Promise<void> {
     try {
       const { manage, loadedProjects } = await loadManageFile(this.managePath);
@@ -264,6 +255,7 @@ export class BoardSession {
           firstEvent?.eventId ??
           null,
         error: null,
+        manageAvailability: { status: "ready" },
         settings: manage.settings,
         projectEntries: await Promise.all(
           manage.projects.map(async (entry) => {
@@ -287,6 +279,10 @@ export class BoardSession {
         ...this.state,
         version: this.state.version + 1,
         error: error instanceof Error ? error.message : String(error),
+        manageAvailability:
+          error instanceof MissingManageFileError
+            ? { status: "missing", path: error.path }
+            : { status: "ready" },
       });
     }
   }

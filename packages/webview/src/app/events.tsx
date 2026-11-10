@@ -22,14 +22,22 @@ export function EventsApp() {
   const [operationError, setOperationError] = useState<string | null>(null);
   const [target, setTarget] = useState<TargetFilter>("pending");
   const today = useToday();
-  useEffect(() => subscribeSnapshots(setSnapshot), []);
+  useEffect(
+    () =>
+      subscribeSnapshots((next) => {
+        setSnapshot(next);
+        setUnconfigured(false);
+        if (!next.error && next.manageAvailability?.status !== "missing")
+          setOperationError(null);
+      }),
+    [],
+  );
   useEffect(() => {
     const handler = (event: MessageEvent) => {
       if (event.data?.type === "unconfigured") {
         setUnconfigured(true);
         setSnapshot(null);
       }
-      if (event.data?.type === "snapshot") setUnconfigured(false);
     };
     window.addEventListener("message", handler);
     return () => window.removeEventListener("message", handler);
@@ -50,13 +58,19 @@ export function EventsApp() {
     actual.pace,
     actual.learning,
   );
+  const missingPath =
+    snapshot?.manageAvailability?.status === "missing"
+      ? snapshot.manageAvailability.path
+      : undefined;
+  const setupOnly = unconfigured || (!!missingPath && projects.length === 0);
   return (
     <main className="events-page">
       {(operationError ?? snapshot?.error) && (
         <p role="alert">{operationError ?? snapshot?.error}</p>
       )}
-      {unconfigured ? (
-        <ManageSetup />
+      {!setupOnly && missingPath && <ManageSetup missingPath={missingPath} />}
+      {setupOnly ? (
+        <ManageSetup missingPath={missingPath} />
       ) : snapshot ? (
         <>
           <div className="event-list-toolbar">

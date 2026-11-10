@@ -9,7 +9,8 @@ GlitchBoardは、複数のProjectをひとつの画面で見渡せるVS Code拡�
 1. VS Codeのアクティビティバーで **GlitchBoard** を開く。\
    サイドバーに「EVENT一覧」が表示される。
 2. 初回は **「manage.yamlを選ぶ」** で既存の管理ファイルを指定するか、**「新しく作る」** で作成する。\
-   VS Codeの設定`glitchboard.manageFile`に`manage.yaml`の絶対パスを指定することもできる。
+   VS Codeの設定`glitchboard.manageFile`に`manage.yaml`の絶対パスを指定することもできる。\
+   設定先にファイルがない場合も、ボードとEVENT一覧に表示されるボタンから新規作成または別のファイルの選択へ進める。
 3. コマンドパレットで **「GlitchBoardを開く」** を実行すると、エディタにボードが開く。
 4. ボードでProjectを追加し、その中にEvent、Story、Taskを作成する。
 

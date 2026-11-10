@@ -82,14 +82,22 @@ export function BoardApp() {
     kind: ItemKind;
     id: string;
   } | null>(null);
-  useEffect(() => subscribeSnapshots(setSnapshot), []);
+  useEffect(
+    () =>
+      subscribeSnapshots((next) => {
+        setSnapshot(next);
+        setUnconfigured(false);
+        if (!next.error && next.manageAvailability?.status !== "missing")
+          setOperationError(null);
+      }),
+    [],
+  );
   useEffect(() => {
     const handler = (event: MessageEvent) => {
       if (event.data?.type === "unconfigured") {
         setUnconfigured(true);
         setSnapshot(null);
       }
-      if (event.data?.type === "snapshot") setUnconfigured(false);
     };
     window.addEventListener("message", handler);
     return () => window.removeEventListener("message", handler);
@@ -155,13 +163,21 @@ export function BoardApp() {
       version: snapshot?.version ?? 0,
     });
 
+  const missingPath =
+    snapshot?.manageAvailability?.status === "missing"
+      ? snapshot.manageAvailability.path
+      : undefined;
+  const setupOnly = unconfigured || (!!missingPath && projects.length === 0);
   return (
     <main className="board-page">
-      {operationError && <p role="alert">{operationError}</p>}
-      {unconfigured ? (
+      {(operationError ?? snapshot?.error) && (
+        <p role="alert">{operationError ?? snapshot?.error}</p>
+      )}
+      {!setupOnly && missingPath && <ManageSetup missingPath={missingPath} />}
+      {setupOnly ? (
         <>
           <h1>GlitchBoard</h1>
-          <ManageSetup />
+          <ManageSetup missingPath={missingPath} />
         </>
       ) : (
         <>
@@ -196,7 +212,6 @@ export function BoardApp() {
               dangerCount={danger.count}
             />
           </header>
-          {snapshot?.error && <p role="alert">{snapshot.error}</p>}
           <div className="board-content">
             <div className="timeline-panel">
               <Timeline

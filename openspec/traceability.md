@@ -7,6 +7,39 @@
 その後の機能改修は現行の正式仕様へ反映し、アーカイブ済みの提案・差分仕様は当時の履歴として保持する。\
 下表の状態はアーカイブした変更のリンクを示し、実装と検証の結果は後段の対応表で管理する。
 
+## 管理ファイル不在時の案内の計画
+
+2026-11-11にREQ-029の拡張を提案した。
+既存IDを維持し、新規IDの予約はない。
+この変更の実装、受け入れテスト、画面確認の実績を以下へ記録する。
+
+| 要件ID | 変更 | 正式仕様 | 設計とタスク | 状態 |
+| --- | --- | --- | --- | --- |
+| REQ-029 | [提案](changes/archive/2026-11-11-add-missing-manage-file-actions/proposal.md) | [正式仕様](specs/vscode-integration/spec.md#requirement-req-029---管理ファイル未設定時の案内) | [設計](changes/archive/2026-11-11-add-missing-manage-file-actions/design.md)、[タスク](changes/archive/2026-11-11-add-missing-manage-file-actions/tasks.md) | アーカイブ済み |
+
+2026-11-11のapply指定を受け、実装を開始した。
+管理ファイル自身の欠落を[読込境界](../packages/extension/src/storage/manage.ts)で分類し、[セッション](../packages/extension/src/session.ts)と[共有スキーマ](../packages/shared/src/domain/messages.ts)から両画面へ配信する。
+[状態テスト](../tests/vscode-extension-shell/req-029-state.test.ts)はREQ-029-S02、S03、S08、S10を扱う。
+`corepack pnpm test tests/vscode-extension-shell/req-029-state.test.ts tests/vscode-extension-shell/req-013-s02.test.ts tests/vscode-extension-shell/req-013-s03.test.ts tests/vscode-extension-shell/req-013-s01-snapshot-validation.test.ts`で9件成功した。
+不在状態の未実装による失敗を確認後に実装した。
+実行環境はmacOS arm64、Node 24である。
+[共通案内](../packages/webview/src/app/ManageSetup.tsx)、[ボード](../packages/webview/src/app/board.tsx)、[EVENT一覧](../packages/webview/src/app/events.tsx)、[装飾](../packages/webview/src/app/style.css)へ不在の案内とボタン表示を追加した。
+[UIテスト](../tests/vscode-extension-shell/req-029-ui.test.tsx)はREQ-029-S01、S02、S03、S04、S07、S08、S09、S10を扱い、未実装時の失敗確認後、10件成功した。
+`node scripts/verify-manage-setup.mjs`で両テーマ、両表示面、未設定・不在の8条件を確認し、[実行結果](../artifacts/manage-setup/browser-results.json)と[狭いEVENT一覧の例](../artifacts/manage-setup/events-light-missing-focus.png)を保存した。
+検証手順は[scripts/verify-manage-setup.mjs](../scripts/verify-manage-setup.mjs)に記録した。
+[設定操作テスト](../tests/vscode-extension-shell/req-029-setup.test.ts)でREQ-029-S04〜S07の両画面からの操作を検証した。
+同じ設定先への作成後に案内が残る失敗を2件確認し、[設定処理](../packages/extension/src/extension.ts)に再読込を追加して解消した。
+設定操作14件、UI10件、共有スキーマ1件、既存Webview回帰6件の計31件が成功した。
+2026-11-11に`corepack pnpm test`で全77ファイル・126テスト成功を確認した。
+`corepack pnpm typecheck`、`corepack pnpm check`、`corepack pnpm check:fsd`、`corepack pnpm build`、`git diff --check`、`openspec validate add-missing-manage-file-actions --strict`も成功した。
+Node 24.18.0、pnpm 12.16.1、macOS arm64で実行した。
+VS Code 1.145.2安定版の隔離した検証プロファイルで、実際のファイルダイアログによる作成・選択・取消、既存ファイル指定時の排他的作成、失敗後の復帰、監視による削除・復元を確認した。
+ダーク・ライト両テーマで両画面を確認し、[実画面の結果](../artifacts/manage-setup/vscode-results.json)、[ダーク](../artifacts/manage-setup/vscode-dark-missing.png)、[ライト](../artifacts/manage-setup/vscode-light-missing.png)、[選択ダイアログ](../artifacts/manage-setup/vscode-choose-dialog.png)、[作成エラー](../artifacts/manage-setup/vscode-create-error.png)を保存した。
+検証用YAMLは一時ディレクトリだけに作成し、既存の利用者データには触れていない。
+2026-11-11にREQ-029の差分を正式仕様へ同期して変更をアーカイブした。
+正式仕様7件の検証、差分との一致、リンク、要件とシナリオの対応を確認した。
+[検証報告](changes/archive/2026-11-11-add-missing-manage-file-actions/verification.md)に全14タスクと10シナリオの検証結果をまとめた。
+
 ## 2026-11-03 UI改修
 
 既存のREQ-015〜REQ-019、REQ-022、REQ-023、REQ-025の表示条件を正式仕様へ追記した。\

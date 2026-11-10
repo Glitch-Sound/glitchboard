@@ -1,0 +1,61 @@
+{
+  "date": "2026-11-11",
+  "results": [
+    {
+      "scenario": "REQ-029-S01/REQ-029-S02/REQ-029-S09",
+      "theme": "dark",
+      "surface": "board",
+      "mode": "unset",
+      "passed": true
+    },
+    {
+      "scenario": "REQ-029-S01/REQ-029-S02/REQ-029-S09",
+      "theme": "dark",
+      "surface": "board",
+      "mode": "missing",
+      "passed": true
+    },
+    {
+      "scenario": "REQ-029-S01/REQ-029-S02/REQ-029-S09",
+      "theme": "dark",
+      "surface": "events",
+      "mode": "unset",
+      "passed": true
+    },
+    {
+      "scenario": "REQ-029-S01/REQ-029-S02/REQ-029-S09",
+      "theme": "dark",
+      "surface": "events",
+      "mode": "missing",
+      "passed": true
+    },
+    {
+      "scenario": "REQ-029-S01/REQ-029-S02/REQ-029-S09",
+      "theme": "light",
+      "surface": "board",
+      "mode": "unset",
+      "passed": true
+    },
+    {
+      "scenario": "REQ-029-S01/REQ-029-S02/REQ-029-S09",
+      "theme": "light",
+      "surface": "board",
+      "mode": "missing",
+      "passed": true
+    },
+    {
+      "scenario": "REQ-029-S01/REQ-029-S02/REQ-029-S09",
+      "theme": "light",
+      "surface": "events",
+      "mode": "unset",
+      "passed": true
+    },
+    {
+      "scenario": "REQ-029-S01/REQ-029-S02/REQ-029-S09",
+      "theme": "light",
+      "surface": "events",
+      "mode": "missing",
+      "passed": true
+    }
+  ]
+}
