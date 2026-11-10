@@ -94,10 +94,14 @@ Eventを選ぶとボードが開き、そのEventに移動する。\
 
 **＋** でEventを追加する。\
 Projectを選んで名前を入力し、**「期限を選ぶ」** を押すとカレンダーから日付を選べる。
+前月・翌月のボタンで月を移動し、日付を選んでから**追加**またはEnterで確定する。
+期限欄には`YYYY-MM-DD`でも直接入力でき、未入力や実在しない日付は保存できない。
+カレンダー内の矢印キーで日付を移動し、EnterまたはSpaceで選択する。
+Escや枠外クリックはカレンダーだけを閉じ、入力内容を保持する。
 
-![EVENT追加フォーム](artifacts/event-add-dark-updated.png)
+![EVENT追加フォーム](artifacts/event-date-picker/events-dark-form.png)
 
-![EVENTの期限を選ぶカレンダー](artifacts/event-add-datepicker-dark-updated.png)
+![EVENTの期限を選ぶカレンダー](artifacts/event-date-picker/events-dark-calendar.png)
 
 ## 項目を編集する
 
@@ -105,7 +109,11 @@ Project、Event、Story、Taskの詳細パネルから、名前、色、期限�
 Taskではポイントも変更できる。\
 削除時は対象に含まれる子項目の件数を確認できる。
 
-![Eventの詳細パネル](artifacts/readme-detail-panel.png)
+Eventの**編集**では期限欄へ直接入力するか、期限ボタンから共通カレンダーを開いて日付を選ぶ。
+日付を選んだ後に**保存**で確定する。
+カレンダー内のEscはカレンダーだけを閉じ、編集中の名前と期限を保持する。
+
+![Eventの詳細パネル](artifacts/event-date-picker/board-light-calendar.png)
 
 変更は管理ファイルに保存される。\
 保存や削除に失敗した場合は画面上部に理由が表示される。\

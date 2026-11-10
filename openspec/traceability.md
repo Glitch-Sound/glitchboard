@@ -7,6 +7,61 @@
 その後の機能改修は現行の正式仕様へ反映し、アーカイブ済みの提案・差分仕様は当時の履歴として保持する。\
 下表の状態はアーカイブした変更のリンクを示し、実装と検証の結果は後段の対応表で管理する。
 
+## Event期限選択の改修計画
+
+2026-11-11にEvent追加のDatePicker不表示と、関連する期限入力への横展開を計画した。
+REQ-022とREQ-027を拡張し、新規要件IDの採番はない。
+2026-11-11のapply指定を受けて実装を開始した。
+
+| 要件ID | 変更 | 差分仕様 | 設計とタスク | 状態 |
+| --- | --- | --- | --- | --- |
+| REQ-022 | [提案](changes/fix-event-date-picker/proposal.md) | [追加操作](changes/fix-event-date-picker/specs/hierarchy-editing/spec.md) | [設計](changes/fix-event-date-picker/design.md)、[タスク](changes/fix-event-date-picker/tasks.md) | 実装・検証済み |
+| REQ-027 | [提案](changes/fix-event-date-picker/proposal.md) | [期限編集](changes/fix-event-date-picker/specs/item-details/spec.md) | [設計](changes/fix-event-date-picker/design.md)、[タスク](changes/fix-event-date-picker/tasks.md) | 実装・検証済み |
+
+実装前のVS Code 1.145.2安定版、macOS arm64、隔離プロファイルで期限ボタンを押した。
+`showPicker() called from cross-origin iframe`の`SecurityError`が発生し、期限が空のままカレンダーが表示されないことを確認した。
+これは実機で観測した事実である。
+[再現結果](../artifacts/event-date-picker/reproduction.json)と[画面](../artifacts/event-date-picker/reproduction-vscode.png)を保存した。
+
+[共通DatePicker](../packages/webview/src/shared/ui/date-picker/DatePicker.tsx)と[暦日配列](../packages/webview/src/shared/ui/date-picker/date-grid.ts)を実装した。
+[部品テスト](../tests/shared-ui/date-picker.test.tsx)は未実装時にカレンダー不在で5件失敗し、実装後に5件成功した。
+API未定義・例外、日付ボタン選択、年境界、うるう日、直接入力、日本時間、矢印・Enter・Space・Escを確認した。
+部品の通知は`onChange`だけであり、保存処理を持たない。
+共有UIから上位層への依存はない。
+
+[InlineAdd](../packages/webview/src/features/inline-add/ui/InlineAdd.tsx)の両レイアウトを共通部品へ置換し、期限の検証と未入力時のカレンダー表示を追加した。
+[追加テスト](../tests/hierarchy-operations/event-date-picker.test.tsx)と[既存画面テスト](../tests/event-list-filtering/ui-refinement.test.ts)は改修前に9件失敗、改修後は共通部品を含む15件が成功した。
+既存REQ-022-S01、S02、S04と`regression-inline-add.test.ts`の4件も成功した。
+日付選択だけの保存禁止、両レイアウトの保存、未入力・不正日付、取消、保存失敗後の名前・Project・期限の保持を確認した。
+両READMEの追加手順を更新した。
+
+[DetailPanel](../packages/webview/src/widgets/detail-panel/ui/DetailPanel.tsx)へ期限入力を横展開し、保存前の検証と処理済みEscの尊重を追加した。
+[編集テスト](../tests/detail-panel/event-date-picker.test.tsx)は改修前5件失敗、改修後5件成功した。
+既存REQ-027-S01、S02の4件も成功し、YAML保存後の危険判定更新とProject色編集を維持した。
+両READMEの編集手順を更新した。
+
+[ブラウザ検証](../scripts/verify-event-date-picker.mjs)は[通常レイアウト専用入口](../scripts/fixtures/event-date-picker.tsx)と製品ビルドのEVENT一覧・詳細編集を操作する。
+Asia/TokyoとAmerica/Los_Angeles、両テーマ、3表示面の12条件が成功した。
+幅240px、上下・左右の画面端、スクロール、フォーカス表示、Tab・Enter・Space、月移動、年境界・うるう日、未入力・不正日付・保存失敗と再操作を確認した。
+[実行結果](../artifacts/event-date-picker/browser-results.json)、[狭いEVENT一覧](../artifacts/event-date-picker/events-dark-calendar.png)、[通常レイアウト](../artifacts/event-date-picker/fixture-light-calendar.png)、[詳細編集](../artifacts/event-date-picker/board-light-calendar.png)を保存した。
+枠外の直接入力欄クリックと、フォーカスが親フォームに移った後のEscも補強し、再検証した。
+VS Code 1.145.2安定版の隔離プロファイルでは、カレンダーから追加後にYAML・EVENT一覧へ反映され、詳細編集後にYAML・タイムラインの列・Event要約・EVENT一覧へ反映された。
+実際のEACCESでも追加欄の名前・Project・期限が残り、権限を戻した再操作で保存できた。
+取消時の入力保持と両テーマを確認し、[実機結果](../artifacts/event-date-picker/vscode-results.json)、[追加](../artifacts/event-date-picker/vscode-dark-add-calendar.png)、[編集](../artifacts/event-date-picker/vscode-light-edit-calendar.png)、[保存エラー](../artifacts/event-date-picker/vscode-save-error.png)を保存した。
+両READMEの画面例と追加・編集手順を更新し、配布用画像もExtensionへ複製した。
+
+2026-11-11、macOS arm64、Node 24.18.0、pnpm 12.16.1で全体検証を実行した。
+`corepack pnpm test`は80ファイル・144テスト成功した。
+`corepack pnpm typecheck`、`corepack pnpm check`、`corepack pnpm check:fsd`、`corepack pnpm build`、`git diff --check`も成功した。
+ビルド時の既存Zod依存の注釈警告は出るが、ビルドは正常終了した。
+
+最終ビルドの新規VS Codeプロファイルでも、Tabでカレンダー外へ移動後のEsc、入力保持、土曜日の選択、両テーマを確認した。
+[最終実機確認](../artifacts/event-date-picker/vscode-final-smoke.json)と[全体検証結果](../artifacts/event-date-picker/check-results.json)に記録した。
+正式仕様への同期はアーカイブ時の後続作業である。
+
+`openspec validate fix-event-date-picker --strict`が成功した。
+[検証報告](changes/fix-event-date-picker/verification.md)に2要件・全13シナリオとD-01〜D-04の照合を記録し、CLIで13/13タスク完了を確認した。
+
 ## 管理ファイル不在時の案内の計画
 
 2026-11-11にREQ-029の拡張を提案した。

@@ -25,11 +25,9 @@ describe("EVENT一覧の入力と抽出", () => {
     ).toBeTruthy();
     expect(screen.getByRole("combobox", { name: "Project" })).toBeTruthy();
     const dateInput = screen.getByLabelText("期限") as HTMLInputElement;
-    const showPicker = vi.fn();
-    dateInput.showPicker = showPicker;
-    fireEvent.click(screen.getByRole("button", { name: "期限を選ぶ" }));
-    expect(showPicker).toHaveBeenCalledOnce();
-    fireEvent.change(dateInput, { target: { value: "2026-11-30" } });
+    fireEvent.change(dateInput, { target: { value: "2026-11-10" } });
+    fireEvent.click(screen.getByRole("button", { name: /^期限 / }));
+    fireEvent.click(screen.getByRole("button", { name: "2026-11-30" }));
     expect(screen.getByRole("button", { name: "期限 11/30(月)" })).toBeTruthy();
     fireEvent.change(screen.getByRole("textbox", { name: "名前" }), {
       target: { value: "Release" },

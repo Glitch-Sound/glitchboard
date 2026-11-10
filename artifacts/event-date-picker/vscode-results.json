@@ -1,0 +1,17 @@
+{
+  "date": "2026-11-11",
+  "environment": "VS Code 1.145.2 stable on macOS arm64, fresh isolated extension development host",
+  "fixture": "/private/tmp/gb-date-final/workspace",
+  "steps": [
+    "REQ-022-S05 selection does not save",
+    "REQ-022-S06 Escape retains form",
+    "REQ-022-S03 EACCES retains inputs and retry succeeds",
+    "REQ-022-S01 add saved to YAML and EVENT list",
+    "REQ-027-S04 calendar Escape retains detail drafts",
+    "REQ-027-S04 outside click retains detail",
+    "REQ-027-S01/S03 edited due saved to YAML, timeline marker, EVENT list and event summary",
+    "REQ-022-S09 / REQ-027-S03 actual VS Code dark and light calendars"
+  ],
+  "errors": [],
+  "finalYaml": "id: 11111111-1111-4111-8111-111111111111\nname: Alpha\ncolor: \"#123456\"\nevents:\n  [\n    {\n        id: 428eb411-c6cf-4530-8893-8810b8f61265,\n        name: Calendar edited,\n        due: 2026-11-13,\n        stories: []\n      }\n  ]\n"
+}

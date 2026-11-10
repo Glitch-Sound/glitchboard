@@ -9,10 +9,12 @@ import type {
 import {
   effectiveTaskPoints,
   eventPoints,
+  eventSchema,
   storyPoints,
 } from "../../../../../shared/src/domain/index.js";
 import type { Operation } from "../../../../../shared/src/domain/messages.js";
 import { DeleteDialog } from "../../../features/delete-item/index.js";
+import { DatePicker } from "../../../shared/ui/date-picker/index.js";
 
 export type DetailSelection =
   | { kind: "project"; item: Project; hierarchy: string[] }
@@ -83,11 +85,13 @@ export function DetailPanel({
   const [due, setDue] = useState(
     selection.kind === "event" ? selection.item.due : "",
   );
+  const [calendarOpen, setCalendarOpen] = useState(false);
+  const [dueError, setDueError] = useState<string>();
   const [note, setNote] = useState(selection.item.note ?? "");
   const pointValues = [1, 2, 3, 5, 8, 13, 21] as const;
   useEffect(() => {
     const close = (event: KeyboardEvent) => {
-      if (event.key === "Escape") onClose();
+      if (event.key === "Escape" && !event.defaultPrevented) onClose();
     };
     window.addEventListener("keydown", close);
     return () => window.removeEventListener("keydown", close);
@@ -132,6 +136,19 @@ export function DetailPanel({
           onSubmit={(event) => {
             event.preventDefault();
             if (!name.trim()) return;
+            // REQ-027-S03: 追加欄と同じ日付検証を保存前に行う。
+            if (
+              selection.kind === "event" &&
+              !eventSchema.shape.due.safeParse(due).success
+            ) {
+              setDueError(
+                due
+                  ? "YYYY-MM-DDで実在する日付を入力してください。"
+                  : "期限を選んでください。",
+              );
+              if (!due) setCalendarOpen(true);
+              return;
+            }
             onSave?.(
               selection.kind,
               selection.item.id,
@@ -151,15 +168,16 @@ export function DetailPanel({
             />
           </label>
           {selection.kind === "event" && (
-            <label>
-              期限{" "}
-              <input
-                type="date"
-                value={due}
-                onChange={(event) => setDue(event.target.value)}
-                required
-              />
-            </label>
+            <DatePicker
+              value={due}
+              onChange={(value) => {
+                setDue(value);
+                setDueError(undefined);
+              }}
+              open={calendarOpen}
+              onOpenChange={setCalendarOpen}
+              error={dueError}
+            />
           )}
           <button type="submit">保存</button>
           <button type="button" onClick={() => setEditing(false)}>

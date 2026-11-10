@@ -1,4 +1,6 @@
 import { useEffect, useRef, useState } from "react";
+import { eventSchema } from "../../../../../shared/src/domain/index.js";
+import { DatePicker } from "../../../shared/ui/date-picker/index.js";
 
 type Kind = "project" | "event" | "story" | "task";
 export type AddValues = {
@@ -21,13 +23,6 @@ const names = {
   story: "Story",
   task: "Task",
 };
-const weekdays = ["日", "月", "火", "水", "木", "金", "土"];
-
-function displayDue(due: string): string {
-  const weekday = weekdays[new Date(`${due}T00:00:00Z`).getUTCDay()];
-  return `${Number(due.slice(5, 7))}/${Number(due.slice(8, 10))}(${weekday})`;
-}
-
 /** REQ-022: 見出しの追加ボタンから入力しEnterで保存、Escで破棄する。 */
 const projectColors = [
   "#4c8dff",
@@ -92,7 +87,8 @@ export function InlineAdd({
     projectId ?? projects[0]?.id ?? "",
   );
   const nameInput = useRef<HTMLInputElement>(null);
-  const dateInput = useRef<HTMLInputElement>(null);
+  const [calendarOpen, setCalendarOpen] = useState(false);
+  const [dueError, setDueError] = useState<string>();
   useEffect(() => {
     if (open) nameInput.current?.focus();
   }, [open]);
@@ -100,6 +96,8 @@ export function InlineAdd({
     setOpen(false);
     setName("");
     setDue("");
+    setCalendarOpen(false);
+    setDueError(undefined);
   };
   return (
     <span
@@ -128,7 +126,7 @@ export function InlineAdd({
       {open && (
         <form
           onKeyDown={(event) => {
-            if (event.key === "Escape") {
+            if (event.key === "Escape" && !event.defaultPrevented) {
               event.preventDefault();
               cancel();
             }
@@ -136,8 +134,17 @@ export function InlineAdd({
           onSubmit={async (event) => {
             event.preventDefault();
             if (saving || !name.trim()) return;
-            if (kind === "event" && !due) {
-              dateInput.current?.showPicker?.();
+            // REQ-022-S07: 不正値は保持し、期限を選び直してから送信する。
+            if (
+              kind === "event" &&
+              !eventSchema.shape.due.safeParse(due).success
+            ) {
+              setDueError(
+                due
+                  ? "YYYY-MM-DDで実在する日付を入力してください。"
+                  : "期限を選んでください。",
+              );
+              if (!due) setCalendarOpen(true);
               return;
             }
             setSaving(true);
@@ -207,38 +214,16 @@ export function InlineAdd({
                     ))}
                   </select>
                 </span>
-                <span className="inline-event-due">
-                  <button
-                    type="button"
-                    className="inline-event-date-trigger"
-                    aria-label={due ? `期限 ${displayDue(due)}` : "期限を選ぶ"}
-                    onClick={() => dateInput.current?.showPicker?.()}
-                  >
-                    <svg
-                      aria-hidden="true"
-                      width="16"
-                      height="16"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    >
-                      <rect x="3" y="5" width="18" height="16" rx="2" />
-                      <path d="M7 3v4M17 3v4M3 10h18" />
-                    </svg>
-                    {due ? displayDue(due) : "期限を選ぶ"}
-                  </button>
-                  <input
-                    ref={dateInput}
-                    type="date"
-                    aria-label="期限"
-                    tabIndex={-1}
-                    value={due}
-                    onChange={(event) => setDue(event.target.value)}
-                  />
-                </span>
+                <DatePicker
+                  value={due}
+                  onChange={(value) => {
+                    setDue(value);
+                    setDueError(undefined);
+                  }}
+                  open={calendarOpen}
+                  onOpenChange={setCalendarOpen}
+                  error={dueError}
+                />
               </div>
             ) : (
               <>
@@ -253,19 +238,21 @@ export function InlineAdd({
                     </option>
                   ))}
                 </select>
-                <input
-                  type="date"
-                  aria-label="期限"
+                <DatePicker
                   value={due}
-                  onChange={(event) => setDue(event.target.value)}
+                  onChange={(value) => {
+                    setDue(value);
+                    setDueError(undefined);
+                  }}
+                  open={calendarOpen}
+                  onOpenChange={setCalendarOpen}
+                  error={dueError}
                 />
               </>
             ))}
-          {(kind !== "event" || layout !== "embedded" || due) && (
-            <button type="submit" disabled={saving}>
-              追加
-            </button>
-          )}
+          <button type="submit" disabled={saving}>
+            追加
+          </button>
         </form>
       )}
     </span>

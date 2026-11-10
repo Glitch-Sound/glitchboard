@@ -1,5 +1,97 @@
 @import "tailwindcss";
 
+.date-picker {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 6px;
+  min-width: 0;
+}
+.date-picker input {
+  min-width: 0;
+  width: 100%;
+  box-sizing: border-box;
+}
+.date-picker input,
+.date-picker-trigger {
+  min-height: 30px;
+  padding: 4px 6px;
+  border: 1px solid var(--vscode-panel-border, #666);
+  border-radius: 4px;
+  background: var(--vscode-input-background, var(--vscode-editor-background));
+  color: var(--vscode-foreground);
+  font-size: 12px;
+}
+.date-picker-trigger {
+  white-space: nowrap;
+  cursor: pointer;
+}
+.date-picker-error {
+  grid-column: 1 / -1;
+  color: var(--vscode-errorForeground);
+  font-size: 12px;
+}
+.date-picker-calendar {
+  position: fixed;
+  z-index: 1000;
+  box-sizing: border-box;
+  padding: 8px;
+  overflow: auto;
+  border: 1px solid var(--vscode-panel-border, #666);
+  border-radius: 6px;
+  color: var(--vscode-foreground);
+  background: var(--vscode-editor-background);
+  box-shadow: 0 4px 16px #0004;
+}
+.date-picker-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4px;
+  margin-bottom: 6px;
+}
+.date-picker-heading button {
+  min-width: 28px;
+  min-height: 28px;
+}
+.date-picker-grid {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 2px;
+}
+.date-picker-weekday {
+  text-align: center;
+  font-size: 12px;
+  padding: 4px 0;
+  color: var(--vscode-descriptionForeground);
+}
+.date-picker-grid button {
+  min-width: 0;
+  min-height: 28px;
+  padding: 3px 0;
+  border: 1px solid transparent;
+  border-radius: 3px;
+  color: inherit;
+  background: transparent;
+  font-variant-numeric: tabular-nums;
+}
+.date-picker-grid button[data-other-month="true"] {
+  color: var(--vscode-descriptionForeground);
+}
+.date-picker-grid button:hover {
+  background: var(--vscode-list-hoverBackground, #8883);
+}
+.date-picker-grid button[aria-current="date"] {
+  border-color: var(--vscode-focusBorder, #007fd4);
+}
+.date-picker-grid button[aria-pressed="true"] {
+  color: var(--vscode-button-foreground, white);
+  background: var(--vscode-button-background, #0078d4);
+}
+.date-picker-calendar button:focus-visible {
+  outline: 2px solid var(--vscode-focusBorder, #007fd4);
+  outline-offset: -2px;
+}
+
 :root {
   color: var(--vscode-foreground);
   background: var(--vscode-editor-background);
@@ -1090,7 +1182,7 @@ main {
 }
 .event-summary-metrics p {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) max-content;
+  grid-template-columns: minmax(0, 1fr);
   align-items: baseline;
   gap: 8px;
   width: 100%;
@@ -1482,11 +1574,10 @@ main {
 }
 .inline-event-controls {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) max-content;
+  grid-template-columns: minmax(0, 1fr);
   gap: 8px;
 }
-.inline-event-project,
-.inline-event-due {
+.inline-event-project {
   display: flex;
   align-items: center;
   min-width: 0;
@@ -1503,8 +1594,7 @@ main {
   border-radius: 50%;
   pointer-events: none;
 }
-.inline-add .inline-event-project select,
-.inline-event-date-trigger {
+.inline-add .inline-event-project select {
   width: 100%;
   min-width: 0;
   min-height: 36px;
@@ -1518,31 +1608,6 @@ main {
 .inline-add .inline-event-project select {
   padding: 6px 6px 6px 25px;
   cursor: pointer;
-}
-.inline-event-date-trigger {
-  display: flex;
-  width: max-content;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  padding: 6px;
-  border-style: dashed;
-  white-space: nowrap;
-  cursor: pointer;
-}
-.inline-event-date-trigger svg {
-  flex: none;
-}
-.inline-add .inline-event-due input[type="date"] {
-  position: absolute;
-  top: 100%;
-  left: 0;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  border: 0;
-  opacity: 0;
-  pointer-events: none;
 }
 .event-list-toolbar .inline-add-embedded form button[type="submit"] {
   justify-self: end;

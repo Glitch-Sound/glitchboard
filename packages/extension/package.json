@@ -3,7 +3,7 @@
   "displayName": "GlitchBoard",
   "description": "個人用プロジェクト管理ツール",
   "publisher": "Glitch-Sound",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "icon": "media/icon.png",
   "repository": {
     "type": "git",

@@ -1,0 +1,12 @@
+{
+  "date": "2026-11-11",
+  "environment": "VS Code 1.145.2 stable, final build, fresh isolated profile",
+  "steps": [
+    "Tab out of calendar then Escape closes only calendar and restores trigger focus",
+    "draft name retained",
+    "dark/light actual Event add and detail calendars",
+    "date selection only does not change YAML",
+    "Saturday selectable"
+  ],
+  "errors": []
+}
