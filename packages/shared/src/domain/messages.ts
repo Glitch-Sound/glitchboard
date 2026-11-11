@@ -102,6 +102,13 @@ export const operationSchema = z.discriminatedUnion("type", [
     color: z.string().regex(/^#[0-9a-fA-F]{6}$/),
   }),
   z.object({
+    // REQ-032-S04: UUIDと移動方向を共有境界で検証する。
+    type: z.literal("moveProject"),
+    projectId: z.uuid(),
+    targetProjectId: z.uuid(),
+    placement: z.enum(["before", "after"]),
+  }),
+  z.object({
     type: z.literal("addEvent"),
     projectId: z.uuid(),
     name: z.string().trim().min(1),

@@ -1,7 +1,7 @@
 import { randomUUID } from "node:crypto";
 import { mkdir, readdir, readFile, rename, writeFile } from "node:fs/promises";
 import { dirname, isAbsolute, join, relative, resolve, sep } from "node:path";
-import { Document, parseDocument } from "yaml";
+import { Document, isSeq, parseDocument } from "yaml";
 import {
   type Project,
   projectSchema,
@@ -203,6 +203,38 @@ export async function setProjectLoaded(
   const index = manage.projects.findIndex((entry) => entry.file === file);
   if (index < 0) throw new Error(`Projectが見つからない: ${file}`);
   document.setIn(["projects", index, "load"], load);
+  manageSchema.parse(document.toJS());
+  await atomicWrite(managePath, String(document));
+}
+
+/** REQ-032-S03/S04: 表示中だけを並べ替え、非表示の位置とコメントを保つ。 */
+export async function moveProject(
+  managePath: string,
+  file: string,
+  targetFile: string,
+  placement: "before" | "after",
+): Promise<void> {
+  if (!isAbsolute(managePath))
+    throw new Error("manage.yamlには絶対パスを指定する");
+  const source = await readFile(managePath, "utf8");
+  const document = documentFrom(source, managePath);
+  const manage = manageSchema.parse(document.toJS());
+  const entries = document.get("projects");
+  if (!isSeq(entries)) throw new Error("Project一覧が見つからない");
+  const visible = manage.projects
+    .map((entry, index) => ({ ...entry, node: entries.items[index] }))
+    .filter((entry) => entry.load);
+  const from = visible.findIndex((entry) => entry.file === file);
+  if (from < 0 || !visible.some((entry) => entry.file === targetFile))
+    throw new Error("並べ替え対象が更新されたため、操作をやり直す");
+  if (file === targetFile) return;
+  const [moved] = visible.splice(from, 1);
+  const to = visible.findIndex((entry) => entry.file === targetFile);
+  visible.splice(to + (placement === "after" ? 1 : 0), 0, moved);
+  let next = 0;
+  for (const [index, entry] of manage.projects.entries()) {
+    if (entry.load) entries.items[index] = visible[next++].node;
+  }
   manageSchema.parse(document.toJS());
   await atomicWrite(managePath, String(document));
 }

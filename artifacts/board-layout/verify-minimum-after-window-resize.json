@@ -1,0 +1,15 @@
+{
+  "scenario": "REQ-031 minimum height after viewport resize",
+  "beforeWindowResize": {
+    "top": 700,
+    "bottom": 80,
+    "ratio": 0.8974358974358975
+  },
+  "afterWindowResize": {
+    "top": 466.65625,
+    "bottom": 53.328125,
+    "ratio": 0.8974428318158598
+  },
+  "expectedMinimum": 80,
+  "mismatch": true
+}

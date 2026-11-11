@@ -15,6 +15,7 @@ import {
   createProject,
   loadManageFile,
   MissingManageFileError,
+  moveProject,
   readProjectSummary,
   setProjectLoaded,
 } from "./storage/manage.js";
@@ -89,6 +90,30 @@ export class BoardSession {
       }
       const { manage, loadedProjects } = await loadManageFile(this.managePath);
       const loadedFiles = manage.projects.filter((entry) => entry.load);
+      // REQ-032-S03/S04: 最新の読込対象でIDを解決し、保存後に両画面へ再配信する。
+      if (operation.type === "moveProject") {
+        const file =
+          loadedFiles[
+            loadedProjects.findIndex(
+              (project) => project.id === operation.projectId,
+            )
+          ]?.file;
+        const targetFile =
+          loadedFiles[
+            loadedProjects.findIndex(
+              (project) => project.id === operation.targetProjectId,
+            )
+          ]?.file;
+        if (!file || !targetFile) throw new Error("並べ替え対象が見つからない");
+        await moveProject(
+          this.managePath,
+          file,
+          targetFile,
+          operation.placement,
+        );
+        await this.reload();
+        return { ok: true };
+      }
       if (operation.type === "editItem") {
         const index = loadedProjects.findIndex((project) =>
           operation.kind === "project"

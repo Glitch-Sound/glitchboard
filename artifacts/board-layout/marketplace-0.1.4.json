@@ -1,0 +1,13 @@
+{
+  "date": "2026-11-11",
+  "extension": "Glitch-Sound.glitchboard",
+  "version": "0.1.4",
+  "package": "/private/tmp/glitchboard-0.1.4.vsix",
+  "sha256": "b10af28f7f4eb4efe08eae60676d0c42934238d5d9124d87d79c9f525d090e44",
+  "command": "vsce publish --packagePath /private/tmp/glitchboard-0.1.4.vsix",
+  "result": "DONE Published Glitch-Sound.glitchboard v0.1.4.",
+  "marketplace": "https://marketplace.visualstudio.com/items?itemName=Glitch-Sound.glitchboard",
+  "propagationChecked": false,
+  "propagationNote": "利用者の指示に従い反映完了は待機しない",
+  "knownWarning": "W-01: 画面縮小時に詳細エリアが最小高さを下回る場合がある"
+}

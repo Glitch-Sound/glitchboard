@@ -11,7 +11,7 @@ import {
   type ItemKind,
 } from "../../../shared/src/domain/deletion.js";
 import type { Project } from "../../../shared/src/domain/index.js";
-import { displayDays, type Period } from "../pages/board/index.js";
+import { BoardSplit, displayDays, type Period } from "../pages/board/index.js";
 import {
   DetailPanel,
   type DetailSelection,
@@ -212,7 +212,7 @@ export function BoardApp() {
               dangerCount={danger.count}
             />
           </header>
-          <div className="board-content">
+          <BoardSplit>
             <div className="timeline-panel">
               <Timeline
                 projects={projects}
@@ -235,6 +235,14 @@ export function BoardApp() {
                     type: "createProject",
                     name,
                     color,
+                  })
+                }
+                onMoveProject={(projectId, targetProjectId, placement) =>
+                  sendOperation(localBridge(), {
+                    type: "moveProject",
+                    projectId,
+                    targetProjectId,
+                    placement,
                   })
                 }
               />
@@ -291,7 +299,7 @@ export function BoardApp() {
                 />
               )}
             </div>
-          </div>
+          </BoardSplit>
           {detailSelection && (
             <DetailPanel
               key={detailSelection.item.id}

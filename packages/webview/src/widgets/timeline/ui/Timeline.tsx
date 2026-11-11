@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { type DragEvent, useEffect, useRef, useState } from "react";
 import type { EventDanger } from "../../../../../shared/src/calculation/danger.js";
 import {
   isWorkday,
@@ -23,6 +23,11 @@ type Props = {
   pace?: number | null;
   learning?: boolean;
   onAddProject?: (name: string, color: string) => boolean | Promise<boolean>;
+  onMoveProject?: (
+    projectId: string,
+    targetProjectId: string,
+    placement: "before" | "after",
+  ) => boolean | Promise<boolean>;
 };
 
 const defaultSettings: WorkdaySettings = {
@@ -142,7 +147,7 @@ function RequiredPace({
   );
 }
 
-/** REQ-016: Project別の日付列にEvent期限をまとめて表示する。 */
+/** REQ-016/REQ-032: 期限表示と、保存結果に従うProjectの並べ替えを扱う。 */
 export function Timeline({
   projects,
   days,
@@ -157,6 +162,7 @@ export function Timeline({
   pace,
   learning,
   onAddProject,
+  onMoveProject,
 }: Props) {
   const [open, setOpen] = useState<string | null>(null);
   const [addingProject, setAddingProject] = useState(false);
@@ -166,6 +172,35 @@ export function Timeline({
   );
   const [savingProject, setSavingProject] = useState(false);
   const projectNameInput = useRef<HTMLInputElement>(null);
+  const draggedProject = useRef<string | null>(null);
+  const [dragging, setDragging] = useState<string | null>(null);
+  const [dropTarget, setDropTarget] = useState<{
+    id: string;
+    placement: "before" | "after";
+  } | null>(null);
+  const [moving, setMoving] = useState(false);
+  const clearDrag = () => {
+    draggedProject.current = null;
+    setDragging(null);
+    setDropTarget(null);
+  };
+  const moveProject = async (
+    id: string,
+    targetId: string,
+    placement: "before" | "after",
+  ) => {
+    if (!onMoveProject || moving || id === targetId) return;
+    setMoving(true);
+    try {
+      await onMoveProject(id, targetId, placement);
+    } finally {
+      setMoving(false);
+    }
+  };
+  const dropPlacement = (event: DragEvent<HTMLTableRowElement>) => {
+    const rect = event.currentTarget.getBoundingClientRect();
+    return event.clientY < rect.top + rect.height / 2 ? "before" : "after";
+  };
   useEffect(() => {
     if (addingProject) projectNameInput.current?.focus();
   }, [addingProject]);
@@ -181,6 +216,7 @@ export function Timeline({
     <table
       className={`timeline timeline-${period}`}
       aria-label="期限タイムライン"
+      aria-busy={moving}
     >
       <colgroup>
         <col className="project-col" />
@@ -245,8 +281,46 @@ export function Timeline({
         </tr>
       </thead>
       <tbody>
-        {projects.map((project) => (
-          <tr className="timeline-row" key={project.id}>
+        {projects.map((project, index) => (
+          <tr
+            className="timeline-row project-row"
+            key={project.id}
+            data-project-id={project.id}
+            data-dragging={dragging === project.id || undefined}
+            data-drop={
+              dropTarget?.id === project.id ? dropTarget.placement : undefined
+            }
+            onDragOver={(event) => {
+              if (
+                !draggedProject.current ||
+                draggedProject.current === project.id ||
+                moving
+              )
+                return;
+              event.preventDefault();
+              event.dataTransfer.dropEffect = "move";
+              setDropTarget({
+                id: project.id,
+                placement: dropPlacement(event),
+              });
+            }}
+            onDragLeave={(event) => {
+              if (
+                !event.currentTarget.contains(
+                  event.relatedTarget as Node | null,
+                )
+              )
+                setDropTarget(null);
+            }}
+            onDrop={(event) => {
+              const id = draggedProject.current;
+              if (!id) return;
+              event.preventDefault();
+              const placement = dropPlacement(event);
+              clearDrag();
+              void moveProject(id, project.id, placement);
+            }}
+          >
             <th
               scope="row"
               style={{
@@ -257,6 +331,50 @@ export function Timeline({
                   : "transparent",
               }}
             >
+              {onMoveProject && (
+                <button
+                  type="button"
+                  className="project-drag-handle"
+                  draggable={!moving}
+                  disabled={moving}
+                  aria-label={`${project.name}を並べ替え`}
+                  title="ドラッグで並べ替え（上下キーでも移動）"
+                  onDragStart={(event) => {
+                    draggedProject.current = project.id;
+                    setDragging(project.id);
+                    event.dataTransfer.effectAllowed = "move";
+                    event.dataTransfer.setData("text/plain", project.id);
+                    const row = event.currentTarget.closest("tr");
+                    if (row)
+                      event.dataTransfer.setDragImage(
+                        row,
+                        20,
+                        row.clientHeight / 2,
+                      );
+                  }}
+                  onDragEnd={clearDrag}
+                  onKeyDown={(event) => {
+                    const targetIndex =
+                      event.key === "ArrowUp"
+                        ? index - 1
+                        : event.key === "ArrowDown"
+                          ? index + 1
+                          : -1;
+                    if (event.key !== "ArrowUp" && event.key !== "ArrowDown")
+                      return;
+                    event.preventDefault();
+                    const target = projects[targetIndex];
+                    if (target)
+                      void moveProject(
+                        project.id,
+                        target.id,
+                        event.key === "ArrowUp" ? "before" : "after",
+                      );
+                  }}
+                >
+                  <span aria-hidden="true">⠿</span>
+                </button>
+              )}
               <span className="project-name">
                 <i style={{ backgroundColor: project.color }} />
                 {project.name}

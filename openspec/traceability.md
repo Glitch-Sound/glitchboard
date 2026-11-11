@@ -7,6 +7,67 @@
 その後の機能改修は現行の正式仕様へ反映し、アーカイブ済みの提案・差分仕様は当時の履歴として保持する。\
 下表の状態はアーカイブした変更のリンクを示し、実装と検証の結果は後段の対応表で管理する。
 
+## ボードの高さとProject表示順の改修計画
+
+2026-11-11の利用者の3点の改修指示に対し、OpenSpecの成果物を作成する前に実装と検証を進めた。
+同日の利用者の指摘を受け、[resize-board-and-reorder-projects](changes/resize-board-and-reorder-projects/proposal.md)へ要件と計画を補完する。
+事前の計画合意や未実装時の受け入れテスト失敗確認を行った記録としては扱わない。
+REQ-030は正式仕様に既存のため、REQ-031とREQ-032を新規に予約する。
+REQ-016は既存IDを維持する。
+
+| 要件ID | 状態 | 差分仕様 | 設計とタスク |
+| --- | --- | --- | --- |
+| REQ-016 | 実装・検証済み | [タイムライン](changes/resize-board-and-reorder-projects/specs/board-visualization/spec.md) | [設計](changes/resize-board-and-reorder-projects/design.md)、[タスク](changes/resize-board-and-reorder-projects/tasks.md) |
+| REQ-031 | 実装済み | [上下高さ調整](changes/resize-board-and-reorder-projects/specs/board-visualization/spec.md) | [設計](changes/resize-board-and-reorder-projects/design.md)、[タスク](changes/resize-board-and-reorder-projects/tasks.md) |
+| REQ-032 | 実装済み | [Project表示順](changes/resize-board-and-reorder-projects/specs/board-visualization/spec.md) | [設計](changes/resize-board-and-reorder-projects/design.md)、[タスク](changes/resize-board-and-reorder-projects/tasks.md) |
+
+先行実装は[高さ調整](../packages/webview/src/pages/board/ui/BoardSplit.tsx)、[Timeline](../packages/webview/src/widgets/timeline/ui/Timeline.tsx)、[管理保存](../packages/extension/src/storage/manage.ts)、[セッション](../packages/extension/src/session.ts)、[共有メッセージ](../packages/shared/src/domain/messages.ts)に存在する。
+[並べ替えUIテスト](../tests/board-timeline/project-reorder.test.tsx)3件と[保存テスト](../tests/data-persistence/project-order.test.ts)2件を実行した。
+2026-11-11、macOS arm64、Node 24.18.0で`npm test`の82ファイル・149テスト、`npm run typecheck`、`npm run check`、`npm run check:fsd`、`npm run build`、`git diff --check`が成功した。
+`node scripts/verify-board-layout.mjs`は通信を差し替えたChromiumで両テーマの初期比率、ドラッグ、キー操作、44pxの行高、スクロール、画面サイズ変更、最小高さを確認した。
+結果と画面は一時出力`/private/tmp/glitchboard-layout/`にあり、恒久的な受け入れ証跡への移設は未実施である。
+VS Code実機での今回の操作確認、要件IDを含むテスト名と実装注記、全シナリオとの照合は未実施である。
+上記はapply開始前の観測であり、後続の完了実績と区別する。
+
+2026-11-11の「この変更をapplyして」という指示を受け、計画に沿った受け入れを開始した。
+REQ-016-S01〜S04の既存7テストが成功し、両テーマと3表示期間で44pxの通常行と詳細操作を確認した。
+REQ-031-S01〜S05はブラウザーで初期比率、120pxのドラッグ、選択維持、解放と取消、上下キーと初期化、上下限、極小画面、多数行と3列の独立スクロールを確認した。
+[ブラウザー結果](../artifacts/board-layout/results.json)、[ダークの画面](../artifacts/board-layout/dark-default.png)、[ライトの画面](../artifacts/board-layout/light-default.png)へ恒久的な証跡を保存した。
+[ルートの操作手順](../README.md#ボードの見方)と[配布用の操作手順](../packages/extension/README.md#ボードの見方)へ高さ調整を追記した。
+REQ-032-S01、S02、S06は[UIテスト](../tests/board-timeline/project-reorder.test.tsx)とブラウザーの実ドラッグ、上下キー、両端、選択維持で確認した。
+REQ-032-S03、S04は[保存テスト](../tests/data-persistence/project-order.test.ts)で全Projectファイル、設定、読込フラグ、非表示位置、コメント、再読込、不正・消失・同一対象を確認した。
+REQ-032-S05は[ボードの失敗復帰テスト](../tests/board-timeline/project-reorder-error.test.tsx)で要求、失敗応答、理由表示、順序と選択の維持、再操作後のスナップショット反映を確認した。
+これら3ファイルの計8テストは成功した。
+先行実装への不足を原因とする失敗はなく、追加テストの初回失敗は見出し内の操作ボタンを含む文字列の照合条件によるものだった。
+両READMEに移動ハンドル、挿入位置、上下キー、保存と失敗時の再操作を追記した。
+[実機手順](../scripts/verify-board-layout-vscode.mjs)でVS Code 1.145.2安定版、macOS arm64、隔離プロファイルを起動した。
+両テーマで3表示期間の44px行、高さのドラッグと初期化、Projectの前後への実ドラッグとYAML保存、選択維持を確認した。
+実際のEACCESで順序とYAMLを維持し、権限復旧後の上下キーによる再操作で保存でき、エラーが消えることを確認した。
+ウィンドウ再読込後の順序、Projectファイルの全バイトとコメント保持も確認した。
+[実機結果](../artifacts/board-layout/vscode-results.json)、[ダーク](../artifacts/board-layout/vscode-dark.png)、[ライト](../artifacts/board-layout/vscode-light.png)、[実書込エラー](../artifacts/board-layout/vscode-save-error.png)を保存した。
+検証データは一時ディレクトリへ作成し、検証用の権限を復旧してウィンドウとプロセスを終了した。
+既存の利用者データと通常のVS Codeプロファイルは変更していない。
+2026-11-11、macOS arm64、Node 24.18.0で全体検証を実施した。
+`npm test`の83ファイル・152テスト、型検査、Biome、Steiger、ビルド、ブラウザー検証と差分の空白検査が成功した。
+ビルドでは既存Zod依存の注釈警告が出たが、正常終了した。
+[全体検証結果](../artifacts/board-layout/check-results.json)にコマンドと環境を記録した。
+`openspec validate resize-board-and-reorder-projects --strict`が成功した。
+[検証報告](changes/resize-board-and-reorder-projects/verification.md)で3要件・16シナリオ、D-01〜D-04、実装・テスト・台帳を照合し、重大な不一致と未検証項目がないことを確認した。
+CLIのapply進捗で10/10タスク完了、`state: all_done`を確認した。
+同日の明示的なverify指定により再検証し、最小高さへ調整した後の画面縮小でW-01を検出した。
+高さ900pxで下部80pxへ調整後、高さ640pxにすると下部53.328125pxになった。
+[再現結果](../artifacts/board-layout/verify-minimum-after-window-resize.json)と[再現画面](../artifacts/board-layout/verify-minimum-after-window-resize.png)を保存した。
+関連15テストとOpenSpec厳格検証は成功したが、検証判定は重大0件、警告1件、提案0件へ更新した。
+[検証報告](changes/resize-board-and-reorder-projects/verification.md#再検証での指摘)に修正箇所と未カバーの操作順序を記録した。
+実装の修正とタスクの再適用はこのverifyでは行っていない。
+2026-11-11の利用者の公開指示を受け、Extensionのバージョンを0.1.4へ更新した。
+ビルドとVSIXの版・必須資産・CRC、公開者認証を確認し、検証済みパッケージをマーケットプレイスへ送信した。
+`vsce publish --packagePath /private/tmp/glitchboard-0.1.4.vsix`が正常終了し、公開要求の受付を確認した。
+[公開記録](../artifacts/board-layout/marketplace-0.1.4.json)へ版とパッケージのハッシュを保存した。
+利用者の指示に従い、マーケットプレイスへの反映完了は待機していない。
+W-01は未修正のまま配布に含む。
+正式仕様への同期はアーカイブ時の後続作業である。
+
 ## Event期限選択の改修計画
 
 2026-11-11にEvent追加のDatePicker不表示と、関連する期限入力への横展開を計画した。
@@ -156,6 +217,8 @@ Vitestの全82件、型検査、ビルドを実行し、月表示30列が1280px�
 | REQ-027 | 詳細編集 | 実装済み | [提案](changes/archive/2026-11-03-detail-panel/proposal.md) | [正式仕様](specs/item-details/spec.md) |
 | REQ-028 | 補足 | 実装済み | [提案](changes/archive/2026-11-03-detail-panel/proposal.md) | [正式仕様](specs/item-details/spec.md) |
 | REQ-029 | 管理ファイル未設定時の案内 | 実装済み | 2026-11-03の機能改修 | [正式仕様](specs/vscode-integration/spec.md) |
+| REQ-031 | ボードの上下高さ調整 | 実装済み | [提案](changes/resize-board-and-reorder-projects/proposal.md) | [差分仕様](changes/resize-board-and-reorder-projects/specs/board-visualization/spec.md) |
+| REQ-032 | Projectの表示順変更 | 実装済み | [提案](changes/resize-board-and-reorder-projects/proposal.md) | [差分仕様](changes/resize-board-and-reorder-projects/specs/board-visualization/spec.md) |
 
 ## 2026-11-03の機能改修
 
@@ -184,6 +247,9 @@ OpenSpec変更の作成時に以下の表へ行を追加する。\
 
 | 変更 | 要件・シナリオID | 仕様 | 設計・タスク | 実装 | テスト | 検証結果 |
 | --- | --- | --- | --- | --- | --- | --- |
+| [resize-board-and-reorder-projects](changes/resize-board-and-reorder-projects/proposal.md) | REQ-016、REQ-016-S01〜S05 | [差分](changes/resize-board-and-reorder-projects/specs/board-visualization/spec.md) | [設計](changes/resize-board-and-reorder-projects/design.md)、[タスク](changes/resize-board-and-reorder-projects/tasks.md) | [Timeline](../packages/webview/src/widgets/timeline/ui/Timeline.tsx)、[CSS](../packages/webview/src/app/style.css) | [ブラウザー手順](../scripts/verify-board-layout.mjs)、既存REQ-016テスト | 両テーマ・全表示期間の44pxと操作を確認、ID対応済み、検証報告を参照 |
+| [resize-board-and-reorder-projects](changes/resize-board-and-reorder-projects/proposal.md) | REQ-031、REQ-031-S01〜S05 | [差分](changes/resize-board-and-reorder-projects/specs/board-visualization/spec.md) | [設計](changes/resize-board-and-reorder-projects/design.md)、[タスク](changes/resize-board-and-reorder-projects/tasks.md) | [BoardSplit](../packages/webview/src/pages/board/ui/BoardSplit.tsx) | [ブラウザー手順](../scripts/verify-board-layout.mjs) | 初期比率、実ドラッグ、キー、取消、両端と極小画面、独立スクロールを確認済み |
+| [resize-board-and-reorder-projects](changes/resize-board-and-reorder-projects/proposal.md) | REQ-032、REQ-032-S01〜S06 | [差分](changes/resize-board-and-reorder-projects/specs/board-visualization/spec.md) | [設計](changes/resize-board-and-reorder-projects/design.md)、[タスク](changes/resize-board-and-reorder-projects/tasks.md) | [Timeline](../packages/webview/src/widgets/timeline/ui/Timeline.tsx)、[保存](../packages/extension/src/storage/manage.ts)、[セッション](../packages/extension/src/session.ts) | [UI](../tests/board-timeline/project-reorder.test.tsx)、[保存](../tests/data-persistence/project-order.test.ts)、[ブラウザー手順](../scripts/verify-board-layout.mjs) | 関連8テスト、実ドラッグ、実EACCESと再操作、再読込が成功、全条件を照合済み |
 | [data-persistence](changes/archive/2026-11-03-data-persistence/proposal.md) | REQ-001、REQ-001-S01、REQ-001-S02 | [仕様](specs/data-management/spec.md) | [設計](changes/archive/2026-11-03-data-persistence/design.md)、[タスク](changes/archive/2026-11-03-data-persistence/tasks.md) | [モデル](../packages/shared/src/domain/index.ts)、[読込](../packages/extension/src/storage/project.ts) | [S01](../tests/data-persistence/req-001-s01.test.ts)、[S02](../tests/data-persistence/req-001-s02.test.ts) | 2026-11-03、`corepack pnpm test tests/data-persistence/req-001-s01.test.ts tests/data-persistence/req-001-s02.test.ts`、2件成功、Node 24.18.0 |
 | [data-persistence](changes/archive/2026-11-03-data-persistence/proposal.md) | REQ-002、REQ-002-S01、REQ-002-S02 | [仕様](specs/data-management/spec.md) | [設計](changes/archive/2026-11-03-data-persistence/design.md)、[タスク](changes/archive/2026-11-03-data-persistence/tasks.md) | [管理ファイル](../packages/extension/src/storage/manage.ts) | [S01](../tests/data-persistence/req-002-s01.test.ts)、[S02](../tests/data-persistence/req-002-s02.test.ts) | 2026-11-03、`corepack pnpm test tests/data-persistence/req-002-s01.test.ts tests/data-persistence/req-002-s02.test.ts`、2件成功、Node 24.18.0 |
 | [data-persistence](changes/archive/2026-11-03-data-persistence/proposal.md) | REQ-003、REQ-003-S01 | [仕様](specs/data-management/spec.md) | [設計](changes/archive/2026-11-03-data-persistence/design.md)、[タスク](changes/archive/2026-11-03-data-persistence/tasks.md) | [管理ファイル](../packages/extension/src/storage/manage.ts) | [S01](../tests/data-persistence/req-003-s01.test.ts) | 2026-11-03、`corepack pnpm test tests/data-persistence/req-003-s01.test.ts`、1件成功、Node 24.18.0 |

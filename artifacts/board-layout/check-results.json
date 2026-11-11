@@ -1,0 +1,50 @@
+{
+  "date": "2026-11-11",
+  "environment": "macOS arm64, Node 24.18.0, VS Code 1.145.2 stable",
+  "commands": [
+    {
+      "command": "npm test",
+      "result": "83 files, 152 tests passed"
+    },
+    {
+      "command": "npm run typecheck",
+      "result": "passed"
+    },
+    {
+      "command": "npm run check",
+      "result": "passed, no diagnostics"
+    },
+    {
+      "command": "npm run check:fsd",
+      "result": "passed, no problems"
+    },
+    {
+      "command": "npm run build",
+      "result": "passed; existing Zod annotation warnings"
+    },
+    {
+      "command": "node scripts/verify-board-layout.mjs",
+      "result": "both themes passed"
+    },
+    {
+      "command": "node scripts/verify-board-layout-vscode.mjs",
+      "result": "isolated VS Code, both themes, real saves, EACCES/retry, window reload passed"
+    },
+    {
+      "command": "git diff --check",
+      "result": "passed"
+    },
+    {
+      "command": "openspec validate resize-board-and-reorder-projects --strict",
+      "result": "passed"
+    }
+  ],
+  "openspec": {
+    "change": "resize-board-and-reorder-projects",
+    "tasks": "10/10",
+    "state": "all_done",
+    "requirements": 3,
+    "scenarios": 16,
+    "verification": "openspec/changes/resize-board-and-reorder-projects/verification.md"
+  }
+}

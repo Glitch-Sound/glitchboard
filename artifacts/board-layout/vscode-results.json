@@ -1,0 +1,91 @@
+{
+  "date": "2026-11-11",
+  "environment": "VS Code 1.145.2 stable, macOS arm64, isolated development host",
+  "fixture": "/private/tmp/gb-layout-vscode-tbabIm",
+  "steps": [
+    "dark: REQ-016-S05 / REQ-031-S01/S02/S04 actual rows, pointer resize, reset",
+    "dark: REQ-032-S01/S02/S03 native drag before and after saved through extension",
+    "light: REQ-016-S05 / REQ-031-S01/S02/S04 actual rows, pointer resize, reset",
+    "light: REQ-032-S01/S02/S03 native drag before and after saved through extension",
+    "REQ-032-S05/S06 actual EACCES preserves state, keyboard retry saves and clears error",
+    "REQ-032-S03 real window reload preserves order and Project bytes/comments"
+  ],
+  "results": [
+    {
+      "theme": "dark",
+      "initial": {
+        "top": 467.3984375,
+        "bottom": 311.6015625,
+        "ratio": 0.5999979942233633
+      },
+      "expanded": {
+        "top": 547.3984375,
+        "bottom": 231.6015625,
+        "ratio": 0.7026937580231065
+      },
+      "periodRows": {
+        "3日": [
+          44,
+          44,
+          44
+        ],
+        "月": [
+          44,
+          44,
+          44
+        ],
+        "1週間": [
+          44,
+          44,
+          44
+        ]
+      },
+      "savedOrder": [
+        "Atlas",
+        "Beacon",
+        "Cinder"
+      ]
+    },
+    {
+      "theme": "light",
+      "initial": {
+        "top": 467.3984375,
+        "bottom": 311.6015625,
+        "ratio": 0.5999979942233633
+      },
+      "expanded": {
+        "top": 547.3984375,
+        "bottom": 231.6015625,
+        "ratio": 0.7026937580231065
+      },
+      "periodRows": {
+        "3日": [
+          44,
+          44,
+          44
+        ],
+        "月": [
+          44,
+          44,
+          44
+        ],
+        "1週間": [
+          44,
+          44,
+          44
+        ]
+      },
+      "savedOrder": [
+        "Atlas",
+        "Beacon",
+        "Cinder"
+      ]
+    }
+  ],
+  "finalOrder": [
+    "Beacon",
+    "Atlas",
+    "Cinder"
+  ],
+  "errors": []
+}
