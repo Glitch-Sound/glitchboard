@@ -1169,8 +1169,8 @@ main {
 .event-details > .event-summary {
   display: flex;
   flex-direction: column;
-  gap: 20px;
-  padding: 20px;
+  gap: 8px;
+  padding: 14px 16px;
 }
 .event-project-label {
   display: flex;
@@ -1196,7 +1196,7 @@ main {
   align-items: center;
   gap: 6px;
   margin: 0;
-  font-size: 22px;
+  font-size: 20px;
   line-height: 1.2;
 }
 .event-summary h2 .delete-control > button:first-child {
@@ -1228,8 +1228,8 @@ main {
   border-radius: 5px;
 }
 .event-due {
-  margin: 12px 0 0;
-  font-size: 14px;
+  margin: 8px 0 0;
+  font-size: 13px;
   font-weight: 600;
   color: var(--vscode-descriptionForeground);
 }
@@ -1241,27 +1241,27 @@ main {
   align-items: baseline;
   gap: 6px;
   margin: 0;
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 700;
 }
 .event-days strong {
-  font-size: 56px;
+  font-size: 44px;
   line-height: 1;
 }
 .event-summary-metrics {
   display: grid;
-  gap: 20px;
+  gap: 8px;
   margin-top: auto;
 }
 .event-summary-metrics p {
   display: grid;
-  grid-template-columns: minmax(0, 1fr);
+  grid-template-columns: minmax(0, 1fr) auto;
   align-items: baseline;
-  gap: 8px;
+  gap: 6px;
   width: 100%;
   margin: 0;
-  font-size: 16px;
-  line-height: 1.4;
+  font-size: 13px;
+  line-height: 1.35;
 }
 .event-summary-metrics p > span {
   color: var(--vscode-descriptionForeground);
