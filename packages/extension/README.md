@@ -6,11 +6,12 @@
 期限をタイムラインで確認し、Event ごとの作業を追加、見積もり、完了できる。\
 データはローカルの YAML に保存し、作業フォルダを切り替えても同じボードを使える。
 
-<a href="media/readme/overview.png"><img src="media/readme/overview.png" width="819" alt="実際の VS Code のメインボード、上に指標とタイムライン、下に Event の要約、Story、Task が並ぶ"></a>
+<a href="media/readme/overview.png"><img src="media/readme/overview.png" width="1077" alt="実際の VS Code で左の EVENT 一覧とメインボードを同時に表示した画面"></a>
 
 画面例は撮影用の[サンプルデータ](examples/readme-guide/manage.yaml)を使った実画面である。\
 すべて同じダークテーマ、表示倍率で撮影している。\
-画像を開くと元の大きさで確認できる。
+全体画像は左の EVENT 一覧とメインボードを同時に表示し、本文幅に合わせて縮小する。\
+画像を開くと元の大きさで文字と操作ボタンを確認できる。
 
 ## 導入して使い始める
 

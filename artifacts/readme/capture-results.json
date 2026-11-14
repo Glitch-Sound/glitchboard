@@ -1,5 +1,5 @@
 {
-  "capturedAt": "2026-11-14T16:28:49.489Z",
+  "capturedAt": "2026-11-14T16:46:31.211Z",
   "sampleDate": "2026-11-15",
   "source": "実 VS Code Extension Development Host",
   "hostVersion": "1.146.0",
@@ -28,13 +28,31 @@
     {
       "name": "overview",
       "clip": {
-        "x": 352,
+        "x": 48,
         "y": 35,
-        "width": 964,
+        "width": 1268,
         "height": 793
       },
       "scale": "css",
-      "resized": false
+      "resized": false,
+      "surfaces": [
+        "events",
+        "board"
+      ],
+      "regions": {
+        "events": {
+          "x": 48,
+          "y": 35,
+          "width": 300,
+          "height": 793
+        },
+        "board": {
+          "x": 352,
+          "y": 35,
+          "width": 964,
+          "height": 793
+        }
+      }
     },
     {
       "name": "tasks",

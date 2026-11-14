@@ -5,15 +5,17 @@
   "images": [
     {
       "src": "packages/extension/media/readme/overview.png",
-      "alt": "実際の VS Code のメインボード、上に指標とタイムライン、下に Event の要約、Story、Task が並ぶ",
-      "naturalWidth": 964,
-      "displayWidth": 819,
-      "scale": 0.8495850622406639
+      "alt": "実際の VS Code で左の EVENT 一覧とメインボードを同時に表示した画面",
+      "naturalWidth": 1268,
+      "declaredWidth": 1077,
+      "displayWidth": 830,
+      "scale": 0.6545741324921136
     },
     {
       "src": "packages/extension/media/readme/setup.png",
       "alt": "初回だけ左の EVENT 一覧に表示する管理ファイルの選択と作成",
       "naturalWidth": 273,
+      "declaredWidth": 232,
       "displayWidth": 232,
       "scale": 0.8498168498168498
     },
@@ -21,6 +23,7 @@
       "src": "packages/extension/media/readme/tasks.png",
       "alt": "Event の要約、任意の Story と Taks、完了チェックとポイントを持つ Task 一覧",
       "naturalWidth": 938,
+      "declaredWidth": 797,
       "displayWidth": 797,
       "scale": 0.849680170575693
     },
@@ -28,6 +31,7 @@
       "src": "packages/extension/media/readme/task-points.png",
       "alt": "Task 詳細でポイントのバッジを開き、7段階の数値とスライダーを選べる画面",
       "naturalWidth": 420,
+      "declaredWidth": 357,
       "displayWidth": 357,
       "scale": 0.85
     },
@@ -35,10 +39,37 @@
       "src": "packages/extension/media/readme/event-add.png",
       "alt": "Event 追加で Project と名前を指定し、期限のカレンダーを開いた画面",
       "naturalWidth": 280,
+      "declaredWidth": 238,
       "displayWidth": 238,
       "scale": 0.85
     }
   ],
+  "wide": {
+    "viewport": 1240,
+    "contentWidth": 1100,
+    "images": [
+      {
+        "src": "packages/extension/media/readme/overview.png",
+        "displayWidth": 1077
+      },
+      {
+        "src": "packages/extension/media/readme/setup.png",
+        "displayWidth": 232
+      },
+      {
+        "src": "packages/extension/media/readme/tasks.png",
+        "displayWidth": 797
+      },
+      {
+        "src": "packages/extension/media/readme/task-points.png",
+        "displayWidth": 357
+      },
+      {
+        "src": "packages/extension/media/readme/event-add.png",
+        "displayWidth": 238
+      }
+    ]
+  },
   "passed": true,
   "horizontalOverflow": false
 }

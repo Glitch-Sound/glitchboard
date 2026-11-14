@@ -1,8 +1,8 @@
 {
-  "vsix": "/tmp/glitchboard-selection-backgrounds-kacbfznp/glitchboard-0.2.0.vsix",
+  "vsix": "/tmp/glitchboard-readme-overview-h5xmzmu2/glitchboard-0.2.0.vsix",
   "files": 20,
-  "bytes": 524572,
-  "sha256": "e5bbbf6859be626dc2750f555c78c09491cba76d494cc8b57d0f9e3e5f966e79",
+  "bytes": 558863,
+  "sha256": "0803ecbdce36d30f06631c337b47e4838c72dfe9386477b3c343fcb46781e6e9",
   "readmeMatches": true,
   "localAssets": [
     "media/readme/event-add.png",
@@ -14,7 +14,7 @@
   "screenshotsByteExact": true,
   "screenshotSha256": {
     "media/readme/event-add.png": "3d2df2e4d5427984b18ae8ff7ee9cfbaba48e9b6cd5cf059c09850bd719a60f5",
-    "media/readme/overview.png": "3e3b42e9bc5a6b7977f21f1aad0eec2aa1101cb8458ff289af02a738018c7816",
+    "media/readme/overview.png": "c25e64fa8a5d2d66154941bfcecd8eb2f1bfc5c3cce592435cb7c0e0347fdc18",
     "media/readme/setup.png": "47b6c86c5b50974d061db54cae27b9012894dacc6a045312b4be1c0fefebca09",
     "media/readme/task-points.png": "ffb915b6dc637d25ff39314b54200ef8363ee1d6dd757302a28c3551c2b7dff6",
     "media/readme/tasks.png": "94b93a283271c58b9e5ad44422f45c57193a1d476ec70585e7f044c2192d02fd"
@@ -30,5 +30,8 @@
   "oldValidationArtifactsExcluded": true,
   "published": false,
   "licenseWarning": "LICENSE ファイルは既存状態で存在しない。公開せずローカル検証用の作成を継続した。",
-  "noteEditInstructionsMatch": true
+  "overviewSurfaces": [
+    "events",
+    "board"
+  ]
 }

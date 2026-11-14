@@ -13,9 +13,17 @@
     "extension/dist/webview/events.js",
     "extension/dist/webview/style.css"
   ],
-  "manualProductChecksRemaining": 39,
-  "uiSuitesRerun": true,
-  "uiSuites": 9,
-  "noteEditInstructionsMatch": true,
-  "reason": "最新の背景の役割と維持対象を両テーマで再検証した"
+  "negativeChecks": 5,
+  "responsiveNegativeRejected": true,
+  "overviewSurfaces": [
+    "events",
+    "board"
+  ],
+  "readmeWidths": [
+    830,
+    1100
+  ],
+  "uiSuitesRerun": false,
+  "reason": "文書と撮影手順の変更であり、製品コードを変更していない",
+  "manualProductChecksRemaining": 39
 }

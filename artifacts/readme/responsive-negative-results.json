@@ -1,0 +1,6 @@
+{
+  "fault": "README の画像の max-width 制限を外す",
+  "exitCode": 1,
+  "rejected": true,
+  "reason": "本文幅を超えた実際の表示幅を検出した"
+}

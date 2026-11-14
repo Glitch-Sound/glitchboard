@@ -16,6 +16,10 @@
     {
       "fault": "missing command",
       "rejected": true
+    },
+    {
+      "fault": "overview omits events",
+      "rejected": true
     }
   ]
 }

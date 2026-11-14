@@ -36,7 +36,7 @@ try {
  app=await _electron.launch({executablePath:process.env.VSCODE_EXECUTABLE ?? "/Applications/Visual Studio Code.app/Contents/MacOS/Code",args:[`--user-data-dir=${join(root,"user")}`,`--extensions-dir=${join(root,"extensions")}`,`--extensionDevelopmentPath=${resolve("packages/extension")}`,"--skip-welcome","--skip-release-notes","--disable-workspace-trust","--new-window",join(root,"glitchboard-demo")],timeout:30000});
  const page=await app.firstWindow(); page.setDefaultTimeout(15000); await page.waitForSelector(".monaco-workbench");
  await app.evaluate(({BrowserWindow})=>{BrowserWindow.getAllWindows()[0].setBounds({width:1320,height:860});});
- const command=async name=>{await page.keyboard.press("Meta+Shift+P");const input=page.locator(".quick-input-widget input");await input.fill(`>${name}`);await input.press("Enter");};
+ const command=async name=>{await page.keyboard.press("Meta+Shift+P");const input=page.locator(".quick-input-widget input");await input.fill(`>${name}`);await expect(page.locator(".quick-input-list").getByText(name,{exact:true}).first()).toBeVisible();await input.press("Enter");};
  const findFrame=async selector=>{let found;await expect.poll(async()=>{for(const frame of page.frames()){if(await frame.locator(selector).count()){found=frame;return true;}}return false;},{timeout:20000}).toBe(true);return found;};
  const capture=async(name,locator,height)=>{const box=await locator.boundingBox();assert.ok(box);const clip={x:Math.floor(box.x),y:Math.floor(box.y),width:Math.ceil(box.width),height:Math.ceil(height ?? box.height)};await page.screenshot({path:join(images,name+".png"),clip,scale:"css"});captures.push({name,clip,scale:"css",resized:false});};
  await command("GlitchBoardを開く");
@@ -55,8 +55,10 @@ try {
  const tasksBox=await board.locator(".event-details").boundingBox(),lastTask=await board.locator(".task-line").last().boundingBox();
  assert.ok(lastTask.y+lastTask.height<=tasksBox.y+tasksBox.height+1,"完了行を切らない");
  const sidebarBox=await page.locator(".part.sidebar").boundingBox(),editorBox=await page.locator(".part.editor").boundingBox();assert.ok(sidebarBox&&editorBox);
- const overview={x:Math.floor(editorBox.x),y:Math.floor(editorBox.y),width:Math.floor(editorBox.width),height:Math.floor(editorBox.height)};
- await page.screenshot({path:join(images,"overview.png"),clip:overview,scale:"css"});captures.push({name:"overview",clip:overview,scale:"css",resized:false});
+ const overviewLeft=Math.min(sidebarBox.x,editorBox.x),overviewTop=Math.min(sidebarBox.y,editorBox.y);
+ const overview={x:Math.floor(overviewLeft),y:Math.floor(overviewTop),width:Math.ceil(Math.max(sidebarBox.x+sidebarBox.width,editorBox.x+editorBox.width)-Math.floor(overviewLeft)),height:Math.ceil(Math.max(sidebarBox.y+sidebarBox.height,editorBox.y+editorBox.height)-Math.floor(overviewTop))};
+ await expect(events.locator(".event-row.selected")).toContainText("サイト公開");
+ await page.screenshot({path:join(images,"overview.png"),clip:overview,scale:"css"});captures.push({name:"overview",clip:overview,scale:"css",resized:false,surfaces:["events","board"],regions:{events:sidebarBox,board:editorBox}});
  await capture("tasks",board.locator(".event-details"));
  await board.getByRole("button",{name:"入力フォームを確認するの詳細",exact:true}).click();
  const detail=board.getByRole("dialog",{name:"詳細パネル",exact:true});await detail.getByRole("button",{name:"8pt",exact:true}).click();await expect(board.locator(".point-options")).toBeVisible();

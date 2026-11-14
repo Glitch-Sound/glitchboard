@@ -11,6 +11,16 @@ const manifest = JSON.parse(await read("package.json"));
 const capture = JSON.parse(await read("artifacts/readme/capture-results.json"));
 assert.equal(capture.zoomLevel, 0); assert.equal(capture.appearance.fontSize, "13px");
 assert.equal(capture.theme, "Default Dark Modern");
+const overview = capture.captures.find(item => item.name === "overview");
+assert.deepEqual(overview.surfaces, ["events", "board"], "全体画像は左の EVENT とメインを同時に含める");
+assert.deepEqual(Object.keys(overview.regions).sort(), ["board", "events"]);
+assert.ok(overview.regions.events.x < overview.regions.board.x);
+for (const region of Object.values(overview.regions)) {
+  assert.ok(region.width > 0 && region.height > 0);
+  assert.ok(region.x >= overview.clip.x && region.y >= overview.clip.y);
+  assert.ok(region.x + region.width <= overview.clip.x + overview.clip.width + 1);
+  assert.ok(region.y + region.height <= overview.clip.y + overview.clip.height + 1);
+}
 let links = 0, images = 0;
 for (const file of ["README.md", "DEVELOPMENT.md", "packages/extension/README.md"]) {
   const source = await read(file), text = source.replace(/```[\s\S]*?```/g, "");
