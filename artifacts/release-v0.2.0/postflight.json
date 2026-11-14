@@ -1,0 +1,58 @@
+{
+  "verifiedAt": "2026-11-14T17:35:49.112180+00:00",
+  "releaseCommit": "8b676c0f4b2fdf0617c2042bb498370b8d1c96e1",
+  "tag": "v0.2.0",
+  "tagTarget": "8b676c0f4b2fdf0617c2042bb498370b8d1c96e1",
+  "repository": "https://github.com/Glitch-Sound/glitchboard",
+  "publicAssets": [
+    {
+      "url": "https://raw.githubusercontent.com/Glitch-Sound/glitchboard/v0.2.0/packages/extension/media/readme/event-add.png",
+      "bytes": 20923,
+      "sha256": "3d2df2e4d5427984b18ae8ff7ee9cfbaba48e9b6cd5cf059c09850bd719a60f5",
+      "matchesSource": true
+    },
+    {
+      "url": "https://raw.githubusercontent.com/Glitch-Sound/glitchboard/v0.2.0/packages/extension/media/readme/overview.png",
+      "bytes": 128929,
+      "sha256": "c25e64fa8a5d2d66154941bfcecd8eb2f1bfc5c3cce592435cb7c0e0347fdc18",
+      "matchesSource": true
+    },
+    {
+      "url": "https://raw.githubusercontent.com/Glitch-Sound/glitchboard/v0.2.0/packages/extension/media/readme/setup.png",
+      "bytes": 12600,
+      "sha256": "47b6c86c5b50974d061db54cae27b9012894dacc6a045312b4be1c0fefebca09",
+      "matchesSource": true
+    },
+    {
+      "url": "https://raw.githubusercontent.com/Glitch-Sound/glitchboard/v0.2.0/packages/extension/media/readme/task-points.png",
+      "bytes": 30269,
+      "sha256": "ffb915b6dc637d25ff39314b54200ef8363ee1d6dd757302a28c3551c2b7dff6",
+      "matchesSource": true
+    },
+    {
+      "url": "https://raw.githubusercontent.com/Glitch-Sound/glitchboard/v0.2.0/packages/extension/media/readme/tasks.png",
+      "bytes": 48910,
+      "sha256": "94b93a283271c58b9e5ad44422f45c57193a1d476ec70585e7f044c2192d02fd",
+      "matchesSource": true
+    },
+    {
+      "url": "https://github.com/Glitch-Sound/glitchboard/blob/v0.2.0/packages/extension/CHANGELOG.md",
+      "rawUrl": "https://raw.githubusercontent.com/Glitch-Sound/glitchboard/v0.2.0/packages/extension/CHANGELOG.md",
+      "bytes": 2534,
+      "matchesSource": true
+    },
+    {
+      "url": "https://github.com/Glitch-Sound/glitchboard/blob/v0.2.0/packages/extension/examples/readme-guide/manage.yaml",
+      "rawUrl": "https://raw.githubusercontent.com/Glitch-Sound/glitchboard/v0.2.0/packages/extension/examples/readme-guide/manage.yaml",
+      "bytes": 245,
+      "matchesSource": true
+    }
+  ],
+  "vsixSha256": "cdca03ff90c8f034f8312befea3187178a61cdfda1640abebfdb7b532727f27a",
+  "marketplaceVersion": "0.1.5",
+  "marketplaceStatus": "not-uploaded-browser-approval-required",
+  "status": "source-pushed-marketplace-pending",
+  "marketplaceVerifiedAt": "2026-11-14T17:36:34.701555+00:00",
+  "marketplaceHttpStatus": 200,
+  "rootAndPackagedReadmeAndManifestPublic": true
+}
