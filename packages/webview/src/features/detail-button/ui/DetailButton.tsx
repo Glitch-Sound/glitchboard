@@ -13,7 +13,10 @@ export function DetailButton({ name, note, icon = "info", onOpen }: Props) {
       className={`detail-button ${note ? "has-note" : "no-note"} ${icon === "document" ? "detail-button-document" : ""}`}
       aria-label={`${name}の詳細`}
       title={`${name}の詳細を開く`}
-      onClick={onOpen}
+      onClick={(event) => {
+        event.stopPropagation();
+        onOpen();
+      }}
     >
       {icon === "document" ? (
         <svg viewBox="0 0 20 20" width="16" height="16" aria-hidden="true">

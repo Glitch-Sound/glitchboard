@@ -1,0 +1,3 @@
+Change 'unify-record-navigation' is valid
+ℹ [INFO] board-visualization/spec.md: Archive would refuse this delta: board-visualization MODIFIED failed for header "### Requirement: REQ-037 - Event 追加の入口と空状態" - not found
+ℹ [INFO] item-details/spec.md: Archive would refuse this delta: item-details MODIFIED failed for header "### Requirement: REQ-035 - レコードの選択と詳細" - not found

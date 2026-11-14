@@ -10,7 +10,7 @@
 > lint
 > biome check .
 
-Checked 164 files in 24ms. No fixes applied.
+Checked 171 files in 25ms. No fixes applied.
 
 > typecheck
 > tsc --noEmit -p tsconfig.json
@@ -27,109 +27,117 @@ Checked 164 files in 24ms. No fixes applied.
 
  RUN  v3.2.7 /Users/glitch/Developer/glitchboard
 
- ✓ tests/hierarchy-operations/req-024-s01.test.ts (1 test) 32ms
- ✓ tests/data-persistence/project-order.test.ts (3 tests) 61ms
+ ✓ tests/board-timeline/event-workflow.test.tsx (5 tests) 447ms
+ ✓ tests/shared-ui/date-picker.test.tsx (5 tests) 568ms
+ ✓ tests/detail-panel/event-date-picker.test.tsx (5 tests) 539ms
+ ✓ tests/vscode-extension-shell/req-029-ui.test.tsx (10 tests) 396ms
+ ✓ tests/vscode-extension-shell/regression-webview.test.ts (6 tests) 408ms
+ ✓ tests/hierarchy-operations/event-date-picker.test.tsx (8 tests) 708ms
+ ✓ tests/board-timeline/project-scope.test.tsx (2 tests) 676ms
+   ✓ Projectを含む画面の対象参照 > REQ-005-S05 2番目のEventと詳細を表示し、編集、完了、削除に同じファイル参照を送る  666ms
+ ✓ tests/board-timeline/board-workflow.test.tsx (4 tests) 896ms
+   ✓ ボードの入口 > REQ-025-S01 直接Taskと通常Storyの子件数を削除確認へ渡し、取消では送信しない  347ms
+   ✓ ボードの入口 > REQ-035-S01 レコード選択と詳細ボタンを区別し、チェックとStory選択は独立する  467ms
+ ✓ tests/board-timeline/project-reorder.test.tsx (4 tests) 266ms
+ ✓ tests/event-list-filtering/ui-refinement.test.ts (2 tests) 220ms
+ ✓ tests/detail-panel/req-027-s01.test.ts (2 tests) 205ms
+ ✓ tests/detail-panel/edit-workflow.test.tsx (5 tests) 335ms
+ ✓ tests/board-timeline/project-reorder-error.test.tsx (1 test) 300ms
+ ✓ tests/board-timeline/task-add-form.test.ts (2 tests) 242ms
+ ✓ tests/board-timeline/ui-refinement.test.ts (2 tests) 221ms
+ ✓ tests/detail-panel/req-027-s02.test.ts (2 tests) 168ms
+ ✓ tests/hierarchy-operations/req-025-s02.test.ts (1 test) 147ms
+ ✓ tests/board-timeline/req-016-s01.test.ts (1 test) 171ms
+ ✓ tests/board-timeline/story-add-form.test.ts (2 tests) 239ms
+ ✓ tests/detail-panel/ui-refinement.test.ts (2 tests) 155ms
+ ✓ tests/hierarchy-operations/req-025-s01.test.ts (3 tests) 291ms
+ ✓ tests/board-timeline/project-add-row.test.ts (1 test) 179ms
+ ✓ tests/board-timeline/timeline-dimensions.test.tsx (2 tests) 187ms
+ ✓ tests/board-timeline/unified-navigation.test.tsx (9 tests) 2569ms
+   ✓ 統一した選択と詳細 > REQ-035-S01 名前と行は選択し、詳細は独立し、開いていれば追従する  568ms
+   ✓ 統一した選択と詳細 > REQ-041-S01 REQ-041-S03 保存失敗は移動せず、成功後だけ移動し二重送信しない  348ms
+   ✓ 統一した選択と詳細 > REQ-041-S03 不正な期限は移動せず、修正した元Eventへ保存する  405ms
+   ✓ 統一した選択と詳細 > REQ-035-S01 仮想TaksもStory選択から戻り、独立操作は詳細対象を変えない  470ms
+ ✓ tests/hierarchy-operations/regression-inline-add.test.ts (1 test) 262ms
+ ✓ tests/board-timeline/req-016-s04.test.ts (2 tests) 187ms
+ ✓ tests/board-timeline/board-split-resize.test.tsx (2 tests) 166ms
+ ✓ tests/hierarchy-operations/req-023-s02.test.ts (1 test) 147ms
+ ✓ tests/detail-panel/req-028-s03.test.ts (1 test) 158ms
+ ✓ tests/hierarchy-operations/req-023-s01.test.ts (2 tests) 178ms
+ ✓ tests/detail-panel/req-026-s01.test.ts (1 test) 150ms
+ ✓ tests/hierarchy-operations/req-022-s02.test.ts (1 test) 187ms
+ ✓ tests/detail-panel/req-026-s02.test.ts (1 test) 145ms
+ ✓ tests/event-list-filtering/req-020-s01.test.ts (1 test) 39ms
+ ✓ tests/board-timeline/req-016-s02.test.ts (2 tests) 40ms
+ ✓ tests/board-timeline/regression-labels.test.ts (2 tests) 53ms
+ ✓ tests/board-timeline/req-018-s01.test.ts (1 test) 36ms
+ ✓ tests/board-timeline/req-018-s03.test.ts (3 tests) 36ms
+ ✓ tests/board-timeline/req-018-s02.test.ts (1 test) 31ms
+ ✓ tests/board-timeline/req-017-s02.test.ts (1 test) 34ms
+ ✓ tests/board-timeline/req-017-s01.test.ts (1 test) 39ms
+ ✓ tests/vscode-extension-shell/req-013-s01-snapshot-validation.test.ts (1 test) 4ms
+ ✓ tests/data-persistence/project-order.test.ts (3 tests) 55ms
  ✓ tests/vscode-extension-shell/project-scope.test.ts (1 test) 61ms
- ✓ tests/hierarchy-operations/event-tasks.test.ts (6 tests) 101ms
- ✓ tests/vscode-extension-shell/req-013-s03.test.ts (1 test) 109ms
- ✓ tests/data-persistence/project-scope.test.ts (20 tests) 194ms
- ✓ tests/vscode-extension-shell/req-013-s01.test.ts (1 test) 23ms
- ✓ tests/hierarchy-operations/req-024-s02.test.ts (1 test) 39ms
- ✓ tests/vscode-extension-shell/nreq-001-s01.test.ts (1 test) 29ms
+ ✓ tests/hierarchy-operations/event-tasks.test.ts (6 tests) 93ms
+ ✓ tests/vscode-extension-shell/req-013-s03.test.ts (1 test) 108ms
+ ✓ tests/data-persistence/project-scope.test.ts (20 tests) 178ms
+ ✓ tests/vscode-extension-shell/nreq-001-s01.test.ts (1 test) 28ms
+ ✓ tests/hierarchy-operations/req-024-s02.test.ts (1 test) 29ms
+ ✓ tests/data-persistence/req-003-s02.test.ts (1 test) 19ms
  ✓ tests/vscode-extension-shell/req-013-s04-default-selection.test.ts (1 test) 21ms
+ ✓ tests/hierarchy-operations/req-024-s01.test.ts (1 test) 35ms
  ✓ tests/event-list-filtering/req-020-s02.test.ts (1 test) 26ms
- ✓ tests/vscode-extension-shell/req-013-s02.test.ts (1 test) 21ms
- ✓ tests/data-persistence/req-002-s02.test.ts (1 test) 15ms
- ✓ tests/data-persistence/req-003-s01.test.ts (1 test) 17ms
- ✓ tests/data-persistence/req-003-s02.test.ts (1 test) 20ms
- ✓ tests/vscode-extension-shell/req-014-s01.test.ts (1 test) 19ms
- ✓ tests/data-persistence/req-005-s01.test.ts (1 test) 12ms
- ✓ tests/vscode-extension-shell/req-029-state.test.ts (6 tests) 541ms
- ✓ tests/data-persistence/req-004-s01.test.ts (1 test) 13ms
- ✓ tests/data-persistence/read-only-load.test.ts (1 test) 14ms
- ✓ tests/data-persistence/req-004-s02.test.ts (1 test) 18ms
- ✓ tests/hierarchy-operations/req-022-s01.test.ts (1 test) 13ms
- ✓ tests/data-persistence/req-001-s02.test.ts (1 test) 9ms
- ✓ tests/data-persistence/req-005-s02.test.ts (1 test) 10ms
- ✓ tests/data-persistence/req-001-s01.test.ts (1 test) 6ms
- ✓ tests/data-persistence/req-002-s01.test.ts (1 test) 13ms
- ✓ tests/workload-analytics/req-011-s02.test.ts (1 test) 2ms
- ✓ tests/vscode-extension-shell/req-029-setup.test.ts (14 tests) 780ms
+ ✓ tests/data-persistence/req-004-s02.test.ts (1 test) 12ms
+ ✓ tests/vscode-extension-shell/req-014-s01.test.ts (1 test) 22ms
+ ✓ tests/vscode-extension-shell/req-013-s01.test.ts (1 test) 23ms
+ ✓ tests/vscode-extension-shell/req-013-s02.test.ts (1 test) 24ms
+ ✓ tests/data-persistence/read-only-load.test.ts (1 test) 13ms
+ ✓ tests/vscode-extension-shell/req-029-state.test.ts (6 tests) 537ms
+ ✓ tests/data-persistence/req-003-s01.test.ts (1 test) 14ms
+ ✓ tests/data-persistence/req-004-s01.test.ts (1 test) 12ms
+ ✓ tests/data-persistence/req-005-s01.test.ts (1 test) 16ms
+ ✓ tests/data-persistence/req-002-s02.test.ts (1 test) 13ms
+ ✓ tests/hierarchy-operations/req-022-s01.test.ts (1 test) 11ms
+ ✓ tests/data-persistence/req-002-s01.test.ts (1 test) 12ms
+ ✓ tests/data-persistence/req-005-s02.test.ts (1 test) 14ms
+ ✓ tests/workload-analytics/req-008-s01.test.ts (1 test) 8ms
  ✓ tests/workload-analytics/project-scope.test.ts (1 test) 10ms
+ ✓ tests/vscode-extension-shell/req-029-setup.test.ts (14 tests) 792ms
+ ✓ tests/vscode-extension-shell/req-012-s01.test.ts (1 test) 2ms
  ✓ tests/board-timeline/nreq-003-s01.test.ts (1 test) 9ms
- ✓ tests/workload-analytics/req-008-s01.test.ts (1 test) 11ms
- ✓ tests/vscode-extension-shell/req-012-s01.test.ts (1 test) 4ms
+ ✓ tests/data-persistence/req-001-s01.test.ts (1 test) 6ms
+ ✓ tests/data-persistence/req-001-s02.test.ts (1 test) 6ms
  ✓ tests/event-list-filtering/req-021-s01.test.ts (1 test) 3ms
- ✓ tests/workload-analytics/req-011-s01.test.ts (1 test) 2ms
+ ✓ tests/workload-analytics/req-011-s01.test.ts (1 test) 3ms
+ ✓ tests/event-list-filtering/req-019-s01.test.ts (1 test) 3ms
+ ✓ tests/workload-analytics/req-011-s02.test.ts (1 test) 2ms
+ ✓ tests/workload-analytics/req-007-s01.test.ts (1 test) 2ms
+ ✓ tests/workload-analytics/req-007-s04.test.ts (1 test) 3ms
  ✓ tests/workload-analytics/req-007-s03.test.ts (1 test) 1ms
+ ✓ tests/workload-analytics/req-009-s01.test.ts (1 test) 3ms
+ ✓ tests/workload-analytics/req-010-s01.test.ts (1 test) 3ms
+ ✓ tests/workload-analytics/req-007-s02.test.ts (1 test) 1ms
+ ✓ tests/event-list-filtering/req-019-s02.test.ts (1 test) 2ms
  ✓ tests/workload-analytics/event-task-integration.test.ts (2 tests) 3ms
  ✓ tests/board-timeline/req-015-s01.test.ts (1 test) 2ms
- ✓ tests/workload-analytics/req-011-s03.test.ts (1 test) 1ms
- ✓ tests/workload-analytics/req-007-s04.test.ts (1 test) 2ms
- ✓ tests/workload-analytics/regressions.test.ts (2 tests) 2ms
- ✓ tests/workload-analytics/req-010-s01.test.ts (1 test) 4ms
- ✓ tests/event-list-filtering/req-019-s01.test.ts (1 test) 3ms
- ✓ tests/workload-analytics/req-007-s01.test.ts (1 test) 2ms
- ✓ tests/hierarchy-operations/req-022-s04.test.ts (1 test) 3ms
- ✓ tests/workload-analytics/req-007-s02.test.ts (1 test) 1ms
- ✓ tests/workload-analytics/req-009-s02.test.ts (1 test) 1ms
  ✓ tests/vscode-extension-shell/req-014-setup-schema.test.ts (1 test) 4ms
- ✓ tests/workload-analytics/req-008-s02.test.ts (1 test) 2ms
- ✓ tests/workload-analytics/req-006-s01.test.ts (1 test) 2ms
- ✓ tests/workload-analytics/req-009-s01.test.ts (1 test) 4ms
- ✓ tests/workload-analytics/req-010-s02.test.ts (1 test) 1ms
- ✓ tests/vscode-extension-shell/manage-connection.test.ts (5 tests) 1285ms
-   ✓ 管理ファイルの接続 > REQ-039-S02 実登録パターンが .yaml の変更、削除、作成へ反応する  576ms
-   ✓ 管理ファイルの接続 > REQ-039-S02 実登録パターンが .yml の変更、削除、作成へ反応する  574ms
- ✓ tests/event-list-filtering/req-019-s02.test.ts (1 test) 3ms
- ✓ tests/workload-analytics/req-006-s02.test.ts (1 test) 1ms
- ✓ tests/detail-panel/edit-workflow.test.tsx (5 tests) 335ms
- ✓ tests/board-timeline/event-workflow.test.tsx (5 tests) 461ms
- ✓ tests/vscode-extension-shell/req-029-ui.test.tsx (10 tests) 384ms
- ✓ tests/detail-panel/event-date-picker.test.tsx (5 tests) 576ms
- ✓ tests/vscode-extension-shell/regression-webview.test.ts (6 tests) 458ms
- ✓ tests/shared-ui/date-picker.test.tsx (5 tests) 645ms
- ✓ tests/hierarchy-operations/event-date-picker.test.tsx (8 tests) 732ms
- ✓ tests/board-timeline/project-scope.test.tsx (2 tests) 556ms
-   ✓ Projectを含む画面の対象参照 > REQ-005-S05 2番目のEventと詳細を表示し、編集、完了、削除に同じファイル参照を送る  532ms
- ✓ tests/board-timeline/board-workflow.test.tsx (4 tests) 950ms
-   ✓ ボードの入口 > REQ-035-S01 名前からProject、Event、Task詳細へ直接到達し、チェックとStory選択は独立する  481ms
- ✓ tests/event-list-filtering/ui-refinement.test.ts (2 tests) 244ms
- ✓ tests/board-timeline/req-016-s04.test.ts (2 tests) 186ms
- ✓ tests/board-timeline/project-reorder.test.tsx (4 tests) 231ms
- ✓ tests/detail-panel/req-027-s01.test.ts (2 tests) 177ms
- ✓ tests/board-timeline/project-reorder-error.test.tsx (1 test) 291ms
- ✓ tests/detail-panel/req-027-s02.test.ts (2 tests) 224ms
- ✓ tests/hierarchy-operations/req-025-s01.test.ts (3 tests) 303ms
- ✓ tests/hierarchy-operations/req-023-s01.test.ts (2 tests) 224ms
- ✓ tests/detail-panel/req-026-s02.test.ts (1 test) 110ms
- ✓ tests/board-timeline/ui-refinement.test.ts (2 tests) 217ms
- ✓ tests/hierarchy-operations/regression-inline-add.test.ts (1 test) 188ms
- ✓ tests/hierarchy-operations/req-023-s02.test.ts (1 test) 155ms
- ✓ tests/board-timeline/story-add-form.test.ts (2 tests) 207ms
- ✓ tests/board-timeline/task-add-form.test.ts (2 tests) 217ms
- ✓ tests/detail-panel/req-028-s03.test.ts (1 test) 170ms
- ✓ tests/board-timeline/req-018-s01.test.ts (1 test) 129ms
- ✓ tests/board-timeline/project-add-row.test.ts (1 test) 213ms
- ✓ tests/hierarchy-operations/req-025-s02.test.ts (1 test) 217ms
- ✓ tests/board-timeline/req-018-s02.test.ts (1 test) 108ms
- ✓ tests/board-timeline/board-split-resize.test.tsx (2 tests) 111ms
- ✓ tests/detail-panel/ui-refinement.test.ts (2 tests) 154ms
- ✓ tests/hierarchy-operations/req-022-s02.test.ts (1 test) 149ms
- ✓ tests/board-timeline/req-016-s01.test.ts (1 test) 179ms
- ✓ tests/event-list-filtering/req-020-s01.test.ts (1 test) 60ms
- ✓ tests/board-timeline/req-016-s02.test.ts (2 tests) 70ms
- ✓ tests/board-timeline/regression-labels.test.ts (2 tests) 74ms
- ✓ tests/detail-panel/req-026-s01.test.ts (1 test) 170ms
- ✓ tests/board-timeline/req-018-s03.test.ts (3 tests) 24ms
- ✓ tests/board-timeline/req-017-s01.test.ts (1 test) 18ms
- ✓ tests/vscode-extension-shell/req-013-s01-snapshot-validation.test.ts (1 test) 4ms
- ✓ tests/board-timeline/req-017-s02.test.ts (1 test) 16ms
+ ✓ tests/workload-analytics/req-009-s02.test.ts (1 test) 3ms
+ ✓ tests/workload-analytics/req-006-s02.test.ts (1 test) 2ms
+ ✓ tests/vscode-extension-shell/unified-navigation.test.ts (1 test) 4ms
+ ✓ tests/workload-analytics/regressions.test.ts (2 tests) 3ms
+ ✓ tests/workload-analytics/req-006-s01.test.ts (1 test) 1ms
+ ✓ tests/workload-analytics/req-010-s02.test.ts (1 test) 2ms
+ ✓ tests/vscode-extension-shell/manage-connection.test.ts (5 tests) 1304ms
+   ✓ 管理ファイルの接続 > REQ-039-S02 実登録パターンが .yaml の変更、削除、作成へ反応する  579ms
+   ✓ 管理ファイルの接続 > REQ-039-S02 実登録パターンが .yml の変更、削除、作成へ反応する  588ms
+ ✓ tests/workload-analytics/req-011-s03.test.ts (1 test) 2ms
+ ✓ tests/workload-analytics/req-008-s02.test.ts (1 test) 1ms
+ ✓ tests/hierarchy-operations/req-022-s04.test.ts (1 test) 2ms
 
- Test Files  94 passed (94)
-      Tests  204 passed (204)
-   Start at  10:08:50
-   Duration  5.59s (transform 1.07s, setup 0ms, collect 9.91s, tests 13.52s, environment 11.37s, prepare 3.49s)
+ Test Files  97 passed (97)
+      Tests  216 passed (216)
+   Start at  12:15:36
+   Duration  5.92s (transform 1.03s, setup 0ms, collect 10.59s, tests 15.99s, environment 11.74s, prepare 3.69s)
 
 
 > build
@@ -149,16 +157,21 @@ node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/core/util.js (400:0): A comment
 "// Wrapped in a `@__PURE__` IIFE: esbuild never tree-shakes a top-level initializer that contains a member access on `Number`, so the bare object literal survived into every bundle."
 
 in "node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/core/util.js" contains an annotation that Rollup cannot interpret due to the position of the comment. The comment will be removed to avoid issues.
-✓ 173 modules transformed.
+✓ 177 modules transformed.
 rendering chunks...
 computing gzip size...
-packages/extension/dist/webview/style.css                  46.96 kB │ gzip:   8.66 kB
-packages/extension/dist/webview/events.js                   5.16 kB │ gzip:   2.34 kB
-packages/extension/dist/webview/board.js                   33.15 kB │ gzip:  10.94 kB
-packages/extension/dist/webview/assets/style-BGAVtdld.js  481.12 kB │ gzip: 115.72 kB
-✓ built in 568ms
+packages/extension/dist/webview/style.css                  48.85 kB │ gzip:   9.03 kB
+packages/extension/dist/webview/events.js                   5.42 kB │ gzip:   2.42 kB
+packages/extension/dist/webview/board.js                   38.11 kB │ gzip:  12.47 kB
+packages/extension/dist/webview/assets/style-D7yDmAwF.js  482.09 kB │ gzip: 116.11 kB
+✓ built in 588ms
 vite v7.3.7 building ssr environment for production...
 transforming...
+node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/core/util.js (400:0): A comment
+
+"// Wrapped in a `@__PURE__` IIFE: esbuild never tree-shakes a top-level initializer that contains a member access on `Number`, so the bare object literal survived into every bundle."
+
+in "node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/core/util.js" contains an annotation that Rollup cannot interpret due to the position of the comment. The comment will be removed to avoid issues.
 node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/core/regexes.js (74:0): A comment
 
 "/** Anchors a pattern source. The interpolation lives here rather than at the call site because
@@ -166,15 +179,10 @@ node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/core/regexes.js (74:0): A comme
  * will drop `anchor(dateSource)`. Keeping it inline pinned `date` into every bundle. */"
 
 in "node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/core/regexes.js" contains an annotation that Rollup cannot interpret due to the position of the comment. The comment will be removed to avoid issues.
-node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/core/util.js (400:0): A comment
-
-"// Wrapped in a `@__PURE__` IIFE: esbuild never tree-shakes a top-level initializer that contains a member access on `Number`, so the bare object literal survived into every bundle."
-
-in "node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/core/util.js" contains an annotation that Rollup cannot interpret due to the position of the comment. The comment will be removed to avoid issues.
-✓ 269 modules transformed.
+✓ 268 modules transformed.
 rendering chunks...
-packages/extension/dist/extension.js  702.51 kB
-✓ built in 418ms
+packages/extension/dist/extension.js  703.64 kB
+✓ built in 425ms
 ✓ spec/board-visualization
 ✓ spec/data-management
 ✓ spec/event-navigation
@@ -183,6 +191,6 @@ packages/extension/dist/extension.js  702.51 kB
 ✓ spec/vscode-integration
 ✓ spec/workload-analysis
 Totals: 7 passed, 0 failed (7 items)
-情報: 実機確認: 未確認または不合格 13 件 (REQ-033-S01, REQ-033-S02, REQ-034-S01, REQ-034-S03, REQ-035-S01, REQ-036-S02, REQ-036-S03, REQ-037-S01, REQ-031-S06, REQ-005-S05, REQ-039-S01, REQ-039-S02, REQ-003-S03)
+情報: 実機確認: 未確認または不合格 17 件 (REQ-033-S01, REQ-033-S02, REQ-034-S01, REQ-034-S03, REQ-035-S01, REQ-036-S02, REQ-036-S03, REQ-037-S01, REQ-031-S06, REQ-005-S05, REQ-039-S01, REQ-039-S02, REQ-003-S03, REQ-012-S02, REQ-040-S01, REQ-041-S04, REQ-026-S03)
 問題なし
 openspec/traceability.md を生成した

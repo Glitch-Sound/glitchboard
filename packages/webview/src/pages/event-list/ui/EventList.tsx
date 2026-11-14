@@ -1,6 +1,8 @@
 import type { EventDanger } from "../../../../../shared/src/calculation/danger.js";
 import { calendarDayDifference } from "../../../../../shared/src/calculation/dates.js";
 import type { Project } from "../../../../../shared/src/domain/index.js";
+import { DetailButton } from "../../../features/detail-button/index.js";
+import { RecordSurface } from "../../../shared/ui/record-surface/index.js";
 import { groupEvents, type TargetFilter } from "../model/groupEvents.js";
 
 type Props = {
@@ -9,6 +11,7 @@ type Props = {
   target: TargetFilter;
   danger?: Record<string, EventDanger>;
   onSelect?: (eventId: string) => void;
+  onOpenDetail?: (eventId: string) => void;
 };
 
 /** REQ-019: 期限順のEventを4グループで示す。 */
@@ -18,6 +21,7 @@ export function EventList({
   target,
   danger = {},
   onSelect,
+  onOpenDetail,
 }: Props) {
   const groups = groupEvents(projects, today, target);
   const labels = {
@@ -46,30 +50,44 @@ export function EventList({
                   danger[event.id]?.overdue ||
                   danger[event.id]?.overflow;
                 return (
-                  <button
-                    type="button"
+                  <RecordSurface
                     key={event.id}
+                    name={event.name}
                     className={`event-row${isDanger ? " danger-text" : ""}`}
-                    onClick={() => onSelect?.(event.id)}
+                    onSelect={() => onSelect?.(event.id)}
                   >
-                    <span
-                      className="event-project-marker"
-                      style={{ borderColor: project.color }}
-                      aria-hidden="true"
+                    <button
+                      type="button"
+                      className="event-row-select"
+                      onClick={() => onSelect?.(event.id)}
                     >
-                      <i style={{ backgroundColor: project.color }} />
-                    </span>
-                    <span className="event-row-content">
-                      <span className="event-row-name">{event.name}</span>
-                      <small>
-                        {project.name}・
-                        {days < 0 ? `${-days}日超過` : `残り${days}日`}
-                      </small>
-                    </span>
-                    <time dateTime={event.due}>
-                      {event.due.slice(5).replace("-", "/")}
-                    </time>
-                  </button>
+                      <span
+                        className="event-project-marker"
+                        style={{ borderColor: project.color }}
+                        aria-hidden="true"
+                      >
+                        <i style={{ backgroundColor: project.color }} />
+                      </span>
+                      <span className="event-row-content">
+                        <span className="event-row-name">{event.name}</span>
+                        <small>
+                          {project.name}・
+                          {days < 0 ? `${-days}日超過` : `残り${days}日`}
+                        </small>
+                      </span>
+                      <time dateTime={event.due}>
+                        {event.due.slice(5).replace("-", "/")}
+                      </time>
+                    </button>
+                    {onOpenDetail && (
+                      <DetailButton
+                        name={event.name}
+                        note={event.note}
+                        icon="document"
+                        onOpen={() => onOpenDetail(event.id)}
+                      />
+                    )}
+                  </RecordSurface>
                 );
               })}
             </section>

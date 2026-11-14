@@ -1,4 +1,12 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import {
+  type CSSProperties,
+  type Ref,
+  useCallback,
+  useEffect,
+  useImperativeHandle,
+  useRef,
+  useState,
+} from "react";
 import type { DescendantCounts } from "../../../../../shared/src/domain/deletion.js";
 import type {
   Event,
@@ -16,15 +24,19 @@ import {
 import type { Operation } from "../../../../../shared/src/domain/messages.js";
 import { DeleteDialog } from "../../../features/delete-item/index.js";
 import { DatePicker } from "../../../shared/ui/date-picker/index.js";
+import { PointSelector } from "../../../shared/ui/point-selector/index.js";
 
-export type DetailSelection =
+export type DetailSelection = { projectColor?: string } & (
   | { kind: "project"; item: Project; hierarchy: string[] }
   | { kind: "event"; item: Event; hierarchy: string[] }
   | { kind: "story"; item: Story; hierarchy: string[]; parentDue?: string }
-  | { kind: "task"; item: Task; hierarchy: string[]; parentDue?: string };
+  | { kind: "task"; item: Task; hierarchy: string[]; parentDue?: string }
+);
 
 type EditPatch = Extract<Operation, { type: "editItem" }>["patch"];
+export type DetailPanelHandle = { requestLeave(action: () => void): void };
 type Props = {
+  ref?: Ref<DetailPanelHandle>;
   selection: DetailSelection;
   onClose(): void;
   onSave?: (
@@ -74,6 +86,7 @@ function metrics(selection: DetailSelection): [string, string, string] {
 /** REQ-026/REQ-027/REQ-028: 全階層に共通する詳細、編集、補足。 */
 export function DetailPanel({
   selection,
+  ref,
   onClose,
   onSave,
   onDelete,
@@ -93,7 +106,38 @@ export function DetailPanel({
   const [saveError, setSaveError] = useState<string>();
   const generation = useRef(0);
   const panel = useRef<HTMLElement>(null);
-  const pointValues = [1, 2, 3, 5, 8, 13, 21] as const;
+  const [pendingLeave, setPendingLeave] = useState<(() => void) | null>(null);
+  const pendingRef = useRef<(() => void) | null>(null);
+  const requestLeave = useCallback(
+    (action: () => void) => {
+      if (pendingRef.current) return;
+      if (saving) {
+        setSaveError("保存中です。完了後にもう一度操作してください。");
+        return;
+      }
+      if (editing || editingNote) {
+        pendingRef.current = action;
+        setPendingLeave(() => action);
+      } else action();
+    },
+    [saving, editing, editingNote],
+  );
+  useImperativeHandle(ref, () => ({ requestLeave }));
+  const prompt = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (!pendingLeave) return;
+    const origin = document.activeElement;
+    prompt.current
+      ?.querySelector<HTMLButtonElement>("button:last-child")
+      ?.focus();
+    return () => {
+      if (origin instanceof HTMLElement && origin.isConnected) origin.focus();
+    };
+  }, [pendingLeave]);
+  const clearPending = useCallback(() => {
+    pendingRef.current = null;
+    setPendingLeave(null);
+  }, []);
   useEffect(() => {
     const origin = document.activeElement;
     panel.current?.querySelector<HTMLButtonElement>(".detail-close")?.focus();
@@ -110,42 +154,83 @@ export function DetailPanel({
     setSaveError(undefined);
   }, []);
   const beginEditing = (target: "name" | "note") => {
-    cancelEditing();
-    setName(selection.item.name);
-    setDue(selection.kind === "event" ? selection.item.due : "");
-    setNote(selection.item.note ?? "");
-    if (target === "name") setEditing(true);
-    else setEditingNote(true);
+    requestLeave(() => {
+      cancelEditing();
+      setName(selection.item.name);
+      setDue(selection.kind === "event" ? selection.item.due : "");
+      setNote(selection.item.note ?? "");
+      if (target === "name") setEditing(true);
+      else setEditingNote(true);
+    });
   };
-  const save = async (patch: EditPatch) => {
-    if (saving) return;
+  const save = async (patch: EditPatch): Promise<boolean> => {
+    if (saving) return false;
     const current = generation.current;
     setSaving(true);
     setSaveError(undefined);
     try {
       const result = await onSave?.(selection.kind, selection.item.id, patch);
-      if (current !== generation.current) return;
-      if (result === false)
+      if (current !== generation.current) return false;
+      if (result === false) {
         setSaveError("保存に失敗しました。入力を残しています。");
-      else cancelEditing();
+        return false;
+      }
+      cancelEditing();
+      return true;
     } catch (error) {
       if (current === generation.current)
         setSaveError(error instanceof Error ? error.message : String(error));
+      return false;
     } finally {
       setSaving(false);
     }
+  };
+  const saveCurrent = async () => {
+    if (editingNote) return save({ note });
+    if (!name.trim()) {
+      setSaveError("名前を入力してください。");
+      return false;
+    }
+    if (
+      selection.kind === "event" &&
+      !eventSchema.shape.due.safeParse(due).success
+    ) {
+      const reason = due
+        ? "YYYY-MM-DDで実在する日付を入力してください。"
+        : "期限を選んでください。";
+      setDueError(reason);
+      if (pendingRef.current) setSaveError(reason);
+      else if (!due) setCalendarOpen(true);
+      return false;
+    }
+    return save(
+      selection.kind === "event"
+        ? { name: name.trim(), due }
+        : { name: name.trim() },
+    );
   };
   useEffect(() => {
     const close = (event: KeyboardEvent) => {
       if (event.key !== "Escape" || event.defaultPrevented) return;
       event.preventDefault();
-      if (confirmDelete) setConfirmDelete(false);
-      else if (editing || editingNote) cancelEditing();
-      else onClose();
+      if (pendingRef.current) {
+        if (!saving) clearPending();
+      } else if (confirmDelete) setConfirmDelete(false);
+      else if (editing || editingNote) requestLeave(cancelEditing);
+      else requestLeave(onClose);
     };
     window.addEventListener("keydown", close);
     return () => window.removeEventListener("keydown", close);
-  }, [onClose, confirmDelete, editing, editingNote, cancelEditing]);
+  }, [
+    onClose,
+    confirmDelete,
+    editing,
+    editingNote,
+    cancelEditing,
+    saving,
+    clearPending,
+    requestLeave,
+  ]);
   return (
     <aside
       ref={panel}
@@ -153,20 +238,31 @@ export function DetailPanel({
       role="dialog"
       aria-label="詳細パネル"
       aria-modal="false"
+      style={
+        {
+          "--detail-accent":
+            selection.projectColor ??
+            (selection.kind === "project"
+              ? selection.item.color
+              : "var(--vscode-charts-blue)"),
+        } as CSSProperties
+      }
     >
       <header>
         <div className="detail-header-content">
-          <small className={`detail-kind detail-kind-${selection.kind}`}>
-            {selection.kind.toUpperCase()}
-          </small>
+          <h2 className="detail-title">
+            {selection.hierarchy[0] ?? selection.item.name}
+          </h2>
+          <p className="detail-target">
+            {selection.kind.toUpperCase()} : {selection.item.name}
+          </p>
           <p className="detail-hierarchy">{selection.hierarchy.join(" / ")}</p>
-          <h2 className="detail-title">{selection.item.name}</h2>
         </div>
         <button
           className="detail-close"
           type="button"
           aria-label="詳細を閉じる"
-          onClick={onClose}
+          onClick={() => requestLeave(onClose)}
         >
           ×
         </button>
@@ -187,25 +283,7 @@ export function DetailPanel({
           aria-busy={saving}
           onSubmit={(event) => {
             event.preventDefault();
-            if (!name.trim()) return;
-            // REQ-027-S03: 追加欄と同じ日付検証を保存前に行う。
-            if (
-              selection.kind === "event" &&
-              !eventSchema.shape.due.safeParse(due).success
-            ) {
-              setDueError(
-                due
-                  ? "YYYY-MM-DDで実在する日付を入力してください。"
-                  : "期限を選んでください。",
-              );
-              if (!due) setCalendarOpen(true);
-              return;
-            }
-            void save(
-              selection.kind === "event"
-                ? { name: name.trim(), due }
-                : { name: name.trim() },
-            );
+            void saveCurrent();
           }}
         >
           <label>
@@ -253,35 +331,14 @@ export function DetailPanel({
       )}
       {selection.kind === "task" && (
         <div className="detail-points">
-          <label htmlFor="detail-point-range">
-            ポイント{" "}
-            <strong>
-              {selection.item.points === undefined
-                ? "未見積"
-                : `${selection.item.points}pt`}
-            </strong>
-          </label>
-          <input
-            id="detail-point-range"
-            type="range"
-            min="0"
-            max={pointValues.length - 1}
-            step="1"
-            value={Math.max(0, pointValues.indexOf(selection.item.points ?? 3))}
-            onChange={(event) =>
-              onSave?.("task", selection.item.id, {
-                points: pointValues[Number(event.target.value)] ?? 3,
-              })
-            }
+          <span>ポイント</span>
+          <PointSelector
+            points={selection.item.points}
+            disabled={Boolean(selection.item.doneAt) || saving}
+            onChange={(points) => {
+              void onSave?.("task", selection.item.id, { points });
+            }}
           />
-          <button
-            type="button"
-            onClick={() =>
-              onSave?.("task", selection.item.id, { points: null })
-            }
-          >
-            未見積に戻す
-          </button>
         </div>
       )}
       <section>
@@ -337,12 +394,77 @@ export function DetailPanel({
           <button
             className="detail-action detail-delete-action"
             type="button"
-            onClick={() => setConfirmDelete(true)}
+            onClick={() => requestLeave(() => setConfirmDelete(true))}
           >
             削除
           </button>
         )}
       </footer>
+      {pendingLeave && (
+        <div className="unsaved-backdrop">
+          <div
+            ref={prompt}
+            role="alertdialog"
+            aria-modal="true"
+            aria-label="未保存の編集"
+            className="unsaved-dialog"
+            onKeyDown={(event) => {
+              if (event.key === "Tab") {
+                const buttons = Array.from(
+                  prompt.current?.querySelectorAll<HTMLButtonElement>(
+                    "button:not(:disabled)",
+                  ) ?? [],
+                );
+                const current = buttons.indexOf(
+                  document.activeElement as HTMLButtonElement,
+                );
+                event.preventDefault();
+                buttons[
+                  (current + (event.shiftKey ? -1 : 1) + buttons.length) %
+                    buttons.length
+                ]?.focus();
+              }
+              if (event.key === "Escape") {
+                event.preventDefault();
+                event.stopPropagation();
+                if (!saving) clearPending();
+              }
+            }}
+          >
+            <h3>未保存の編集があります</h3>
+            <p>保存して進むか、編集を破棄するか選んでください。</p>
+            {saveError && <p role="alert">{saveError}</p>}
+            <button
+              type="button"
+              disabled={saving}
+              onClick={async () => {
+                if (await saveCurrent()) {
+                  const next = pendingRef.current;
+                  clearPending();
+                  next?.();
+                }
+              }}
+            >
+              {saving ? "保存中…" : "保存して進む"}
+            </button>
+            <button
+              type="button"
+              disabled={saving}
+              onClick={() => {
+                const next = pendingRef.current;
+                cancelEditing();
+                clearPending();
+                next?.();
+              }}
+            >
+              破棄して進む
+            </button>
+            <button type="button" disabled={saving} onClick={clearPending}>
+              キャンセル
+            </button>
+          </div>
+        </div>
+      )}
       {confirmDelete && (
         <DeleteDialog
           kind={selection.kind}

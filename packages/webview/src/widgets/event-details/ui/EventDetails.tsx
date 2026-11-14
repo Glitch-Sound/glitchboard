@@ -16,12 +16,20 @@ import {
 } from "../../../../../shared/src/domain/index.js";
 import { DeleteControl } from "../../../features/delete-item/index.js";
 import { DetailButton } from "../../../features/detail-button/index.js";
+import { RecordSurface } from "../../../shared/ui/record-surface/index.js";
 import { pointTone } from "../model/pointTone.js";
 import { PointSelector } from "./PointSelector.js";
 
 type Points = 1 | 2 | 3 | 5 | 8 | 13 | 21 | null;
 type Props = {
   event: Event;
+  selectedStoryId?: string | null;
+  selectedTaskId?: string;
+  onSelectRecord?: (
+    kind: "event" | "story" | "task",
+    id: string,
+    groupId?: null,
+  ) => void;
   today: string;
   prediction: string | null;
   danger?: EventDanger;
@@ -36,7 +44,11 @@ type Props = {
     name: string,
   ) => boolean | Promise<boolean>;
   onDelete?: (kind: ItemKind, id: string, counts: DescendantCounts) => void;
-  onOpenDetail?: (kind: "event" | "story" | "task", id: string) => void;
+  onOpenDetail?: (
+    kind: "event" | "story" | "task",
+    id: string,
+    groupId?: null,
+  ) => void;
 };
 
 const weekdays = ["日", "月", "火", "水", "木", "金", "土"];
@@ -58,6 +70,9 @@ function initialStoryId(event: Event): string | null {
 /** REQ-018/REQ-023/REQ-024: 選択Eventの要約とTask操作を表示する。 */
 export function EventDetails({
   event,
+  selectedStoryId,
+  selectedTaskId,
+  onSelectRecord,
   today,
   prediction,
   danger,
@@ -71,9 +86,11 @@ export function EventDetails({
   onDelete,
   onOpenDetail,
 }: Props) {
-  const [storyId, setStoryId] = useState<string | null>(() =>
+  const [internalStoryId, setStoryId] = useState<string | null>(() =>
     initialStoryId(event),
   );
+  const storyId =
+    selectedStoryId !== undefined ? selectedStoryId : internalStoryId;
   const [addingStory, setAddingStory] = useState(false);
   const [storyName, setStoryName] = useState("");
   const [savingStory, setSavingStory] = useState(false);
@@ -152,7 +169,11 @@ export function EventDetails({
         } as CSSProperties
       }
     >
-      <div className="event-summary">
+      <RecordSurface
+        className="event-summary"
+        name={event.name}
+        onSelect={() => onSelectRecord?.("event", event.id)}
+      >
         <div className="event-summary-heading">
           {projectName && (
             <p className="event-project-label">
@@ -168,7 +189,7 @@ export function EventDetails({
                 counts={eventCounts(event)}
                 onOpen={
                   onOpenDetail
-                    ? () => onOpenDetail("event", event.id)
+                    ? () => onSelectRecord?.("event", event.id)
                     : undefined
                 }
                 onConfirm={() =>
@@ -179,7 +200,7 @@ export function EventDetails({
               <button
                 type="button"
                 className="item-name"
-                onClick={() => onOpenDetail("event", event.id)}
+                onClick={() => onSelectRecord?.("event", event.id)}
               >
                 {event.name}
               </button>
@@ -243,10 +264,10 @@ export function EventDetails({
             aria-label="Event進捗"
           />
         </div>
-      </div>
+      </RecordSurface>
       <section aria-label="Story一覧">
         <h3>
-          作業グループ{" "}
+          Story{" "}
           {onAddStory && (
             <button
               className="inline-add-trigger"
@@ -312,16 +333,32 @@ export function EventDetails({
           const progress = storyPoints(item);
           const done = item.tasks.filter((task) => task.doneAt).length;
           return (
-            <div
+            <RecordSurface
               key={item.id}
+              name={item.name}
               className={`story-choice ${selected ? "selected" : ""}`}
+              onSelect={() => {
+                if (onSelectRecord)
+                  onSelectRecord(
+                    item.id === directGroup.id ? "event" : "story",
+                    item.id === directGroup.id ? event.id : item.id,
+                    item.id === directGroup.id ? null : undefined,
+                  );
+                else setStoryId(item.id === directGroup.id ? null : item.id);
+              }}
             >
               <button
                 className="story-select"
                 type="button"
                 aria-pressed={selected}
                 onClick={() => {
-                  setStoryId(item.id === directGroup.id ? null : item.id);
+                  if (onSelectRecord)
+                    onSelectRecord(
+                      item.id === directGroup.id ? "event" : "story",
+                      item.id === directGroup.id ? event.id : item.id,
+                      item.id === directGroup.id ? null : undefined,
+                    );
+                  else setStoryId(item.id === directGroup.id ? null : item.id);
                   cancelTask();
                 }}
               >
@@ -357,7 +394,7 @@ export function EventDetails({
                   onOpen={() => onOpenDetail("story", item.id)}
                 />
               )}
-            </div>
+            </RecordSurface>
           );
         })}
         <p className="workflow-hint">
@@ -429,9 +466,11 @@ export function EventDetails({
         )}
         {selectedTasks?.length ? (
           selectedTasks.map((task) => (
-            <div
+            <RecordSurface
               key={task.id}
-              className={`task-line${task.doneAt ? " completed" : ""}`}
+              name={task.name}
+              className={`task-line${task.doneAt ? " completed" : ""}${selectedTaskId === task.id ? " selected" : ""}`}
+              onSelect={() => onSelectRecord?.("task", task.id)}
             >
               <input
                 type="checkbox"
@@ -446,7 +485,7 @@ export function EventDetails({
                 <button
                   type="button"
                   className="task-name item-name"
-                  onClick={() => onOpenDetail("task", task.id)}
+                  onClick={() => onSelectRecord?.("task", task.id)}
                 >
                   {task.name}
                 </button>
@@ -498,7 +537,7 @@ export function EventDetails({
                   />
                 )}
               </span>
-            </div>
+            </RecordSurface>
           ))
         ) : (
           <p className="workflow-hint">

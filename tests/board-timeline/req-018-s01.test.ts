@@ -34,8 +34,9 @@ describe("REQ-018-S01 未完了Taskを選ぶ", () => {
     );
     expect(
       screen
-        .getByRole("button", { name: /未完了Story/ })
-        .getAttribute("aria-pressed"),
+        .getByText("未完了Story")
+        .closest("button")
+        ?.getAttribute("aria-pressed"),
     ).toBe("true");
     expect(screen.getByText("Todo")).toBeTruthy();
     expect(screen.getByText(/残り7日/)).toBeTruthy();

@@ -99,6 +99,10 @@ describe("REQ-027-S01/S03/S04 Event期限編集", () => {
     expect(onClose).not.toHaveBeenCalled();
     fireEvent.keyDown(screen.getByLabelText("名前"), { key: "Escape" });
     // REQ-036-S03: カレンダーの次は編集だけを取り消す。
+    expect(
+      screen.getByRole("alertdialog", { name: "未保存の編集" }),
+    ).toBeTruthy();
+    fireEvent.click(screen.getByRole("button", { name: "破棄して進む" }));
     expect(screen.queryByRole("textbox", { name: "名前" })).toBeNull();
     expect(onClose).not.toHaveBeenCalled();
     fireEvent.keyDown(screen.getByRole("dialog", { name: "詳細パネル" }), {

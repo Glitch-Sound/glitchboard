@@ -104,6 +104,7 @@ export const operationSchema = z.discriminatedUnion("type", [
   }),
   z.object({
     type: z.literal("selectEvent"),
+    openDetail: z.boolean().optional(),
     projectFile: z.string().min(1).optional(),
     eventId: z.uuid(),
   }),
@@ -160,3 +161,14 @@ export const setupOperationSchema = z.discriminatedUnion("type", [
     requestId: z.number().int().positive().optional(),
   }),
 ]);
+
+/** 左ペインからの移動はボードで編集保護を行ってから確定する。 */
+export const navigationMessageSchema = z.object({
+  type: z.literal("navigateRecord"),
+  payload: z.object({
+    kind: z.literal("event"),
+    id: z.uuid(),
+    projectFile: z.string().min(1).optional(),
+    openDetail: z.boolean(),
+  }),
+});

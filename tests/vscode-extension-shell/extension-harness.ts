@@ -25,6 +25,8 @@ const host = vi.hoisted(() => ({
   saveDialog: vi.fn(),
   update: vi.fn(),
   executeCommand: vi.fn(),
+  createPanel: vi.fn(),
+  revealPanel: vi.fn(),
 }));
 
 export function webview(surface: "board" | "events") {
@@ -103,11 +105,14 @@ export function vscodeMock() {
         host.provider = provider;
         return { dispose() {} };
       },
-      createWebviewPanel: () => ({
-        webview: webview("board"),
-        reveal() {},
-        onDidDispose() {},
-      }),
+      createWebviewPanel: () => {
+        host.createPanel();
+        return {
+          webview: webview("board"),
+          reveal: host.revealPanel,
+          onDidDispose() {},
+        };
+      },
     },
     commands: {
       executeCommand: host.executeCommand,
@@ -140,6 +145,8 @@ export function resetHost() {
   host.saveDialog.mockReset();
   host.update.mockReset();
   host.executeCommand.mockReset();
+  host.createPanel.mockReset();
+  host.revealPanel.mockReset();
   host.executeCommand.mockImplementation(async (id: string) => {
     if (id === "glitchboard.open") host.openBoard?.();
   });

@@ -1,5 +1,5 @@
 {
-  "verifiedAt": "2026-11-14T01:01:57.720Z",
+  "verifiedAt": "2026-11-14T03:17:35.121Z",
   "browser": "156.0.8078.4",
   "results": [
     {
@@ -9,6 +9,8 @@
       "untouchedABytes": true,
       "sidebarSelection": true,
       "editDoneDeleteReorderReload": true,
+      "guardedSidebarNavigation": true,
+      "dimensionsPersisted": true,
       "errors": []
     },
     {
@@ -18,6 +20,8 @@
       "untouchedABytes": true,
       "sidebarSelection": true,
       "editDoneDeleteReorderReload": true,
+      "guardedSidebarNavigation": true,
+      "dimensionsPersisted": true,
       "errors": []
     }
   ]

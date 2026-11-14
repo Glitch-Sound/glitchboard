@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { createRoot } from "react-dom/client";
 import { calculateDanger } from "../../../shared/src/calculation/danger.js";
 import { calculatePeriodLoad } from "../../../shared/src/calculation/load.js";
@@ -12,13 +12,15 @@ import {
 } from "../../../shared/src/domain/deletion.js";
 import {
   scopedEventSelection,
+  scopedId,
   scopeProjects,
 } from "../../../shared/src/domain/identity.js";
 import type { Project } from "../../../shared/src/domain/index.js";
-import { InlineAdd } from "../features/inline-add/index.js";
+import { navigationMessageSchema } from "../../../shared/src/domain/messages.js";
 import { BoardSplit, displayDays, type Period } from "../pages/board/index.js";
 import {
   DetailPanel,
+  type DetailPanelHandle,
   type DetailSelection,
 } from "../widgets/detail-panel/index.js";
 import { EventDetails } from "../widgets/event-details/index.js";
@@ -50,16 +52,27 @@ function detailFor(
 ): DetailSelection | null {
   for (const project of projects) {
     if (kind === "project" && project.id === id)
-      return { kind, item: project, hierarchy: [project.name] };
+      return {
+        kind,
+        item: project,
+        projectColor: project.color,
+        hierarchy: [project.name],
+      };
     for (const event of project.events) {
       if (kind === "event" && event.id === id)
-        return { kind, item: event, hierarchy: [project.name, event.name] };
+        return {
+          kind,
+          item: event,
+          projectColor: project.color,
+          hierarchy: [project.name, event.name],
+        };
       if (kind === "task") {
         const task = event.tasks?.find((task) => task.id === id);
         if (task)
           return {
             kind,
             item: task,
+            projectColor: project.color,
             hierarchy: [project.name, event.name, task.name],
             parentDue: event.due,
           };
@@ -69,6 +82,7 @@ function detailFor(
           return {
             kind,
             item: story,
+            projectColor: project.color,
             hierarchy: [project.name, event.name, story.name],
             parentDue: event.due,
           };
@@ -78,6 +92,7 @@ function detailFor(
               return {
                 kind,
                 item: task,
+                projectColor: project.color,
                 hierarchy: [project.name, event.name, story.name, task.name],
                 parentDue: event.due,
               };
@@ -93,15 +108,34 @@ export function BoardApp() {
   const [unconfigured, setUnconfigured] = useState(false);
   const [operationError, setOperationError] = useState<string | null>(null);
   const [period, setPeriod] = useState<Period>("week");
-  const [selectedEventId, setSelectedEventId] = useState<string | null>(null);
+  const [selectedEventId, setSelectedEventId] = useState<
+    string | null | undefined
+  >(undefined);
   const [detailTarget, setDetailTarget] = useState<{
     kind: ItemKind;
     id: string;
+  } | null>(null);
+  const detailPanel = useRef<DetailPanelHandle>(null);
+  const snapshotSelection = useRef<string | null>(null);
+  const [record, setRecord] = useState<{
+    kind: ItemKind;
+    id: string;
+    groupId?: null;
   } | null>(null);
   useEffect(
     () =>
       subscribeSnapshots((next) => {
         setSnapshot(next);
+        const nextSelection = scopedEventSelection(
+          next.projects,
+          next.selectedEventId,
+          next.selectedProjectFile,
+        );
+        if (nextSelection !== snapshotSelection.current) {
+          snapshotSelection.current = nextSelection;
+          setSelectedEventId(undefined);
+          setRecord(null);
+        }
         setUnconfigured(false);
         if (!next.error && next.manageAvailability?.status !== "missing")
           setOperationError(null);
@@ -154,11 +188,13 @@ export function BoardApp() {
     actual.daily.map((item) => [item.date, item.points]),
   );
   const selection =
-    scopedEventSelection(
-      snapshot?.projects ?? [],
-      snapshot?.selectedEventId,
-      snapshot?.selectedProjectFile,
-    ) ?? selectedEventId;
+    selectedEventId !== undefined
+      ? selectedEventId
+      : scopedEventSelection(
+          snapshot?.projects ?? [],
+          snapshot?.selectedEventId,
+          snapshot?.selectedProjectFile,
+        );
   const selectedEvent = projects
     .flatMap((project) => project.events)
     .find((event) => event.id === selection);
@@ -168,9 +204,84 @@ export function BoardApp() {
     settings,
     actual.pace,
   );
-  const detailSelection = detailTarget
+  const lastDetail = useRef<DetailSelection | null>(null);
+  const resolvedDetail = detailTarget
     ? detailFor(projects, detailTarget.kind, detailTarget.id)
     : null;
+  if (resolvedDetail) lastDetail.current = resolvedDetail;
+  const detailSelection =
+    resolvedDetail ??
+    (detailTarget?.id === lastDetail.current?.item.id
+      ? lastDetail.current
+      : null);
+  const chooseRecord = (
+    kind: ItemKind,
+    id: string,
+    openDetail = false,
+    groupId?: null,
+  ) => {
+    const target = detailFor(projects, kind, id);
+    if (!target) return;
+    const commit = () => {
+      const project = projects.find(
+        (p) =>
+          p.id === id ||
+          p.events.some(
+            (e) =>
+              e.id === id ||
+              e.tasks?.some((t) => t.id === id) ||
+              e.stories.some(
+                (st) => st.id === id || st.tasks.some((t) => t.id === id),
+              ),
+          ),
+      );
+      const event =
+        kind === "project"
+          ? project?.events[0]
+          : project?.events.find(
+              (e) =>
+                e.id === id ||
+                e.tasks?.some((t) => t.id === id) ||
+                e.stories.some(
+                  (st) => st.id === id || st.tasks.some((t) => t.id === id),
+                ),
+            );
+      setRecord({ kind, id, groupId });
+      setSelectedEventId(event?.id ?? null);
+      if (event)
+        postOperation(localBridge(), {
+          type: "selectEvent",
+          eventId: event.id,
+        });
+      if (openDetail || detailTarget) setDetailTarget({ kind, id });
+    };
+    if (detailTarget && (detailTarget.kind !== kind || detailTarget.id !== id))
+      detailPanel.current ? detailPanel.current.requestLeave(commit) : commit();
+    else commit();
+  };
+  const navigate = useRef(chooseRecord);
+  navigate.current = chooseRecord;
+  useEffect(() => {
+    const handler = (event: MessageEvent) => {
+      const message = navigationMessageSchema.safeParse(event.data);
+      if (message.success) {
+        const { kind, id, projectFile, openDetail } = message.data.payload;
+        navigate.current(kind, scopedId(projectFile, id), openDetail);
+      }
+    };
+    window.addEventListener("message", handler);
+    return () => window.removeEventListener("message", handler);
+  }, []);
+  const selectedStoryId =
+    record?.groupId === null
+      ? null
+      : record?.kind === "story"
+        ? record.id
+        : record?.kind === "task"
+          ? (selectedEvent?.stories.find((story) =>
+              story.tasks.some((task) => task.id === record.id),
+            )?.id ?? null)
+          : undefined;
   const requestDelete = (
     kind: ItemKind,
     id: string,
@@ -207,28 +318,6 @@ export function BoardApp() {
               <h1>GlitchBoard</h1>
               <time dateTime={today}>{displayToday(today)}</time>
             </div>
-            {projects.length > 0 && (
-              <div className="board-event-add">
-                <span>Event</span>
-                <InlineAdd
-                  kind="event"
-                  projects={projects}
-                  projectId={
-                    projects.find((project) =>
-                      project.events.some((event) => event.id === selection),
-                    )?.id
-                  }
-                  onSubmit={({ name, projectId, due }) =>
-                    sendOperation(localBridge(), {
-                      type: "addEvent",
-                      projectId,
-                      name,
-                      due,
-                    })
-                  }
-                />
-              </div>
-            )}
             <nav aria-label="表示期間" className="period-switch">
               {(
                 [
@@ -259,20 +348,26 @@ export function BoardApp() {
             <div className="timeline-panel">
               <Timeline
                 projects={projects}
+                initialLayout={localBridge()?.getState?.()?.timelineLayout}
+                onLayoutChange={(timelineLayout) => {
+                  const bridge = localBridge();
+                  bridge?.setState?.({
+                    ...bridge.getState?.(),
+                    timelineLayout,
+                  });
+                }}
                 days={days}
                 today={today}
                 period={period}
                 selectedEventId={selection ?? null}
-                onSelect={(eventId) => {
-                  setSelectedEventId(eventId);
-                  postOperation(localBridge(), {
-                    type: "selectEvent",
-                    eventId,
-                  });
-                }}
+                onSelect={(eventId) => chooseRecord("event", eventId)}
+                onSelectProject={(id) => chooseRecord("project", id)}
+                selectedProjectId={
+                  record?.kind === "project" ? record.id : undefined
+                }
                 settings={settings}
                 danger={danger.events}
-                onOpenDetail={(kind, id) => setDetailTarget({ kind, id })}
+                onOpenDetail={(kind, id) => chooseRecord(kind, id, true)}
                 requiredByDay={required}
                 pace={actual.pace}
                 learning={actual.learning}
@@ -298,6 +393,13 @@ export function BoardApp() {
                 <EventDetails
                   key={selectedEvent.id}
                   event={selectedEvent}
+                  selectedStoryId={selectedStoryId}
+                  selectedTaskId={
+                    record?.kind === "task" ? record.id : undefined
+                  }
+                  onSelectRecord={(kind, id, groupId) =>
+                    chooseRecord(kind, id, false, groupId)
+                  }
                   today={today}
                   prediction={predictions[selectedEvent.id] ?? null}
                   danger={danger.events[selectedEvent.id]}
@@ -348,7 +450,7 @@ export function BoardApp() {
                     })
                   }
                   onDelete={requestDelete}
-                  onOpenDetail={(kind, id) => setDetailTarget({ kind, id })}
+                  onOpenDetail={(kind, id) => chooseRecord(kind, id, true)}
                 />
               ) : (
                 <div className="board-empty">
@@ -359,7 +461,7 @@ export function BoardApp() {
                   </h2>
                   <p>
                     {projects.length
-                      ? "上部の Event ＋ から名前と期限を設定します。そのまま Task を追加できます。"
+                      ? "左の EVENT 一覧の ＋ から名前と期限を設定します。そのまま Task を追加できます。"
                       : "タイムラインの Project ＋ から名前と色を設定します。"}
                   </p>
                 </div>
@@ -369,6 +471,7 @@ export function BoardApp() {
           {detailSelection && (
             <DetailPanel
               key={detailSelection.item.id}
+              ref={detailPanel}
               selection={detailSelection}
               onClose={() => setDetailTarget(null)}
               onSave={(kind, id, patch) =>

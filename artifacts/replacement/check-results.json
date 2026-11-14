@@ -1,16 +1,17 @@
 {
-  "verifiedAt": "2026-11-14T01:09:10.859658+00:00",
+  "verifiedAt": "2026-11-14T03:16:58.585899+00:00",
   "dataModel": "Project > Event > Task; optional Event > Story > Task",
   "legacyMigrationAndCompatibility": "out of scope by user instruction",
   "final": {
-    "testFiles": 94,
-    "tests": 204,
+    "testFiles": 97,
+    "tests": 216,
     "lint": true,
     "typecheck": true,
     "fsd": true,
     "build": true,
     "strictSpecs": 7,
-    "traceCheck": true
+    "traceCheck": true,
+    "whitespaceCheck": true
   },
   "change": {
     "name": "native-event-tasks",
@@ -25,7 +26,7 @@
   "calendarCombinations": 12,
   "setupCombinations": 8,
   "layoutThemes": 2,
-  "manualVsCodeChecksPending": 13,
+  "manualVsCodeChecksPending": 17,
   "published": false,
   "pushed": false,
   "reviewChanges": [
@@ -48,5 +49,14 @@
       "archived": "openspec/changes/archive/2026-11-14-fix-manage-connection"
     }
   ],
-  "projectScopeBrowserResults": "../review/project-scope-results.json"
+  "projectScopeBrowserResults": "../review/project-scope-results.json",
+  "interactionChange": {
+    "name": "unify-record-navigation",
+    "requirements": 10,
+    "scenarios": 29,
+    "tasks": 4,
+    "strictValidationBeforeSync": true,
+    "strictTraceBeforeSync": true,
+    "archived": "openspec/changes/archive/2026-11-14-unify-record-navigation"
+  }
 }

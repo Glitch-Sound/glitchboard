@@ -1,8 +1,11 @@
 import { writeFile } from "node:fs/promises";
 import { dirname } from "node:path";
 import * as vscode from "vscode";
-import { setupOperationSchema } from "../../shared/src/domain/messages.js";
-import { navigateToEvent } from "./navigation.js";
+import {
+  navigationMessageSchema,
+  operationSchema,
+  setupOperationSchema,
+} from "../../shared/src/domain/messages.js";
 import { BoardSession } from "./session.js";
 import { registerViews } from "./views.js";
 
@@ -11,6 +14,17 @@ export function activate(context: vscode.ExtensionContext): void {
   let sidebar: vscode.WebviewView | undefined;
   let board: vscode.WebviewPanel | undefined;
   let session: BoardSession | undefined;
+  let boardReady = false;
+  let pendingNavigation:
+    | ReturnType<typeof navigationMessageSchema.parse>
+    | undefined;
+  const deliverNavigation = async () => {
+    if (boardReady && board && pendingNavigation) {
+      const message = pendingNavigation;
+      pendingNavigation = undefined;
+      await board.webview.postMessage(message);
+    }
+  };
   let watcher: vscode.FileSystemWatcher | undefined;
   let timer: ReturnType<typeof setTimeout> | undefined;
   const configure = async () => {
@@ -134,6 +148,14 @@ export function activate(context: vscode.ExtensionContext): void {
         vscode.window.registerWebviewViewProvider(id, {
           resolveWebviewView(view) {
             sidebar = view;
+            const showBoard = () => {
+              if (view.visible)
+                void vscode.commands.executeCommand("glitchboard.open");
+            };
+            const visibility = view.onDidChangeVisibility?.(showBoard);
+            if (visibility) context.subscriptions.push(visibility);
+            // 解決時はユーザーがサイドバーを開いたため、メイン画面も開く。
+            void vscode.commands.executeCommand("glitchboard.open");
             view.webview.options = {
               enableScripts: true,
               localResourceRoots: [context.extensionUri],
@@ -197,15 +219,20 @@ export function activate(context: vscode.ExtensionContext): void {
                   typeof message.eventId === "string"
                 ) {
                   try {
-                    await navigateToEvent(message.eventId, {
-                      selectEvent: () =>
-                        currentSession.handleOperation(message),
-                      openBoard: async () => {
-                        await vscode.commands.executeCommand(
-                          "glitchboard.open",
-                        );
+                    const parsed = operationSchema.parse(message);
+                    if (parsed.type !== "selectEvent")
+                      throw new Error("移動要求が無効");
+                    pendingNavigation = navigationMessageSchema.parse({
+                      type: "navigateRecord",
+                      payload: {
+                        kind: "event",
+                        id: parsed.eventId,
+                        projectFile: parsed.projectFile,
+                        openDetail: parsed.openDetail ?? false,
                       },
                     });
+                    await vscode.commands.executeCommand("glitchboard.open");
+                    await deliverNavigation();
                     result = { ok: true };
                   } catch (error) {
                     result = {
@@ -241,6 +268,7 @@ export function activate(context: vscode.ExtensionContext): void {
         board.reveal();
         return;
       }
+      boardReady = false;
       board = vscode.window.createWebviewPanel(
         "glitchboard.board",
         "GlitchBoard",
@@ -279,11 +307,13 @@ export function activate(context: vscode.ExtensionContext): void {
             "type" in message &&
             message.type === "ready"
           ) {
+            boardReady = true;
             await board?.webview.postMessage(
               session
                 ? { type: "snapshot", payload: session.snapshot() }
                 : { type: "unconfigured" },
             );
+            await deliverNavigation();
             return;
           }
           if (!session) {
@@ -316,6 +346,7 @@ export function activate(context: vscode.ExtensionContext): void {
       );
       board.onDidDispose(() => {
         board = undefined;
+        boardReady = false;
       });
       sidebar?.show?.(true);
     },

@@ -473,20 +473,6 @@ main {
   border: 1px solid var(--vscode-panel-border);
   border-radius: 7px;
 }
-.detail-points label {
-  display: flex;
-  justify-content: space-between;
-}
-.detail-points input {
-  width: 100%;
-}
-.detail-points button {
-  justify-self: end;
-  border: 0;
-  background: transparent;
-  color: var(--vscode-descriptionForeground);
-  cursor: pointer;
-}
 .detail-note {
   white-space: pre-wrap;
 }
@@ -694,6 +680,7 @@ main {
 }
 .board-content {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   grid-template-rows: minmax(0, 3fr) 12px minmax(0, 2fr);
   flex: 1;
   min-height: 0;
@@ -729,10 +716,13 @@ main {
   cursor: row-resize;
 }
 .timeline-panel {
+  min-width: 0;
   min-height: 0;
   overflow: auto;
 }
 .board-details-panel {
+  min-width: 0;
+  overflow-x: auto;
   min-height: 0;
 }
 .board-header {
@@ -843,7 +833,7 @@ main {
   overflow: visible;
 }
 .timeline .project-col {
-  width: 340px;
+  width: var(--project-width);
 }
 .timeline .overdue-col {
   width: 76px;
@@ -864,8 +854,8 @@ main {
   text-align: center;
 }
 .timeline-row > :first-child {
-  width: 340px;
-  min-width: 340px;
+  width: var(--project-width);
+  min-width: var(--project-width);
   box-sizing: border-box;
   padding: 8px;
   border-inline-start: 3px solid;
@@ -930,9 +920,9 @@ main {
     var(--vscode-editor-background)
   );
 }
-/* REQ-016-S05: 追加フォームの内容を切らず、通常Project行を44pxに収める。 */
+/* REQ-016-S05: 追加フォームの内容を切らず、通常Project行を共通の調整値に収める。 */
 .timeline tbody tr:not(.pace-row):not(.timeline-spacer) {
-  height: 44px;
+  height: var(--project-row-height);
 }
 .project-drag-handle {
   display: inline-grid;
@@ -1054,7 +1044,7 @@ main {
   align-items: center;
   gap: 4px;
   width: 100%;
-  min-height: 44px;
+  min-height: var(--project-row-height);
   box-sizing: border-box;
   padding: 6px 8px;
   border: 2px solid var(--vscode-focusBorder);
@@ -1201,6 +1191,7 @@ main {
   color: var(--vscode-charts-red);
 }
 .event-details {
+  min-width: 820px;
   display: grid;
   grid-template-columns: minmax(220px, 3fr) minmax(300px, 4fr) minmax(
       300px,
@@ -1513,7 +1504,7 @@ main {
   display: grid;
   grid-template-columns: 18px minmax(0, 1fr) auto auto;
   align-items: center;
-  gap: 2px;
+  gap: 2px 10px;
   min-width: 0;
   min-height: 48px;
   padding: 7px 16px;
@@ -2018,4 +2009,129 @@ main {
   background: transparent;
   color: var(--vscode-foreground);
   font-size: 20px;
+}
+
+/* REQ-040: 日付の領域を残し、幅と行高を全Projectへ適用する。 */
+.timeline-layout {
+  min-width: var(--timeline-min-width);
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+.timeline-dimensions {
+  border: 0;
+  margin: 0;
+  min-width: 0;
+  display: flex;
+  justify-content: flex-end;
+  gap: 16px;
+  padding: 4px 8px;
+  flex-wrap: wrap;
+}
+.timeline-dimensions label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  color: var(--vscode-descriptionForeground);
+}
+.timeline-dimensions input {
+  width: 84px;
+  accent-color: var(--vscode-focusBorder);
+}
+.timeline-dimensions output {
+  min-width: 36px;
+}
+.timeline-layout .timeline {
+  flex: 1;
+}
+.detail-panel .detail-title {
+  color: var(--detail-accent);
+  border-inline-start: 4px solid var(--detail-accent);
+  padding-inline-start: 10px;
+}
+.detail-target {
+  font-size: 14px;
+  font-weight: 600;
+  margin: 10px 0;
+}
+.event-row {
+  display: flex;
+  align-items: center;
+}
+.event-row-select {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+  min-width: 0;
+  background: transparent;
+  border: 0;
+  text-align: left;
+  color: inherit;
+  padding: 0;
+}
+.event-row-content {
+  flex: 1;
+  min-width: 0;
+}
+.task-line.selected {
+  background: var(--vscode-list-inactiveSelectionBackground);
+}
+.unsaved-backdrop {
+  position: fixed;
+  inset: 0;
+  background: #0006;
+  z-index: 2000;
+  display: grid;
+  place-items: center;
+}
+.unsaved-dialog {
+  background: var(
+    --vscode-editorWidget-background,
+    var(--vscode-editor-background)
+  );
+  border: 1px solid var(--vscode-focusBorder);
+  border-radius: 8px;
+  box-shadow: 0 12px 40px #0005;
+  max-width: min(420px, 90vw);
+  padding: 20px;
+}
+.unsaved-dialog :where(button) {
+  margin: 8px 6px 0 0;
+  padding: 7px 10px;
+}
+.marker-wrap > :where(.detail-button) {
+  position: absolute;
+  right: 2px;
+  top: 0;
+}
+.marker-list > div {
+  display: flex;
+  align-items: center;
+}
+
+.record-surface {
+  position: relative;
+}
+.record-surface > .record-hitbox {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  background: transparent;
+  z-index: 0;
+  padding: 0;
+}
+.record-surface > :where(:not(.record-hitbox)) {
+  position: relative;
+  pointer-events: none;
+}
+.record-surface :where(button, input, a, textarea, select) {
+  pointer-events: auto;
+}
+.record-hitbox:focus-visible {
+  outline: 1px solid var(--vscode-focusBorder);
+  outline-offset: -2px;
 }

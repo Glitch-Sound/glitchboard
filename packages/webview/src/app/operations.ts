@@ -1,6 +1,10 @@
 import { itemReference } from "../../../shared/src/domain/identity.js";
 
-export type LocalBridge = { postMessage(message: unknown): void };
+export type LocalBridge = {
+  postMessage(message: unknown): void;
+  getState?(): { timelineLayout?: { width: number; height: number } };
+  setState?(state: unknown): void;
+};
 
 const targetFields: Record<string, string> = {
   updateTask: "taskId",

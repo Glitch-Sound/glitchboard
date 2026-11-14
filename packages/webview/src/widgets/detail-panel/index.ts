@@ -1,2 +1,2 @@
-export type { DetailSelection } from "./ui/DetailPanel.js";
+export type { DetailPanelHandle, DetailSelection } from "./ui/DetailPanel.js";
 export { DetailPanel } from "./ui/DetailPanel.js";

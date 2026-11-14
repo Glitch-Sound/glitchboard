@@ -7,7 +7,7 @@ import { DeleteDialog } from "../../packages/webview/src/features/delete-item/ui
 import { DetailPanel } from "../../packages/webview/src/widgets/detail-panel/ui/DetailPanel.js";
 
 describe("詳細パネルと削除確認", () => {
-  it("種別タグ、3枚の指標、Taskポイントスライダー、独立した操作ボタンを示す", () => {
+  it("REQ-026-S03 Projectタイトル、3枚の指標、共通Taskポイント、独立した操作ボタンを示す", () => {
     const onSave = vi.fn();
     const { container } = render(
       createElement(DetailPanel, {
@@ -22,12 +22,12 @@ describe("詳細パネルと削除確認", () => {
         onDelete: () => {},
       }),
     );
-    expect(container.querySelector(".detail-kind-task")?.textContent).toBe(
-      "TASK",
-    );
+    expect(screen.getByRole("heading", { name: "Project" })).toBeTruthy();
+    expect(screen.getByText("TASK : 準備")).toBeTruthy();
     expect(container.querySelectorAll(".detail-metrics > span")).toHaveLength(
       3,
     );
+    fireEvent.click(screen.getByRole("button", { name: "5pt" }));
     fireEvent.change(screen.getByRole("slider", { name: /ポイント/ }), {
       target: { value: "4" },
     });

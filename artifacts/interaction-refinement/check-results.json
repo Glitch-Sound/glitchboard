@@ -1,0 +1,49 @@
+{
+  "verifiedAt": "2026-11-14T03:16:58.585899+00:00",
+  "dataModel": "Event.tasks + optional Event.stories; Taks is a virtual display group",
+  "final": {
+    "testFiles": 97,
+    "tests": 216,
+    "lint": true,
+    "typecheck": true,
+    "fsd": true,
+    "build": true,
+    "strictSpecs": 7,
+    "traceCheck": true,
+    "whitespaceCheck": true
+  },
+  "change": {
+    "name": "unify-record-navigation",
+    "requirements": 10,
+    "scenarios": 29,
+    "tasks": 4,
+    "strictValidationBeforeSync": true,
+    "strictTraceBeforeSync": true,
+    "archived": "openspec/changes/archive/2026-11-14-unify-record-navigation"
+  },
+  "realBrowser": {
+    "themes": [
+      "dark",
+      "light"
+    ],
+    "nativeTaskPersistenceAndRecovery": true,
+    "recordScopeAndSidebarGuard": true,
+    "saveDiscardCancel": true,
+    "dimensionMaximumAndViewportAndRedisplay": true,
+    "pointComputedColorMatch": true,
+    "calendarCombinations": 12,
+    "setupCombinations": 8,
+    "layoutThemes": 2
+  },
+  "evidence": {
+    "normal": "../replacement/browser-results.json",
+    "projectScope": "../review/project-scope-results.json",
+    "calendar": "../replacement/calendar/browser-results.json",
+    "setup": "../replacement/setup/browser-results.json",
+    "layout": "../replacement/layout/results.json"
+  },
+  "manualVsCodeChecksPending": 17,
+  "pushed": false,
+  "published": false,
+  "readmeScreenshotsAdded": false
+}

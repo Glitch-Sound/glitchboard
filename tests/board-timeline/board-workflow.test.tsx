@@ -16,6 +16,7 @@ vi.mock("../../packages/webview/src/app/bridge.js", () => ({
 }));
 
 import { BoardApp } from "../../packages/webview/src/app/board.js";
+import { EventsApp } from "../../packages/webview/src/app/events.js";
 
 const projects = [0, 1].map((i) => ({
   id: `11111111-1111-4111-8111-11111111111${i}`,
@@ -79,7 +80,7 @@ describe("ボードの入口", () => {
     fireEvent.click(
       within(screen.getByRole("region", { name: "Event詳細" })).getByRole(
         "button",
-        { name: "Event 1" },
+        { name: "Event 1の詳細" },
       ),
     );
     fireEvent.click(
@@ -98,7 +99,7 @@ describe("ボードの入口", () => {
         .filter((message) => message.type === "deleteItem"),
     ).toEqual([]);
   });
-  it("REQ-035-S01 名前からProject、Event、Task詳細へ直接到達し、チェックとStory選択は独立する", () => {
+  it("REQ-035-S01 レコード選択と詳細ボタンを区別し、チェックとStory選択は独立する", () => {
     render(<BoardApp />);
     emit(snapshot);
     for (const name of ["Project 1", "Event 1", "Task 1"]) {
@@ -106,12 +107,12 @@ describe("ボードの入口", () => {
         (name.startsWith("Event")
           ? within(screen.getByRole("region", { name: "Event詳細" }))
           : screen
-        ).getByRole("button", { name }),
+        ).getByRole("button", { name: `${name}の詳細` }),
       );
       expect(
         within(screen.getByRole("dialog", { name: "詳細パネル" })).getByRole(
           "heading",
-          { name },
+          { name: "Project 1" },
         ),
       ).toBeTruthy();
       fireEvent.click(screen.getByRole("button", { name: "詳細を閉じる" }));
@@ -132,8 +133,8 @@ describe("ボードの入口", () => {
     ]);
   });
 
-  it("REQ-037-S01 ボードのEvent追加は現在のProjectを選択して保存する", () => {
-    render(<BoardApp />);
+  it("REQ-037-S01 EVENT一覧の追加は現在のProjectを選択して保存する", () => {
+    render(<EventsApp />);
     emit(snapshot);
     fireEvent.click(screen.getByRole("button", { name: "Eventを追加" }));
     expect(screen.getByRole("combobox", { name: "Project" })).toHaveProperty(
@@ -168,11 +169,8 @@ describe("ボードの入口", () => {
       selectedEventId: null,
     });
     expect(screen.getByText("Event を追加しましょう")).toBeTruthy();
-    fireEvent.click(screen.getByRole("button", { name: "Eventを追加" }));
-    expect(screen.getByRole("combobox", { name: "Project" })).toHaveProperty(
-      "value",
-      projects[0].id,
-    );
+    expect(screen.queryByRole("button", { name: "Eventを追加" })).toBeNull();
+    expect(screen.getByText(/左の EVENT 一覧/)).toBeTruthy();
   });
 });
 

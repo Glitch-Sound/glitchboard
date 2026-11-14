@@ -30,8 +30,9 @@ describe("REQ-018-S02 未完了Taskがない", () => {
     );
     expect(
       screen
-        .getByRole("button", { name: /先頭Story/ })
-        .getAttribute("aria-pressed"),
+        .getByText("先頭Story")
+        .closest("button")
+        ?.getAttribute("aria-pressed"),
     ).toBe("true");
     rerender(
       createElement(EventDetails, {

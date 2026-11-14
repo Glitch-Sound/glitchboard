@@ -63,12 +63,12 @@ describe("Eventの作業フロー", () => {
   it("REQ-034-S01 同じEvent更新で選択と追加入力が戻らない", () => {
     const props = { ...base, event, onAddTask: vi.fn() };
     const view = render(<EventDetails {...props} />);
-    fireEvent.click(screen.getByRole("button", { name: /^Second/ }));
+    fireEvent.click(screen.getByRole("button", { name: /^Second0/ }));
     inputTask("下書き");
     view.rerender(<EventDetails {...props} event={structuredClone(event)} />);
     expect(
       screen
-        .getByRole("button", { name: /^Second/ })
+        .getByRole("button", { name: /^Second0/ })
         .getAttribute("aria-pressed"),
     ).toBe("true");
     expect(screen.getByRole("textbox", { name: "名前" })).toHaveProperty(
@@ -80,7 +80,7 @@ describe("Eventの作業フロー", () => {
   it("REQ-034-S02 選択Story消失とEvent切替は未保存入力を取り消す", () => {
     const props = { ...base, event, onAddTask: vi.fn(), onAddStory: vi.fn() };
     const view = render(<EventDetails {...props} />);
-    fireEvent.click(screen.getByRole("button", { name: /^Second/ }));
+    fireEvent.click(screen.getByRole("button", { name: /^Second0/ }));
     inputTask("古い入力");
     view.rerender(
       <EventDetails

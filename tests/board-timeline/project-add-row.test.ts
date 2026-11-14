@@ -33,7 +33,7 @@ describe("PROJECT追加行", () => {
     const row = container.querySelector<HTMLTableRowElement>(
       ".timeline-project-add-row",
     );
-    expect(row?.cells).toHaveLength(4);
+    expect(row?.cells).toHaveLength(3);
     expect(row?.cells[0]?.colSpan).toBe(1);
     const name = screen.getByRole("textbox", { name: "名前" });
     expect(name.closest("td")).toBe(row?.cells[0]);

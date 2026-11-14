@@ -91,6 +91,7 @@ vi.mock("vscode", () => {
       }),
     },
     commands: {
+      executeCommand: vi.fn(),
       registerCommand: (_id: string, callback: () => void) => {
         state.openBoard = callback;
         return { dispose() {} };

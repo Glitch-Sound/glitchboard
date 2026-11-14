@@ -117,6 +117,10 @@ describe("詳細編集の反復", () => {
     );
     fireEvent.click(screen.getByRole("button", { name: "編集" }));
     fireEvent.keyDown(screen.getByLabelText("名前"), { key: "Escape" });
+    expect(
+      screen.getByRole("alertdialog", { name: "未保存の編集" }),
+    ).toBeTruthy();
+    fireEvent.click(screen.getByRole("button", { name: "破棄して進む" }));
     expect(screen.queryByRole("textbox")).toBeNull();
     expect(onClose).not.toHaveBeenCalled();
     fireEvent.click(screen.getByRole("button", { name: "削除" }));

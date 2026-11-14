@@ -36,7 +36,7 @@ try {
     });
     const errors = [];page.on("pageerror",e=>errors.push(e.message));
     await page.goto("http://datepicker.test/");
-    if (surface === "board") {await page.getByRole("button",{name:"Releaseの詳細",exact:true}).click();await page.getByRole("button",{name:"編集",exact:true}).click();}
+    if (surface === "board") {await page.getByRole("region",{name:"Event詳細",exact:true}).getByRole("button",{name:"Releaseの詳細",exact:true}).click();await page.getByRole("button",{name:"編集",exact:true}).click();}
     else {await page.getByRole("button",{name:"Eventを追加",exact:true}).click();await page.getByLabel("名前",{exact:true}).fill("Calendar release");}
     const input = page.getByLabel("期限",{exact:true});
     const trigger = () => page.getByRole("button",{name:/^期限(?: |を選ぶ)/});

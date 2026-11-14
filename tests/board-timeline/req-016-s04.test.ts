@@ -4,6 +4,7 @@ import { fireEvent, render, screen } from "@testing-library/react";
 import { createElement } from "react";
 import { describe, expect, it, vi } from "vitest";
 import type { Project } from "../../packages/shared/src/domain/index.js";
+import { EventList } from "../../packages/webview/src/pages/event-list/ui/EventList.js";
 import { Timeline } from "../../packages/webview/src/widgets/timeline/ui/Timeline.js";
 
 describe("REQ-016-S04 期限切れのEvent", () => {
@@ -30,7 +31,7 @@ describe("REQ-016-S04 期限切れのEvent", () => {
     ).toBe(1);
   });
 
-  it("日付列より左の期限切れ列へまとめ、一覧から選択できる", () => {
+  it("タイムラインから期限切れを除き、EVENT一覧から選択できる", () => {
     const projects = [
       {
         id: "project",
@@ -53,10 +54,19 @@ describe("REQ-016-S04 期限切れのEvent", () => {
         onSelect,
       }),
     );
-    const heading = screen.getByRole("columnheader", { name: "期限切れ" });
-    expect((heading as HTMLTableCellElement).cellIndex).toBe(1);
-    fireEvent.click(screen.getByRole("button", { name: "2件のEvent" }));
-    fireEvent.click(screen.getByRole("option", { name: "B" }));
+    expect(screen.queryByRole("columnheader", { name: "期限切れ" })).toBeNull();
+    expect(screen.queryByRole("button", { name: "2件のEvent" })).toBeNull();
+    render(
+      createElement(EventList, {
+        projects,
+        today: "2026-11-03",
+        target: "pending",
+        onSelect,
+      }),
+    );
+    fireEvent.click(
+      screen.getByText("B").closest("button") as HTMLButtonElement,
+    );
     expect(onSelect).toHaveBeenCalledWith("second");
   });
 });

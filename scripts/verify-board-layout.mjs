@@ -1,3 +1,4 @@
+import { timelineDimensions } from "../packages/webview/src/widgets/timeline/model/dimensions.ts";
 import assert from "node:assert/strict";
 import { randomUUID } from "node:crypto";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
@@ -63,14 +64,14 @@ try {
     const initial = await heights();
     assert.ok(Math.abs(initial.ratio - 0.6) < 0.002, JSON.stringify(initial));
     const rowHeights = await page.locator(".project-row").evaluateAll((rows) => rows.map((row) => row.getBoundingClientRect().height));
-    assert.ok(rowHeights.every((h) => h <= 44.1), JSON.stringify(rowHeights));
+    assert.ok(rowHeights.every((h) => h <= timelineDimensions.height.initial + 0.1), JSON.stringify(rowHeights));
     // REQ-016-S01〜S05: 全期間の行高と既存の詳細操作。
     const periodRows = {};
     for (const [label, period] of [["3日", "three-days"], ["月", "month"], ["1週間", "week"]]) {
       await page.getByRole("button", { name: label, exact: true }).click();
       await expect(page.locator(`.timeline-${period}`)).toBeVisible();
       periodRows[period] = await page.locator(".project-row").evaluateAll((rows) => rows.map((row) => row.getBoundingClientRect().height));
-      assert.ok(periodRows[period].every((h) => Math.abs(h - 44) < 0.1), JSON.stringify(periodRows));
+      assert.ok(periodRows[period].every((h) => Math.abs(h - timelineDimensions.height.initial) < 0.1), JSON.stringify(periodRows));
       await page.locator(".project-actions .detail-button").first().click();
       await expect(page.getByRole("dialog", { name: "詳細パネル", exact: true })).toBeVisible();
       await page.getByRole("button", { name: "詳細を閉じる", exact: true }).click();
@@ -98,6 +99,7 @@ try {
     assert.ok(Math.abs((await heights()).ratio - expanded.ratio) < 0.002);
     await separator.dblclick();
     assert.ok(Math.abs((await heights()).ratio - 0.6) < 0.002);
+    const selectionRequestsBefore = await page.evaluate(() => window.requests.filter(r=>r.type === "selectEvent").length);
     // REQ-032-S02: 下半分への実ドラッグ。
     const target = page.locator(".project-row").nth(2);
     await page.locator(".project-drag-handle").first().dragTo(target, { targetPosition: { x: 200, y: 40 } });
@@ -107,7 +109,7 @@ try {
     assert.equal(move.targetProjectId, projects[2].id);
     assert.equal(move.placement, "after");
     await page.waitForFunction((id) => document.querySelectorAll(".project-row")[2].dataset.projectId === id, projects[0].id);
-    assert.equal(await page.evaluate(() => window.requests.some((r) => r.type === "selectEvent")), false);
+    assert.equal(await page.evaluate(() => window.requests.filter((r) => r.type === "selectEvent").length), selectionRequestsBefore);
     await page.locator(".project-drag-handle").nth(2).focus();
     await page.keyboard.press("ArrowUp");
     await page.waitForFunction(() => window.requests.filter((r) => r.type === "moveProject").length === 2);

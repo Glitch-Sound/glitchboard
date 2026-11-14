@@ -132,6 +132,13 @@ export function EventsApp() {
             today={today}
             danger={danger.events}
             target={target}
+            onOpenDetail={(eventId) =>
+              postOperation(localBridge(), {
+                type: "selectEvent",
+                eventId,
+                openDetail: true,
+              })
+            }
             onSelect={(eventId) =>
               postOperation(localBridge(), { type: "selectEvent", eventId })
             }

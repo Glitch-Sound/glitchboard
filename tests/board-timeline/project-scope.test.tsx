@@ -62,7 +62,7 @@ afterEach(() => {
   postMessage.mockClear();
 });
 describe("Projectを含む画面の対象参照", () => {
-  it("REQ-005-S05 2番目のEventと詳細を表示し、編集、完了、削除に同じファイル参照を送る", () => {
+  it("REQ-005-S05 2番目のEventと詳細を表示し、編集、完了、削除に同じファイル参照を送る", async () => {
     render(<BoardApp />);
     emit();
     expect(screen.getByRole("button", { name: "B Task" })).toBeTruthy();
@@ -78,9 +78,9 @@ describe("Projectを含む画面の対象参照", () => {
       taskId: ids.task,
       done: true,
     });
-    fireEvent.click(screen.getByRole("button", { name: "B Task" }));
+    fireEvent.click(screen.getByRole("button", { name: "B Taskの詳細" }));
     const panel = screen.getByRole("dialog", { name: "詳細パネル" });
-    expect(within(panel).getByRole("heading", { name: "B Task" })).toBeTruthy();
+    expect(within(panel).getByRole("heading", { name: "B" })).toBeTruthy();
     fireEvent.click(within(panel).getByRole("button", { name: "編集" }));
     fireEvent.change(within(panel).getByLabelText("名前"), {
       target: { value: "Changed B" },
@@ -94,6 +94,20 @@ describe("Projectを含む画面の対象参照", () => {
       id: ids.task,
       patch: { name: "Changed B" },
     });
+    const editRequest = postMessage.mock.calls
+      .map(([m]) => m)
+      .find((m) => m.type === "editItem");
+    await act(async () =>
+      window.dispatchEvent(
+        new MessageEvent("message", {
+          data: {
+            type: "operationResult",
+            requestId: editRequest.requestId,
+            payload: { ok: true },
+          },
+        }),
+      ),
+    );
     fireEvent.click(within(panel).getByRole("button", { name: "削除" }));
     fireEvent.click(screen.getByRole("button", { name: "削除する" }));
     expect(
@@ -105,7 +119,9 @@ describe("Projectを含む画面の対象参照", () => {
   it("REQ-005-S05 サイドバーの同一Event IDを別行として選択できる", () => {
     render(<EventsApp />);
     emit();
-    fireEvent.click(screen.getByRole("button", { name: /B Event/ }));
+    fireEvent.click(
+      screen.getByText("B Event").closest("button") as HTMLButtonElement,
+    );
     expect(
       postMessage.mock.calls
         .map(([m]) => m)

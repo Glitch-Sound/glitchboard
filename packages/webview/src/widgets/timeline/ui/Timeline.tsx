@@ -8,9 +8,13 @@ import type { Project } from "../../../../../shared/src/domain/index.js";
 import { DetailButton } from "../../../features/detail-button/index.js";
 import { nextProjectColor } from "../../../features/inline-add/index.js";
 
+import { TimelineFrame, type TimelineLayout } from "./TimelineFrame.js";
+
 type Period = "three-days" | "week" | "month";
 type Props = {
   projects: readonly Project[];
+  initialLayout?: Partial<TimelineLayout>;
+  onLayoutChange?: (layout: TimelineLayout) => void;
   days: readonly string[];
   today: string;
   period: Period;
@@ -18,7 +22,9 @@ type Props = {
   onSelect(eventId: string): void;
   settings?: WorkdaySettings;
   danger?: Record<string, EventDanger>;
-  onOpenDetail?: (kind: "project", id: string) => void;
+  onOpenDetail?: (kind: "project" | "event", id: string) => void;
+  onSelectProject?: (id: string) => void;
+  selectedProjectId?: string;
   requiredByDay?: Readonly<Record<string, number>>;
   pace?: number | null;
   learning?: boolean;
@@ -150,6 +156,8 @@ function RequiredPace({
 /** REQ-016/REQ-032: 期限表示と、保存結果に従うProjectの並べ替えを扱う。 */
 export function Timeline({
   projects,
+  initialLayout,
+  onLayoutChange,
   days,
   today,
   period,
@@ -158,6 +166,8 @@ export function Timeline({
   settings = defaultSettings,
   danger = {},
   onOpenDetail,
+  onSelectProject,
+  selectedProjectId,
   requiredByDay,
   pace,
   learning,
@@ -208,359 +218,377 @@ export function Timeline({
     setAddingProject(false);
     setProjectName("");
   };
-  const hasOverdue = projects.some((project) =>
-    project.events.some((event) => event.due < today),
-  );
-  const columns: (string | null)[] = hasOverdue ? [null, ...days] : [...days];
+  const columns = [...days];
   return (
-    <table
-      className={`timeline timeline-${period}`}
-      aria-label="期限タイムライン"
-      aria-busy={moving}
+    <TimelineFrame
+      initialLayout={initialLayout}
+      onLayoutChange={onLayoutChange}
     >
-      <colgroup>
-        <col className="project-col" />
-        {hasOverdue && <col className="overdue-col" />}
-        {days.map((day) => (
-          <col key={day} />
-        ))}
-      </colgroup>
-      <thead>
-        <tr className="timeline-row timeline-heading">
-          <th scope="col">
-            <span className="section-heading">
-              Project{" "}
-              {onAddProject && (
-                <button
-                  className="inline-add-trigger"
-                  type="button"
-                  aria-label="Projectを追加"
-                  aria-expanded={addingProject}
-                  onClick={() => {
-                    if (addingProject) {
-                      cancelProject();
-                      return;
-                    }
-                    setProjectColor(
-                      nextProjectColor(
-                        projects.map((project) => project.color),
-                      ),
-                    );
-                    setAddingProject(true);
-                  }}
-                >
-                  <span className="inline-add-plus" aria-hidden="true">
-                    +
-                  </span>
-                </button>
-              )}
-            </span>
-          </th>
-          {hasOverdue && (
-            <th scope="col" className="overdue-heading">
-              期限切れ
-            </th>
-          )}
+      <table
+        className={`timeline timeline-${period}`}
+        aria-label="期限タイムライン"
+        aria-busy={moving}
+      >
+        <colgroup>
+          <col className="project-col" />
           {days.map((day) => (
-            <th
-              scope="col"
-              key={day}
-              data-date={day}
-              className={`${dayTone(day, today, settings)} ${!learning && pace !== null && pace !== undefined && (requiredByDay?.[day] ?? 0) > pace ? "overlap-day" : ""}`}
-            >
-              <time dateTime={day}>
-                <span>{weekdays[new Date(`${day}T12:00:00`).getDay()]}</span>
-                <strong>
-                  {period === "month"
-                    ? String(Number(day.slice(8)))
-                    : day.slice(5).replace("-", "/")}
-                </strong>
-              </time>
-            </th>
+            <col key={day} />
           ))}
-        </tr>
-      </thead>
-      <tbody>
-        {projects.map((project, index) => (
-          <tr
-            className="timeline-row project-row"
-            key={project.id}
-            data-project-id={project.id}
-            data-dragging={dragging === project.id || undefined}
-            data-drop={
-              dropTarget?.id === project.id ? dropTarget.placement : undefined
-            }
-            onDragOver={(event) => {
-              if (
-                !draggedProject.current ||
-                draggedProject.current === project.id ||
-                moving
-              )
-                return;
-              event.preventDefault();
-              event.dataTransfer.dropEffect = "move";
-              setDropTarget({
-                id: project.id,
-                placement: dropPlacement(event),
-              });
-            }}
-            onDragLeave={(event) => {
-              if (
-                !event.currentTarget.contains(
-                  event.relatedTarget as Node | null,
+        </colgroup>
+        <thead>
+          <tr className="timeline-row timeline-heading">
+            <th scope="col">
+              <span className="section-heading">
+                Project{" "}
+                {onAddProject && (
+                  <button
+                    className="inline-add-trigger"
+                    type="button"
+                    aria-label="Projectを追加"
+                    aria-expanded={addingProject}
+                    onClick={() => {
+                      if (addingProject) {
+                        cancelProject();
+                        return;
+                      }
+                      setProjectColor(
+                        nextProjectColor(
+                          projects.map((project) => project.color),
+                        ),
+                      );
+                      setAddingProject(true);
+                    }}
+                  >
+                    <span className="inline-add-plus" aria-hidden="true">
+                      +
+                    </span>
+                  </button>
+                )}
+              </span>
+            </th>
+            {days.map((day) => (
+              <th
+                scope="col"
+                key={day}
+                data-date={day}
+                className={`${dayTone(day, today, settings)} ${!learning && pace !== null && pace !== undefined && (requiredByDay?.[day] ?? 0) > pace ? "overlap-day" : ""}`}
+              >
+                <time dateTime={day}>
+                  <span>{weekdays[new Date(`${day}T12:00:00`).getDay()]}</span>
+                  <strong>
+                    {period === "month"
+                      ? String(Number(day.slice(8)))
+                      : day.slice(5).replace("-", "/")}
+                  </strong>
+                </time>
+              </th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {projects.map((project, index) => (
+            <tr
+              className="timeline-row project-row"
+              key={project.id}
+              data-project-id={project.id}
+              onClick={(click) => {
+                if (!(click.target as HTMLElement).closest("button,input"))
+                  onSelectProject?.(project.id);
+              }}
+              data-dragging={dragging === project.id || undefined}
+              data-drop={
+                dropTarget?.id === project.id ? dropTarget.placement : undefined
+              }
+              onDragOver={(event) => {
+                if (
+                  !draggedProject.current ||
+                  draggedProject.current === project.id ||
+                  moving
                 )
-              )
-                setDropTarget(null);
-            }}
-            onDrop={(event) => {
-              const id = draggedProject.current;
-              if (!id) return;
-              event.preventDefault();
-              const placement = dropPlacement(event);
-              clearDrag();
-              void moveProject(id, project.id, placement);
-            }}
-          >
-            <th
-              scope="row"
-              style={{
-                borderInlineStartColor: project.events.some(
-                  (event) => event.id === selectedEventId,
+                  return;
+                event.preventDefault();
+                event.dataTransfer.dropEffect = "move";
+                setDropTarget({
+                  id: project.id,
+                  placement: dropPlacement(event),
+                });
+              }}
+              onDragLeave={(event) => {
+                if (
+                  !event.currentTarget.contains(
+                    event.relatedTarget as Node | null,
+                  )
                 )
-                  ? project.color
-                  : "transparent",
+                  setDropTarget(null);
+              }}
+              onDrop={(event) => {
+                const id = draggedProject.current;
+                if (!id) return;
+                event.preventDefault();
+                const placement = dropPlacement(event);
+                clearDrag();
+                void moveProject(id, project.id, placement);
               }}
             >
-              {onMoveProject && (
-                <button
-                  type="button"
-                  className="project-drag-handle"
-                  draggable={!moving}
-                  disabled={moving}
-                  aria-label={`${project.name}を並べ替え`}
-                  title="ドラッグで並べ替え（上下キーでも移動）"
-                  onDragStart={(event) => {
-                    draggedProject.current = project.id;
-                    setDragging(project.id);
-                    event.dataTransfer.effectAllowed = "move";
-                    event.dataTransfer.setData("text/plain", project.id);
-                    const row = event.currentTarget.closest("tr");
-                    if (row)
-                      event.dataTransfer.setDragImage(
-                        row,
-                        20,
-                        row.clientHeight / 2,
-                      );
-                  }}
-                  onDragEnd={clearDrag}
-                  onKeyDown={(event) => {
-                    const targetIndex =
-                      event.key === "ArrowUp"
-                        ? index - 1
-                        : event.key === "ArrowDown"
-                          ? index + 1
-                          : -1;
-                    if (event.key !== "ArrowUp" && event.key !== "ArrowDown")
-                      return;
-                    event.preventDefault();
-                    const target = projects[targetIndex];
-                    if (target)
-                      void moveProject(
-                        project.id,
-                        target.id,
-                        event.key === "ArrowUp" ? "before" : "after",
-                      );
-                  }}
-                >
-                  <span aria-hidden="true">⠿</span>
-                </button>
-              )}
-              <span className="project-name">
-                <i style={{ backgroundColor: project.color }} />
-                {onOpenDetail ? (
-                  <button
-                    type="button"
-                    className="item-name"
-                    onClick={() => onOpenDetail("project", project.id)}
-                  >
-                    {project.name}
-                  </button>
-                ) : (
-                  project.name
-                )}
-              </span>
-              <span className="project-actions">
-                {onOpenDetail && (
-                  <DetailButton
-                    name={project.name}
-                    note={project.note}
-                    icon="document"
-                    onOpen={() => onOpenDetail("project", project.id)}
-                  />
-                )}
-              </span>
-            </th>
-            {columns.map((day) => {
-              const events = project.events.filter((event) =>
-                day === null
-                  ? event.due < today
-                  : event.due === day && day >= today,
-              );
-              const key = `${project.id}:${day ?? "overdue"}`;
-              const selected = events.find(
-                (event) => event.id === selectedEventId,
-              );
-              const urgent = events.some((event) => {
-                const flag = danger[event.id];
-                return flag?.approaching || flag?.overdue || flag?.overflow;
-              });
-              const caution = events.some((event) => danger[event.id]?.caution);
-              return (
-                <td
-                  key={day ?? "overdue"}
-                  data-date={day ?? undefined}
-                  className={
-                    day === null
-                      ? "overdue-cell"
-                      : `${dayTone(day, today, settings)} ${!learning && pace !== null && pace !== undefined && (requiredByDay?.[day] ?? 0) > pace ? "overlap-day" : ""}`
-                  }
-                >
-                  {events.length > 0 && (
-                    <div className="marker-wrap">
-                      <button
-                        type="button"
-                        className={`event-marker ${urgent ? "danger" : caution ? "caution" : ""}`}
-                        style={{ color: project.color }}
-                        aria-label={
-                          events.length > 1
-                            ? `${events.length}件のEvent`
-                            : events[0]?.name
-                        }
-                        onClick={() =>
-                          events.length > 1
-                            ? setOpen(open === key ? null : key)
-                            : events[0] && onSelect(events[0].id)
-                        }
-                      >
-                        ◆{events.length > 1 && <sup>{events.length}</sup>}
-                      </button>
-                      {period === "month" ? (
-                        selected && (
-                          <span className="marker-label">{selected.name}</span>
-                        )
-                      ) : (
-                        <span className="marker-label">
-                          {events.map((event) => event.name).join("、")}
-                        </span>
-                      )}
-                      {open === key && (
-                        <div role="listbox" className="marker-list">
-                          {events.map((event) => (
-                            <button
-                              key={event.id}
-                              role="option"
-                              aria-selected={event.id === selectedEventId}
-                              type="button"
-                              onClick={() => {
-                                onSelect(event.id);
-                                setOpen(null);
-                              }}
-                            >
-                              {event.name}
-                            </button>
-                          ))}
-                        </div>
-                      )}
-                    </div>
-                  )}
-                </td>
-              );
-            })}
-          </tr>
-        ))}
-        {addingProject && onAddProject && (
-          <tr className="timeline-row timeline-project-add-row">
-            <td>
-              <form
-                className="timeline-project-add-form"
-                onKeyDown={(event) => {
-                  if (event.key === "Escape") {
-                    event.preventDefault();
-                    cancelProject();
-                  }
-                }}
-                onSubmit={async (event) => {
-                  event.preventDefault();
-                  if (savingProject || !projectName.trim()) return;
-                  setSavingProject(true);
-                  try {
-                    const saved = await onAddProject(
-                      projectName.trim(),
-                      projectColor,
-                    );
-                    if (saved) cancelProject();
-                  } finally {
-                    setSavingProject(false);
-                  }
+              <th
+                scope="row"
+                style={{
+                  borderInlineStartColor:
+                    selectedProjectId === project.id ||
+                    project.events.some((event) => event.id === selectedEventId)
+                      ? project.color
+                      : "transparent",
                 }}
               >
-                <label className="timeline-project-color">
-                  <span
-                    className="timeline-project-color-dot"
-                    style={{ backgroundColor: projectColor }}
-                    aria-hidden="true"
-                  />
-                  <input
-                    type="color"
-                    aria-label="色"
-                    value={projectColor}
-                    onChange={(event) => setProjectColor(event.target.value)}
-                  />
-                </label>
-                <input
-                  ref={projectNameInput}
-                  type="text"
-                  aria-label="名前"
-                  placeholder="プロジェクト名 — Enterで追加"
-                  value={projectName}
-                  onChange={(event) => setProjectName(event.target.value)}
-                />
-                {projectName.trim() && (
-                  <button type="submit" disabled={savingProject}>
-                    追加
+                {onMoveProject && (
+                  <button
+                    type="button"
+                    className="project-drag-handle"
+                    draggable={!moving}
+                    disabled={moving}
+                    aria-label={`${project.name}を並べ替え`}
+                    title="ドラッグで並べ替え（上下キーでも移動）"
+                    onDragStart={(event) => {
+                      draggedProject.current = project.id;
+                      setDragging(project.id);
+                      event.dataTransfer.effectAllowed = "move";
+                      event.dataTransfer.setData("text/plain", project.id);
+                      const row = event.currentTarget.closest("tr");
+                      if (row)
+                        event.dataTransfer.setDragImage(
+                          row,
+                          20,
+                          row.clientHeight / 2,
+                        );
+                    }}
+                    onDragEnd={clearDrag}
+                    onKeyDown={(event) => {
+                      const targetIndex =
+                        event.key === "ArrowUp"
+                          ? index - 1
+                          : event.key === "ArrowDown"
+                            ? index + 1
+                            : -1;
+                      if (event.key !== "ArrowUp" && event.key !== "ArrowDown")
+                        return;
+                      event.preventDefault();
+                      const target = projects[targetIndex];
+                      if (target)
+                        void moveProject(
+                          project.id,
+                          target.id,
+                          event.key === "ArrowUp" ? "before" : "after",
+                        );
+                    }}
+                  >
+                    <span aria-hidden="true">⠿</span>
                   </button>
                 )}
-              </form>
-            </td>
-            {hasOverdue && <td className="overdue-cell" />}
+                <span className="project-name">
+                  <i style={{ backgroundColor: project.color }} />
+                  {onOpenDetail ? (
+                    <button
+                      type="button"
+                      className="item-name"
+                      onClick={() => onSelectProject?.(project.id)}
+                    >
+                      {project.name}
+                    </button>
+                  ) : (
+                    project.name
+                  )}
+                </span>
+                <span className="project-actions">
+                  {onOpenDetail && (
+                    <DetailButton
+                      name={project.name}
+                      note={project.note}
+                      icon="document"
+                      onOpen={() => onOpenDetail("project", project.id)}
+                    />
+                  )}
+                </span>
+              </th>
+              {columns.map((day) => {
+                const events = project.events.filter(
+                  (event) => event.due === day && day >= today,
+                );
+                const key = `${project.id}:${day ?? "overdue"}`;
+                const selected = events.find(
+                  (event) => event.id === selectedEventId,
+                );
+                const urgent = events.some((event) => {
+                  const flag = danger[event.id];
+                  return flag?.approaching || flag?.overdue || flag?.overflow;
+                });
+                const caution = events.some(
+                  (event) => danger[event.id]?.caution,
+                );
+                return (
+                  <td
+                    key={day ?? "overdue"}
+                    data-date={day ?? undefined}
+                    className={
+                      day === null
+                        ? "overdue-cell"
+                        : `${dayTone(day, today, settings)} ${!learning && pace !== null && pace !== undefined && (requiredByDay?.[day] ?? 0) > pace ? "overlap-day" : ""}`
+                    }
+                  >
+                    {events.length > 0 && (
+                      <div className="marker-wrap">
+                        <button
+                          type="button"
+                          className={`event-marker ${urgent ? "danger" : caution ? "caution" : ""}`}
+                          style={{ color: project.color }}
+                          aria-label={
+                            events.length > 1
+                              ? `${events.length}件のEvent`
+                              : events[0]?.name
+                          }
+                          onClick={() =>
+                            events.length > 1
+                              ? setOpen(open === key ? null : key)
+                              : events[0] && onSelect(events[0].id)
+                          }
+                        >
+                          ◆{events.length > 1 && <sup>{events.length}</sup>}
+                        </button>
+                        {events.length === 1 && onOpenDetail && (
+                          <DetailButton
+                            name={events[0].name}
+                            note={events[0].note}
+                            icon="document"
+                            onOpen={() => onOpenDetail("event", events[0].id)}
+                          />
+                        )}
+                        {period === "month" ? (
+                          selected && (
+                            <span className="marker-label">
+                              {selected.name}
+                            </span>
+                          )
+                        ) : (
+                          <span className="marker-label">
+                            {events.map((event) => event.name).join("、")}
+                          </span>
+                        )}
+                        {open === key && (
+                          <div role="listbox" className="marker-list">
+                            {events.map((event) => (
+                              <div key={event.id}>
+                                <button
+                                  role="option"
+                                  aria-selected={event.id === selectedEventId}
+                                  type="button"
+                                  onClick={() => {
+                                    onSelect(event.id);
+                                    setOpen(null);
+                                  }}
+                                >
+                                  {event.name}
+                                </button>
+                                {onOpenDetail && (
+                                  <DetailButton
+                                    name={event.name}
+                                    note={event.note}
+                                    icon="document"
+                                    onOpen={() =>
+                                      onOpenDetail("event", event.id)
+                                    }
+                                  />
+                                )}
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  </td>
+                );
+              })}
+            </tr>
+          ))}
+          {addingProject && onAddProject && (
+            <tr className="timeline-row timeline-project-add-row">
+              <td>
+                <form
+                  className="timeline-project-add-form"
+                  onKeyDown={(event) => {
+                    if (event.key === "Escape") {
+                      event.preventDefault();
+                      cancelProject();
+                    }
+                  }}
+                  onSubmit={async (event) => {
+                    event.preventDefault();
+                    if (savingProject || !projectName.trim()) return;
+                    setSavingProject(true);
+                    try {
+                      const saved = await onAddProject(
+                        projectName.trim(),
+                        projectColor,
+                      );
+                      if (saved) cancelProject();
+                    } finally {
+                      setSavingProject(false);
+                    }
+                  }}
+                >
+                  <label className="timeline-project-color">
+                    <span
+                      className="timeline-project-color-dot"
+                      style={{ backgroundColor: projectColor }}
+                      aria-hidden="true"
+                    />
+                    <input
+                      type="color"
+                      aria-label="色"
+                      value={projectColor}
+                      onChange={(event) => setProjectColor(event.target.value)}
+                    />
+                  </label>
+                  <input
+                    ref={projectNameInput}
+                    type="text"
+                    aria-label="名前"
+                    placeholder="プロジェクト名 — Enterで追加"
+                    value={projectName}
+                    onChange={(event) => setProjectName(event.target.value)}
+                  />
+                  {projectName.trim() && (
+                    <button type="submit" disabled={savingProject}>
+                      追加
+                    </button>
+                  )}
+                </form>
+              </td>
+              {days.map((day) => (
+                <td key={day} className={dayTone(day, today, settings)} />
+              ))}
+            </tr>
+          )}
+          <tr className="timeline-row timeline-spacer">
+            <th />
             {days.map((day) => (
               <td key={day} className={dayTone(day, today, settings)} />
             ))}
           </tr>
-        )}
-        <tr className="timeline-row timeline-spacer">
-          <th />
-          {hasOverdue && <td className="overdue-cell" />}
-          {days.map((day) => (
-            <td key={day} className={dayTone(day, today, settings)} />
-          ))}
-        </tr>
-        <tr className="timeline-row pace-row">
-          <th scope="row">
-            <span>必要ペース</span>
-            {!learning && <small>実績 ┄</small>}
-          </th>
-          {hasOverdue && <td className="overdue-cell" />}
-          <td colSpan={days.length}>
-            <RequiredPace
-              days={days}
-              requiredByDay={requiredByDay}
-              pace={pace}
-              learning={learning}
-            />
-          </td>
-        </tr>
-      </tbody>
-    </table>
+          <tr className="timeline-row pace-row">
+            <th scope="row">
+              <span>必要ペース</span>
+              {!learning && <small>実績 ┄</small>}
+            </th>
+            <td colSpan={days.length}>
+              <RequiredPace
+                days={days}
+                requiredByDay={requiredByDay}
+                pace={pace}
+                learning={learning}
+              />
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </TimelineFrame>
   );
 }

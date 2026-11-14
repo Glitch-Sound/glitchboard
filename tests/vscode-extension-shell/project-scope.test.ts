@@ -53,6 +53,37 @@ it("REQ-005-S05 サイドバーの実ハンドラはProject参照を落とさず
     await host.receivers.events?.({
       type: "selectEvent",
       eventId,
+      projectFile: "A.yaml",
+    });
+    expect(
+      host.messages.board.filter((m) => m.type === "navigateRecord"),
+    ).toHaveLength(0);
+    await host.receivers.events?.({
+      type: "selectEvent",
+      eventId,
+      projectFile: "B.yaml",
+    });
+    // 移動はボードの編集保護を経てから確定する。
+    await host.receivers.board?.({ type: "ready" });
+    const navigation = [...host.messages.board]
+      .reverse()
+      .find((m) => m.type === "navigateRecord");
+    expect(
+      host.messages.board.filter((m) => m.type === "navigateRecord"),
+    ).toHaveLength(1);
+    expect(navigation).toEqual({
+      type: "navigateRecord",
+      payload: {
+        kind: "event",
+        id: eventId,
+        projectFile: "B.yaml",
+        openDetail: false,
+      },
+    });
+    expect(latest("board").selectedProjectFile).toBe("A.yaml");
+    await host.receivers.board?.({
+      type: "selectEvent",
+      eventId,
       projectFile: "B.yaml",
     });
     expect(latest("board")).toMatchObject({

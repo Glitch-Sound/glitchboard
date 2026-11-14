@@ -85,11 +85,12 @@ try {
       await expect(tasks.getByRole("textbox")).toHaveCount(0);
       // REQ-035-S01 / REQ-036-S01/S02/S03: 名前から詳細、取消、実保存失敗、補足、再編集。
       const taskName = tasks.getByRole("button", { name: "調査", exact: true });
-      await taskName.click();
+      await tasks.getByRole("button", {name:"調査の詳細",exact:true}).click();
       const detail = page.getByRole("dialog", { name: "詳細パネル", exact: true });
       await detail.getByRole("button", { name: "編集", exact: true }).click();
       await detail.getByLabel("名前", { exact: true }).fill("取り消す名前");
       await page.keyboard.press("Escape");
+      await page.getByRole("button",{name:"破棄して進む",exact:true}).click();
       await expect(detail).toBeVisible();
       await detail.getByRole("button", { name: "編集", exact: true }).click();
       await expect(detail.getByLabel("名前", { exact: true })).toHaveValue("調査");
@@ -111,7 +112,7 @@ try {
       await expect(detail).toBeVisible();
       await page.keyboard.press("Escape");
       await expect(detail).toHaveCount(0);
-      await expect(tasks.getByRole("button", { name: "調査完了へ", exact: true })).toBeFocused();
+      await expect(tasks.getByRole("button", { name: "調査完了への詳細", exact: true })).toBeFocused();
       // ポイント、完了、解除は詳細を開かずに保存する。
       const line = tasks.locator(".task-line").filter({ has: page.getByRole("button", { name: "調査完了へ", exact: true }) });
       await line.getByRole("button", { name: "未見積", exact: true }).click();
@@ -153,32 +154,34 @@ try {
       assert.ok((await readFile(path, "utf8")).includes("# 検証コメント"));
       assert.equal(requests.filter((request) => request.type === "addEventTask").length, 5); // 成功4件、失敗1件。
       await page.screenshot({ path: resolve(artifacts, `board-${theme}.png`) });
-      await tasks.getByRole("button", { name: "調査完了へ", exact: true }).click();
+      await tasks.getByRole("button", { name: "調査完了への詳細", exact: true }).click();
+      // REQ-026-S03: CSSまで含め、一覧と詳細のポイント配色が一致する。
+      const listPoint = tasks.getByRole("button",{name:"8pt",exact:true});
+      const detailPoint = detail.getByRole("button",{name:"8pt",exact:true});
+      const color = node => getComputedStyle(node).color;
+      assert.equal(await detailPoint.evaluate(color),await listPoint.evaluate(color));
+      await detailPoint.click();
+      await page.getByRole("button",{name:"13",exact:true}).click();
+      await expect(detail.getByRole("button",{name:"13pt",exact:true})).toBeVisible();
+      await detail.getByRole("button",{name:"13pt",exact:true}).click();
+      await page.getByRole("button",{name:"8",exact:true}).click();
+      await expect.poll(async()=> (await savedProject()).events[0].tasks[0].points).toBe(8);
       await page.screenshot({ path: resolve(artifacts, `detail-${theme}.png`) });
       await page.keyboard.press("Escape");
-      // REQ-037-S01: ボード共通フォームからEventを追加する。
-      await page.getByRole("button", { name: "Eventを追加", exact: true }).click();
-      await page.getByRole("textbox", { name: "名前", exact: true }).fill("ボードから追加");
-      await page.getByLabel("期限", { exact: true }).fill("2026-11-30");
-      await page.getByRole("button", { name: "追加", exact: true }).click();
-      await expect(page.getByRole("textbox", { name: "名前", exact: true })).toHaveCount(0);
-      saved = await savedProject();
-      assert.equal(saved.events.at(-1).name, "ボードから追加");
-      await expect(page.getByRole("region", { name: "Event詳細", exact: true }).getByRole("button", { name: "ボードから追加", exact: true })).toBeVisible();
-      // 現行モデルの直接TaskとStoryを含む子件数、取消、個別削除、Event削除。
-      session.selectEvent(eventId);
+      // REQ-037-S01: ボード上部には追加を置かず、左のEVENT一覧へ集める。
+      await expect(page.getByRole("button",{name:"Eventを追加",exact:true})).toHaveCount(0);
       const eventSummary = page.getByRole("region", { name: "Event詳細", exact: true });
-      await eventSummary.getByRole("button", { name: "小さなリリース", exact: true }).click();
+      await eventSummary.getByRole("button", { name: "小さなリリースの詳細", exact: true }).click();
       await detail.getByRole("button", { name: "削除", exact: true }).click();
       await expect(page.getByRole("dialog", { name: "削除確認", exact: true })).toContainText("ストーリー 1件、タスク 5件も削除されます。");
       await page.getByRole("button", { name: "キャンセル", exact: true }).click();
       assert.equal(requests.filter((request) => request.type === "deleteItem").length, 0);
       await page.keyboard.press("Escape");
-      await tasks.getByRole("button", { name: "実装", exact: true }).click();
+      await tasks.getByRole("button", { name: "実装の詳細", exact: true }).click();
       await detail.getByRole("button", { name: "削除", exact: true }).click();
       await page.getByRole("button", { name: "削除する", exact: true }).click();
       await expect(tasks.getByRole("button", { name: "実装", exact: true })).toHaveCount(0);
-      await eventSummary.getByRole("button", { name: "小さなリリース", exact: true }).click();
+      await eventSummary.getByRole("button", { name: "小さなリリースの詳細", exact: true }).click();
       await detail.getByRole("button", { name: "削除", exact: true }).click();
       await expect(page.getByRole("dialog", { name: "削除確認", exact: true })).toContainText("ストーリー 1件、タスク 4件も削除されます。");
       await page.getByRole("button", { name: "削除する", exact: true }).click();

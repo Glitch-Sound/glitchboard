@@ -35,7 +35,7 @@ export const storySchema = z.object({
   tasks: z.array(taskSchema),
 });
 
-export const eventTaskGroupName = "EventのTask";
+export const eventTaskGroupName = "Taks";
 
 export const eventSchema = z.object({
   ...common,

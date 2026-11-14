@@ -58,9 +58,9 @@ describe("正式仕様のWebview回帰", () => {
     vi.setSystemTime(new Date("2026-11-03T03:00:00Z"));
     render(createElement(EventsApp));
     emit({ type: "snapshot", payload: snapshot() });
-    expect(screen.getByRole("button", { name: /Launch/ }).className).toContain(
-      "danger-text",
-    );
+    expect(
+      screen.getByText("Launch").closest(".event-row")?.className,
+    ).toContain("danger-text");
     fireEvent.click(screen.getByRole("button", { name: "抽出条件" }));
     expect(screen.getByText("Beta")).toBeTruthy();
   });
