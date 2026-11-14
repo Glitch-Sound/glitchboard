@@ -1,8 +1,8 @@
 {
-  "vsix": "/tmp/glitchboard-readme-package.ZgAnvL/glitchboard-0.2.0.vsix",
+  "vsix": "/tmp/glitchboard-readme-note-0rmtfxuv/glitchboard-0.2.0.vsix",
   "files": 20,
-  "bytes": 529366,
-  "sha256": "06b330d1ba638cd0ad7e02559ec55df5fa1c350598a04be61115a80c963a691b",
+  "bytes": 529387,
+  "sha256": "f7a54b280e1388bb4c88b4406e19745da7157897890a489ca8712ff87ba3e172",
   "readmeMatches": true,
   "localAssets": [
     "media/readme/event-add.png",
@@ -15,5 +15,6 @@
   "sampleFiles": 4,
   "oldValidationArtifactsExcluded": true,
   "published": false,
-  "licenseWarning": "LICENSE ファイルは既存状態で存在しない。公開せずローカル検証用の作成を継続した。"
+  "licenseWarning": "LICENSE ファイルは既存状態で存在しない。公開せずローカル検証用の作成を継続した。",
+  "noteEditInstructionsMatch": true
 }

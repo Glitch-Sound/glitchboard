@@ -9,12 +9,13 @@
   "negativeChecks": 4,
   "builtFilesMatchVsix": [
     "extension/dist/extension.js",
-    "extension/dist/webview/style.css",
-    "extension/dist/webview/events.js",
+    "extension/dist/webview/assets/style-D-l9oYLj.js",
     "extension/dist/webview/board.js",
-    "extension/dist/webview/assets/style-D-l9oYLj.js"
+    "extension/dist/webview/events.js",
+    "extension/dist/webview/style.css"
   ],
   "manualProductChecksRemaining": 39,
   "uiSuitesRerun": false,
-  "reason": "文書と撮影用ツールの変更であり、製品の実装を変更していない"
+  "reason": "文書と撮影用ツールの変更であり、製品の実装を変更していない",
+  "noteEditInstructionsMatch": true
 }
