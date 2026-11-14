@@ -2,6 +2,10 @@ import { useEffect, useState } from "react";
 import { createRoot } from "react-dom/client";
 import { calculateDanger } from "../../../shared/src/calculation/danger.js";
 import { calculateActualPace } from "../../../shared/src/calculation/pace.js";
+import {
+  scopedEventSelection,
+  scopeProjects,
+} from "../../../shared/src/domain/identity.js";
 import { InlineAdd } from "../features/inline-add/index.js";
 import {
   EventFilters,
@@ -10,7 +14,11 @@ import {
 } from "../pages/event-list/index.js";
 import { localBridge } from "./bridge.js";
 import { ManageSetup } from "./ManageSetup.js";
-import { sendOperation, subscribeOperationResults } from "./operations.js";
+import {
+  postOperation,
+  sendOperation,
+  subscribeOperationResults,
+} from "./operations.js";
 import { type Snapshot, subscribeSnapshots } from "./snapshot.js";
 import { useToday } from "./useToday.js";
 import "./style.css";
@@ -43,7 +51,12 @@ export function EventsApp() {
     return () => window.removeEventListener("message", handler);
   }, []);
   useEffect(() => subscribeOperationResults(setOperationError), []);
-  const projects = snapshot?.projects ?? [];
+  const projects = scopeProjects(snapshot?.projects ?? []);
+  const selection = scopedEventSelection(
+    snapshot?.projects ?? [],
+    snapshot?.selectedEventId,
+    snapshot?.selectedProjectFile,
+  );
   const settings = snapshot?.settings ?? {
     workdays_off: ["sat", "sun"],
     public_holidays: true,
@@ -86,9 +99,7 @@ export function EventsApp() {
                 }))}
                 projectId={
                   projects.find((project) =>
-                    project.events.some(
-                      (event) => event.id === snapshot.selectedEventId,
-                    ),
+                    project.events.some((event) => event.id === selection),
                   )?.id ?? projects[0]?.id
                 }
                 onSubmit={({ name, due, projectId }) =>
@@ -103,12 +114,12 @@ export function EventsApp() {
             )}
             <EventFilters
               target={target}
-              projects={snapshot.projects}
+              projects={projects}
               projectEntries={snapshot.projectEntries}
               today={today}
               onTargetChange={setTarget}
               onProjectChange={(file, load) =>
-                localBridge()?.postMessage({
+                postOperation(localBridge(), {
                   type: "setProjectLoaded",
                   file,
                   load,
@@ -117,12 +128,12 @@ export function EventsApp() {
             />
           </div>
           <EventList
-            projects={snapshot.projects}
+            projects={projects}
             today={today}
             danger={danger.events}
             target={target}
             onSelect={(eventId) =>
-              localBridge()?.postMessage({ type: "selectEvent", eventId })
+              postOperation(localBridge(), { type: "selectEvent", eventId })
             }
           />
         </>

@@ -70,7 +70,8 @@
         "glitchboard.manageFile": {
           "type": "string",
           "default": "",
-          "description": "manage.yamlの絶対パス"
+          "description": "管理 YAML (.yaml / .yml) の絶対パス (ユーザー設定)",
+          "scope": "machine"
         }
       }
     }

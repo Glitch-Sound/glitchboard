@@ -10,6 +10,10 @@ import {
   descendantCounts,
   type ItemKind,
 } from "../../../shared/src/domain/deletion.js";
+import {
+  scopedEventSelection,
+  scopeProjects,
+} from "../../../shared/src/domain/identity.js";
 import type { Project } from "../../../shared/src/domain/index.js";
 import { InlineAdd } from "../features/inline-add/index.js";
 import { BoardSplit, displayDays, type Period } from "../pages/board/index.js";
@@ -23,6 +27,7 @@ import { WorkloadHeader } from "../widgets/workload/index.js";
 import { localBridge } from "./bridge.js";
 import { ManageSetup } from "./ManageSetup.js";
 import {
+  postOperation,
   postTaskPoints,
   sendOperation,
   subscribeOperationResults,
@@ -117,7 +122,7 @@ export function BoardApp() {
 
   const today = useToday();
   const days = displayDays(period, today);
-  const projects = snapshot?.projects ?? [];
+  const projects = scopeProjects(snapshot?.projects ?? []);
   const settings = snapshot?.settings ?? {
     workdays_off: ["sat", "sun"],
     public_holidays: true,
@@ -148,7 +153,12 @@ export function BoardApp() {
   const completedByDay = Object.fromEntries(
     actual.daily.map((item) => [item.date, item.points]),
   );
-  const selection = snapshot?.selectedEventId ?? selectedEventId;
+  const selection =
+    scopedEventSelection(
+      snapshot?.projects ?? [],
+      snapshot?.selectedEventId,
+      snapshot?.selectedProjectFile,
+    ) ?? selectedEventId;
   const selectedEvent = projects
     .flatMap((project) => project.events)
     .find((event) => event.id === selection);
@@ -166,7 +176,7 @@ export function BoardApp() {
     id: string,
     expected: DescendantCounts,
   ) =>
-    localBridge()?.postMessage({
+    postOperation(localBridge(), {
       type: "deleteItem",
       kind,
       id,
@@ -255,7 +265,10 @@ export function BoardApp() {
                 selectedEventId={selection ?? null}
                 onSelect={(eventId) => {
                   setSelectedEventId(eventId);
-                  localBridge()?.postMessage({ type: "selectEvent", eventId });
+                  postOperation(localBridge(), {
+                    type: "selectEvent",
+                    eventId,
+                  });
                 }}
                 settings={settings}
                 danger={danger.events}
@@ -307,7 +320,7 @@ export function BoardApp() {
                     if (bridge) postTaskPoints(bridge, taskId, points);
                   }}
                   onDoneChange={(taskId, done) =>
-                    localBridge()?.postMessage({
+                    postOperation(localBridge(), {
                       type: "setTaskDone",
                       taskId,
                       done,

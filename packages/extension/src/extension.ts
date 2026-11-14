@@ -37,7 +37,10 @@ export function activate(context: vscode.ExtensionContext): void {
           });
       });
       watcher = vscode.workspace.createFileSystemWatcher(
-        new vscode.RelativePattern(dirname(current.managePath), "**/*.yaml"),
+        new vscode.RelativePattern(
+          dirname(current.managePath),
+          "**/*.{yaml,yml}",
+        ),
       );
       const schedule = () => {
         if (session !== current) return;
@@ -102,9 +105,7 @@ export function activate(context: vscode.ExtensionContext): void {
         .update(
           "manageFile",
           selected.fsPath,
-          vscode.workspace.workspaceFolders?.length
-            ? vscode.ConfigurationTarget.Workspace
-            : vscode.ConfigurationTarget.Global,
+          vscode.ConfigurationTarget.Global,
         );
       if (session?.managePath === selected.fsPath) await session.reload();
       return { ok: true };
@@ -197,11 +198,8 @@ export function activate(context: vscode.ExtensionContext): void {
                 ) {
                   try {
                     await navigateToEvent(message.eventId, {
-                      selectEvent: (eventId) =>
-                        currentSession.handleOperation({
-                          type: "selectEvent",
-                          eventId,
-                        }),
+                      selectEvent: () =>
+                        currentSession.handleOperation(message),
                       openBoard: async () => {
                         await vscode.commands.executeCommand(
                           "glitchboard.open",

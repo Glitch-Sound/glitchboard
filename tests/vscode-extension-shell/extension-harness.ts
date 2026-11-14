@@ -5,6 +5,7 @@ type Receiver = (message: unknown) => Promise<void>;
 type Message = { type: string; payload?: unknown };
 const host = vi.hoisted(() => ({
   path: "",
+  workspacePath: "/workspace",
   config: null as
     | null
     | ((event: { affectsConfiguration(key: string): boolean }) => void),
@@ -17,10 +18,13 @@ const host = vi.hoisted(() => ({
     create?: () => void;
     delete?: () => void;
     disposed: boolean;
+    base: string;
+    pattern: string;
   }[],
   openDialog: vi.fn(),
   saveDialog: vi.fn(),
   update: vi.fn(),
+  executeCommand: vi.fn(),
 }));
 
 export function webview(surface: "board" | "events") {
@@ -54,16 +58,20 @@ export function vscodeMock() {
       }),
     },
     ViewColumn: { One: 1 },
-    ConfigurationTarget: { Workspace: 1, Global: 2 },
+    ConfigurationTarget: { Workspace: 2, Global: 1 },
     workspace: {
-      workspaceFolders: [{ uri: { fsPath: "/workspace" } }],
+      get workspaceFolders() {
+        return [{ uri: { fsPath: host.workspacePath } }];
+      },
       getConfiguration: () => ({ get: () => host.path, update: host.update }),
       onDidChangeConfiguration: (callback: typeof host.config) => {
         host.config = callback;
         return { dispose() {} };
       },
-      createFileSystemWatcher: () => {
+      createFileSystemWatcher: (pattern: { base: string; pattern: string }) => {
         const watcher = {
+          base: pattern.base,
+          pattern: pattern.pattern,
           disposed: false,
           change: undefined as undefined | (() => void),
           create: undefined as undefined | (() => void),
@@ -102,6 +110,7 @@ export function vscodeMock() {
       }),
     },
     commands: {
+      executeCommand: host.executeCommand,
       registerCommand: (_id: string, callback: () => void) => {
         host.openBoard = callback;
         return { dispose() {} };
@@ -119,6 +128,7 @@ export function latest(surface: "board" | "events") {
 
 export function resetHost() {
   host.path = "";
+  host.workspacePath = "/workspace";
   host.config = null;
   host.provider = null;
   host.openBoard = null;
@@ -129,6 +139,10 @@ export function resetHost() {
   host.openDialog.mockReset();
   host.saveDialog.mockReset();
   host.update.mockReset();
+  host.executeCommand.mockReset();
+  host.executeCommand.mockImplementation(async (id: string) => {
+    if (id === "glitchboard.open") host.openBoard?.();
+  });
   host.update.mockImplementation(async (_key: string, path: string) => {
     const changed = host.path !== path;
     host.path = path;

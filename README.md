@@ -98,3 +98,10 @@ UI 検証は一時データを作って使い、利用者の管理ファイル�
 - 正式仕様: [仕様一覧](openspec/specs/README.md)
 - 自動生成台帳: [traceability.md](openspec/traceability.md)
 - 調査、設計根拠、検証と残課題: [リプレース報告](docs/replacement-report.md)
+
+
+## 管理ファイルの接続
+
+初期設定の管理ファイルはユーザー設定へ保存し、別のワークスペースでも同じボードを利用する。\
+管理ファイルと Project ファイルは .yaml と .yml のどちらも外部変更を監視する。\
+非読込 Project のファイルが欠落している場合は、その項目を利用不可と表示し、他の正常な Project の表示を継続する。

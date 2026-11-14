@@ -1,0 +1,16 @@
+# 検証結果
+
+| 観点 | 結果 |
+| --- | --- |
+| 完全性 | 4/4タスク、1要件、7シナリオを確認した |
+| 正確性 | 全シナリオを自動テストへ対応づけ、追加境界は修正前の失敗を確認した |
+| 整合性 | D-01、tech.md の参照と接続、実装が一致する |
+
+根拠は tests/data-persistence/project-scope.test.ts、tests/board-timeline/project-scope.test.tsx、tests/vscode-extension-shell/project-scope.test.ts、tests/workload-analytics/project-scope.test.ts である。\
+検査を省略した項目と WARNING 以上の指摘はない。\
+全体の204テスト、lint、型検査、FSD、ビルド、正式仕様、トレースは成功した。\
+同期前の厳格変更検査と厳格トレースも成功した。\
+実ブラウザーの結果と実機確認の範囲は docs/replacement-report.md の 追加レビューの修正とレビュー修正後の最終結果を参照する。\
+実機13項目は利用者が最終操作する計画であり、自動検証済みとの主張には含めない。
+
+重大な指摘と警告はなく、アーカイブできる状態である。

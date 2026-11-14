@@ -2,6 +2,7 @@ import * as fs from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { ConfigurationTarget } from "vscode";
 import { activate } from "../../packages/extension/src/extension.js";
 import { host, latest, resetHost, webview } from "./extension-harness.js";
 
@@ -80,7 +81,11 @@ for (const surface of ["board", "events"] as const) {
         expect(await fs.readFile(path, "utf8")).toBe(
           "settings:\n  workdays_off: [sat, sun]\n  public_holidays: true\nprojects: []\n",
         );
-        expect(host.update).toHaveBeenCalledWith("manageFile", path, 1);
+        expect(host.update).toHaveBeenCalledWith(
+          "manageFile",
+          path,
+          ConfigurationTarget.Global,
+        );
       },
     );
     it.each(["chooseManage", "createManage"])(

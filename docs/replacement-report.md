@@ -95,7 +95,7 @@ VS Code API の transport だけを置き換え、保存は本物の処理を使
 ## 残課題と最終確認
 
 最終の VS Code 実機操作は依頼どおり利用者が行う。\
-[manual-checks.md](../openspec/manual-checks.md) に隔離起動と9項目の手順を残した。\
+[manual-checks.md](../openspec/manual-checks.md) に隔離起動と13項目の手順を残した。\
 新しい管理ファイルを作成して試す。\
 旧データの移行と互換性、Task の Story 間移動 UI は提供範囲に含めない。
 
@@ -104,13 +104,41 @@ VS Code API の transport だけを置き換え、保存は本物の処理を使
 GitHub push、リモート設定、Marketplace 公開は行わない。
 
 
-## 最終結果
+## 追加レビューの修正
 
-2026-11-14 に最終状態の全89ファイル、175テストが成功した。\
-lint、型検査、FSD、ビルド、全7 capability の厳格仕様、トレースと差分空白の検査が成功した。\
-今回の変更は8タスク、6要件、16シナリオを照合し、既知の未解決指摘はない。\
-両テーマの実保存、個別と Event 全体の削除、カレンダー12組合せ、初期設定8組合せ、layout の確認も成功した。
+初回の175テストによる確認後、独立レビューで Project をまたぐ UUID の衝突、設定の保存先、yml の監視漏れと非読込ファイルの欠落が指摘された。\
+追加の境界を先にテストし、誤対象更新19件、画面2件、設定と監視と欠落5件の失敗を確認してから修正した。
 
-[設計](../openspec/changes/archive/2026-11-14-native-event-tasks/design.md) と [検証記録](../openspec/changes/archive/2026-11-14-native-event-tasks/verification.md) を参照する。\
-正式仕様への同期とアーカイブを終え、未完了の change はない。\
-ユーザーの最終実機確認9件は手順書に残している。
+| 指摘 | 原因と修正 | 検証 |
+| --- | --- | --- |
+| 別 Project の同じ UUID を誤更新する | 全 Project から最初の UUID 一致を選んでいた。登録ファイル参照と項目 ID で一意に解決する | 実ファイル2件で編集、完了、追加、各階層の削除と並べ替えを確認し、対象外ファイルの全バイト列が同じであることを照合した |
+| 選択、詳細と計算でも UUID が衝突する | 画面のキーと選択、計算用キーへ同じ参照を含め、操作を送る前に保存済み UUID とファイル参照へ戻す | ボード、サイドバー、実 Extension ハンドラ、予測と危険の個別結果、再読込を確認した |
+| 設定がワークスペース内に限定される | 初期設定の保存先を Global とし、パス設定を machine スコープにした | 選択と作成の両方で別ワークスペースへ同じユーザー設定が引き継がれることを確認した |
+| yml の外部変更が反映されない | 監視を **/*.{yaml,yml} に統一した | 実際に登録したパターンと、両拡張子の管理ファイルと Project の変更、削除、復元を確認した |
+| 非読込ファイルが初回表示を妨げる | 概要の取得失敗を、ファイル名と利用不可の表示へ限定した | 有効な Project が表示され、管理ファイルを書き換えないことを確認した |
+
+UUID の一意性は正式仕様 REQ-005 のとおり同一 Project ファイル内とし、データを全体一意へ書き換えてはいない。\
+Project 自体の UUID もファイルをまたいで重複できる。\
+参照を省略した要求は対象が一意に決まる場合だけ処理し、曖昧、未登録、非読込、対象のない参照は書き込まず拒否する。\
+副作用の対象に限らず、React のキー、詳細、選択の維持、予測と危険にも同じ識別を使う。\
+参照の修飾を意図的に外した場合に、計算の回帰テストが失敗することも確認した。
+
+実ブラウザーと実セッション、一時 YAML を接続した追加検証では、Project、Event、Task の UUID を両ファイルで重複させた。\
+両テーマでサイドバーから2番目を選び、編集、完了と解除、並べ替え、再読込、Task と Project の削除を操作し、1番目のファイルが一切変わらないことを確認した。\
+[追加検証の結果](../artifacts/review/project-scope-results.json) を参照する。
+
+最終の VS Code 操作確認は [手順書](../openspec/manual-checks.md) に13項目を残した。\
+公開と push は行っていない。
+
+
+## レビュー修正後の最終結果
+
+最終状態で94ファイル、204テストが成功した。\
+lint、型検査、FSD、ビルド、全7 capability の厳格仕様とトレース、空白の検査も成功した。\
+通常操作と同一 UUID の実保存フローは両テーマで成功し、カレンダー12組合せ、初期設定8組合せ、layout の両テーマを再検証した。\
+UI の標準検証コマンド test:ui に、同一 UUID を使う実操作の回帰確認も追加した。
+
+[レビュー修正の検査ログ](../artifacts/review/check.log)、[結果 JSON](../artifacts/review/check-results.json) を参照する。\
+最終実機確認13件を利用者向けに残し、それ以外の未解決指摘はない。
+
+設計と検証は scope-project-items の [設計](../openspec/changes/archive/2026-11-14-scope-project-items/design.md)と[検証](../openspec/changes/archive/2026-11-14-scope-project-items/verification.md)、fix-manage-connection の [設計](../openspec/changes/archive/2026-11-14-fix-manage-connection/design.md)と[検証](../openspec/changes/archive/2026-11-14-fix-manage-connection/verification.md)へ記録し、正式仕様と同期してアーカイブした。

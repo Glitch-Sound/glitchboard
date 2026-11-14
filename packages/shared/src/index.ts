@@ -4,6 +4,7 @@ export * from "./calculation/load.js";
 export * from "./calculation/pace.js";
 export * from "./calculation/prediction.js";
 export * from "./calculation/required.js";
+export * from "./domain/identity.js";
 export * from "./domain/index.js";
 export * from "./domain/manage.js";
 export * from "./domain/messages.js";

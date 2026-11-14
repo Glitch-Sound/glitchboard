@@ -1,0 +1,46 @@
+{
+  "verifiedAt": "2026-11-14T01:09:10.859658+00:00",
+  "final": {
+    "testFiles": 94,
+    "tests": 204,
+    "lint": true,
+    "typecheck": true,
+    "fsd": true,
+    "build": true,
+    "strictSpecs": 7,
+    "traceCheck": true
+  },
+  "reviewChanges": [
+    {
+      "name": "scope-project-items",
+      "tasks": 4,
+      "requirements": 1,
+      "scenarios": 7,
+      "strictValidationBeforeSync": true,
+      "strictTraceBeforeSync": true,
+      "archived": "openspec/changes/archive/2026-11-14-scope-project-items"
+    },
+    {
+      "name": "fix-manage-connection",
+      "tasks": 4,
+      "requirements": 2,
+      "scenarios": 5,
+      "strictValidationBeforeSync": true,
+      "strictTraceBeforeSync": true,
+      "archived": "openspec/changes/archive/2026-11-14-fix-manage-connection"
+    }
+  ],
+  "browserResults": "project-scope-results.json",
+  "regressionsBeforeFix": {
+    "storage": 19,
+    "ui": 2,
+    "connection": 5
+  },
+  "calculationMutationDetected": true,
+  "calendarCombinations": 12,
+  "setupCombinations": 8,
+  "layoutThemes": 2,
+  "manualVsCodeChecksPending": 13,
+  "published": false,
+  "pushed": false
+}

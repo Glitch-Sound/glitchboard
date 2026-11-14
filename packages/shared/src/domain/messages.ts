@@ -7,8 +7,11 @@ export const snapshotMessageSchema = z.object({
   type: z.literal("snapshot"),
   payload: z.object({
     version: z.number().int().nonnegative(),
-    projects: z.array(projectSchema),
+    projects: z.array(
+      projectSchema.extend({ sourceFile: z.string().min(1).optional() }),
+    ),
     selectedEventId: z.uuid().nullable(),
+    selectedProjectFile: z.string().min(1).nullable().optional(),
     error: z.string().nullable(),
     manageAvailability: z
       .discriminatedUnion("status", [
@@ -37,6 +40,7 @@ export type Snapshot = z.infer<typeof snapshotMessageSchema>["payload"];
 export const operationSchema = z.discriminatedUnion("type", [
   z.object({
     type: z.literal("updateTask"),
+    projectFile: z.string().min(1).optional(),
     taskId: z.uuid(),
     points: z.union([
       z.literal(1),
@@ -51,11 +55,13 @@ export const operationSchema = z.discriminatedUnion("type", [
   }),
   z.object({
     type: z.literal("setTaskDone"),
+    projectFile: z.string().min(1).optional(),
     taskId: z.uuid(),
     done: z.boolean(),
   }),
   z.object({
     type: z.literal("deleteItem"),
+    projectFile: z.string().min(1).optional(),
     kind: z.enum(["project", "event", "story", "task"]),
     id: z.uuid(),
     version: z.number().int().nonnegative(),
@@ -67,6 +73,7 @@ export const operationSchema = z.discriminatedUnion("type", [
   }),
   z.object({
     type: z.literal("editItem"),
+    projectFile: z.string().min(1).optional(),
     kind: z.enum(["project", "event", "story", "task"]),
     id: z.uuid(),
     patch: z
@@ -95,7 +102,11 @@ export const operationSchema = z.discriminatedUnion("type", [
     file: z.string().min(1),
     load: z.boolean(),
   }),
-  z.object({ type: z.literal("selectEvent"), eventId: z.uuid() }),
+  z.object({
+    type: z.literal("selectEvent"),
+    projectFile: z.string().min(1).optional(),
+    eventId: z.uuid(),
+  }),
   z.object({
     type: z.literal("createProject"),
     name: z.string().trim().min(1),
@@ -104,28 +115,34 @@ export const operationSchema = z.discriminatedUnion("type", [
   z.object({
     // REQ-032-S04: UUIDと移動方向を共有境界で検証する。
     type: z.literal("moveProject"),
+    projectFile: z.string().min(1).optional(),
     projectId: z.uuid(),
     targetProjectId: z.uuid(),
+    targetProjectFile: z.string().min(1).optional(),
     placement: z.enum(["before", "after"]),
   }),
   z.object({
     type: z.literal("addEvent"),
+    projectFile: z.string().min(1).optional(),
     projectId: z.uuid(),
     name: z.string().trim().min(1),
     due: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
   }),
   z.object({
     type: z.literal("addStory"),
+    projectFile: z.string().min(1).optional(),
     eventId: z.uuid(),
     name: z.string().trim().min(1),
   }),
   z.object({
     type: z.literal("addEventTask"),
+    projectFile: z.string().min(1).optional(),
     eventId: z.uuid(),
     name: z.string().trim().min(1),
   }),
   z.object({
     type: z.literal("addTask"),
+    projectFile: z.string().min(1).optional(),
     storyId: z.uuid(),
     name: z.string().trim().min(1),
   }),

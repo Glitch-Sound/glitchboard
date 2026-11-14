@@ -1,0 +1,24 @@
+{
+  "verifiedAt": "2026-11-14T01:01:57.720Z",
+  "browser": "156.0.8078.4",
+  "results": [
+    {
+      "theme": "dark",
+      "passed": true,
+      "duplicateProjectEventTaskUuids": true,
+      "untouchedABytes": true,
+      "sidebarSelection": true,
+      "editDoneDeleteReorderReload": true,
+      "errors": []
+    },
+    {
+      "theme": "light",
+      "passed": true,
+      "duplicateProjectEventTaskUuids": true,
+      "untouchedABytes": true,
+      "sidebarSelection": true,
+      "editDoneDeleteReorderReload": true,
+      "errors": []
+    }
+  ]
+}

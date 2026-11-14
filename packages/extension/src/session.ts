@@ -4,7 +4,15 @@ import { todayInTokyo } from "../../shared/src/calculation/dates.js";
 import { calculateActualPace } from "../../shared/src/calculation/pace.js";
 import { pendingWork } from "../../shared/src/calculation/prediction.js";
 import { descendantCounts } from "../../shared/src/domain/deletion.js";
-import { eventTasks } from "../../shared/src/domain/index.js";
+import {
+  itemReference,
+  scopeProjects,
+} from "../../shared/src/domain/identity.js";
+import {
+  eventTasks,
+  type Project,
+  projectSchema,
+} from "../../shared/src/domain/index.js";
 import {
   operationSchema,
   type Snapshot,
@@ -27,6 +35,24 @@ import {
 } from "./storage/manage.js";
 import { updateTask } from "./storage/project.js";
 
+function projectIndex(
+  projects: readonly Project[],
+  files: readonly string[],
+  file: string | undefined,
+  matches: (project: Project) => boolean,
+): number {
+  const indices = projects.flatMap((project, index) =>
+    (!file || files[index] === file) && matches(project) ? [index] : [],
+  );
+  if (indices.length !== 1)
+    throw new Error(
+      indices.length
+        ? "対象が複数のProjectに存在するため、Projectファイルを指定する"
+        : "指定したProjectに対象が見つからない",
+    );
+  return indices[0];
+}
+
 export type BoardSnapshot = Snapshot;
 
 type Surface = "board" | "events";
@@ -38,6 +64,7 @@ export class BoardSession {
     version: 0,
     projects: [],
     selectedEventId: null,
+    selectedProjectFile: null,
     error: null,
     settings: { workdays_off: ["sat", "sun"], public_holidays: true },
     projectEntries: [],
@@ -59,8 +86,26 @@ export class BoardSession {
     return () => listeners.delete(listener);
   }
 
-  selectEvent(eventId: string | null): void {
-    this.publish({ ...this.state, selectedEventId: eventId });
+  selectEvent(eventId: string | null, projectFile?: string): void {
+    if (eventId === null) {
+      this.publish({
+        ...this.state,
+        selectedEventId: null,
+        selectedProjectFile: null,
+      });
+      return;
+    }
+    const index = projectIndex(
+      this.state.projects,
+      this.state.projects.map((project) => project.sourceFile ?? ""),
+      projectFile,
+      (project) => project.events.some((event) => event.id === eventId),
+    );
+    this.publish({
+      ...this.state,
+      selectedEventId: eventId,
+      selectedProjectFile: this.state.projects[index].sourceFile ?? null,
+    });
   }
 
   /** REQ-020: Projectの読込条件をmanage.yamlへ保存して再配信する。 */
@@ -89,12 +134,7 @@ export class BoardSession {
         return { ok: true };
       }
       if (operation.type === "selectEvent") {
-        const exists = this.state.projects.some((project) =>
-          project.events.some((event) => event.id === operation.eventId),
-        );
-        if (!exists)
-          throw new Error(`Eventが見つからない: ${operation.eventId}`);
-        this.selectEvent(operation.eventId);
+        this.selectEvent(operation.eventId, operation.projectFile);
         return { ok: true };
       }
       if (operation.type === "createProject") {
@@ -104,21 +144,27 @@ export class BoardSession {
       }
       const { manage, loadedProjects } = await loadManageFile(this.managePath);
       const loadedFiles = manage.projects.filter((entry) => entry.load);
+      const files = loadedFiles.map((entry) => entry.file);
       // REQ-032-S03/S04: 最新の読込対象でIDを解決し、保存後に両画面へ再配信する。
       if (operation.type === "moveProject") {
         const file =
-          loadedFiles[
-            loadedProjects.findIndex(
+          files[
+            projectIndex(
+              loadedProjects,
+              files,
+              operation.projectFile,
               (project) => project.id === operation.projectId,
             )
-          ]?.file;
+          ];
         const targetFile =
-          loadedFiles[
-            loadedProjects.findIndex(
+          files[
+            projectIndex(
+              loadedProjects,
+              files,
+              operation.targetProjectFile,
               (project) => project.id === operation.targetProjectId,
             )
-          ]?.file;
-        if (!file || !targetFile) throw new Error("並べ替え対象が見つからない");
+          ];
         await moveProject(
           this.managePath,
           file,
@@ -129,20 +175,12 @@ export class BoardSession {
         return { ok: true };
       }
       if (operation.type === "editItem") {
-        const index = loadedProjects.findIndex((project) =>
-          operation.kind === "project"
-            ? project.id === operation.id
-            : project.events.some((event) =>
-                operation.kind === "event"
-                  ? event.id === operation.id
-                  : (operation.kind === "task" &&
-                      event.tasks?.some((task) => task.id === operation.id)) ||
-                    event.stories.some((story) =>
-                      operation.kind === "story"
-                        ? story.id === operation.id
-                        : story.tasks.some((task) => task.id === operation.id),
-                    ),
-              ),
+        const index = projectIndex(
+          loadedProjects,
+          files,
+          operation.projectFile,
+          (project) =>
+            descendantCounts([project], operation.kind, operation.id) !== null,
         );
         const file = loadedFiles[index]?.file;
         if (!file) throw new Error(`編集対象が見つからない: ${operation.id}`);
@@ -159,11 +197,21 @@ export class BoardSession {
         if (operation.version !== this.state.version)
           throw new Error("表示内容が更新されたため、削除をやり直す");
         if (
-          JSON.stringify(loadedProjects) !== JSON.stringify(this.state.projects)
+          JSON.stringify(loadedProjects) !==
+          JSON.stringify(
+            this.state.projects.map((project) => projectSchema.parse(project)),
+          )
         )
           throw new Error("保存内容が更新されたため、削除をやり直す");
-        const current = descendantCounts(
+        const index = projectIndex(
           loadedProjects,
+          files,
+          operation.projectFile,
+          (project) =>
+            descendantCounts([project], operation.kind, operation.id) !== null,
+        );
+        const current = descendantCounts(
+          [loadedProjects[index]],
           operation.kind,
           operation.id,
         );
@@ -174,12 +222,6 @@ export class BoardSession {
           current.tasks !== operation.expected.tasks
         )
           throw new Error("削除対象の内容が変わったため、削除をやり直す");
-        const index = loadedProjects.findIndex((project) =>
-          operation.kind === "project"
-            ? project.id === operation.id
-            : descendantCounts([project], operation.kind, operation.id) !==
-              null,
-        );
         const file = loadedFiles[index]?.file;
         if (!file) throw new Error(`削除対象が見つからない: ${operation.id}`);
         const path = resolve(dirname(this.managePath), file);
@@ -195,21 +237,32 @@ export class BoardSession {
         operation.type === "addEventTask" ||
         operation.type === "addTask"
       ) {
-        const index = loadedProjects.findIndex((project) =>
-          operation.type === "addEvent"
-            ? project.id === operation.projectId
-            : operation.type === "addStory" || operation.type === "addEventTask"
-              ? project.events.some((event) => event.id === operation.eventId)
-              : project.events.some((event) =>
-                  event.stories.some((story) => story.id === operation.storyId),
-                ),
+        const index = projectIndex(
+          loadedProjects,
+          files,
+          operation.projectFile,
+          (project) =>
+            operation.type === "addEvent"
+              ? project.id === operation.projectId
+              : operation.type === "addStory" ||
+                  operation.type === "addEventTask"
+                ? project.events.some((event) => event.id === operation.eventId)
+                : project.events.some((event) =>
+                    event.stories.some(
+                      (story) => story.id === operation.storyId,
+                    ),
+                  ),
         );
         const file = loadedFiles[index]?.file;
         if (!file) throw new Error("追加先が見つからない");
         const path = resolve(dirname(this.managePath), file);
         if (operation.type === "addEvent") {
           const event = await addEvent(path, operation.name, operation.due);
-          this.state = { ...this.state, selectedEventId: event.id };
+          this.state = {
+            ...this.state,
+            selectedEventId: event.id,
+            selectedProjectFile: file,
+          };
         } else if (operation.type === "addStory")
           await addStory(path, operation.eventId, operation.name);
         else if (operation.type === "addEventTask")
@@ -218,10 +271,14 @@ export class BoardSession {
         await this.reload();
         return { ok: true };
       }
-      const index = loadedProjects.findIndex((project) =>
-        project.events.some((event) =>
-          eventTasks(event).some((task) => task.id === operation.taskId),
-        ),
+      const index = projectIndex(
+        loadedProjects,
+        files,
+        operation.projectFile,
+        (project) =>
+          project.events.some((event) =>
+            eventTasks(event).some((task) => task.id === operation.taskId),
+          ),
       );
       const file = loadedFiles[index]?.file;
       if (!file) throw new Error(`Taskが見つからない: ${operation.taskId}`);
@@ -249,19 +306,25 @@ export class BoardSession {
   async reload(): Promise<void> {
     try {
       const { manage, loadedProjects } = await loadManageFile(this.managePath);
-      const selected = loadedProjects.some((project) =>
-        project.events.some((event) => event.id === this.state.selectedEventId),
-      )
-        ? this.state.selectedEventId
-        : null;
-      const today = todayInTokyo();
-      const actual = calculateActualPace(
-        loadedProjects,
-        today,
-        manage.settings,
+      const files = manage.projects
+        .filter((entry) => entry.load)
+        .map((entry) => entry.file);
+      const snapshotProjects = loadedProjects.map((project, index) => ({
+        ...project,
+        sourceFile: files[index],
+      }));
+      const scoped = scopeProjects(snapshotProjects);
+      const selectedIndex = loadedProjects.findIndex(
+        (project, index) =>
+          files[index] === this.state.selectedProjectFile &&
+          project.events.some(
+            (event) => event.id === this.state.selectedEventId,
+          ),
       );
+      const today = todayInTokyo();
+      const actual = calculateActualPace(scoped, today, manage.settings);
       const danger = calculateDanger(
-        loadedProjects,
+        scoped,
         today,
         today,
         today,
@@ -269,12 +332,12 @@ export class BoardSession {
         actual.pace,
         actual.learning,
       ).events;
-      const work = pendingWork(loadedProjects);
+      const work = pendingWork(scoped);
       const firstDanger = work.find((item) => {
         const flag = danger[item.eventId];
         return flag?.approaching || flag?.overdue || flag?.overflow;
       });
-      const firstEvent = loadedProjects
+      const firstEvent = scoped
         .flatMap((project) =>
           project.events.map((event) => ({
             projectId: project.id,
@@ -288,15 +351,22 @@ export class BoardSession {
             a.projectId.localeCompare(b.projectId) ||
             a.eventId.localeCompare(b.eventId),
         )[0];
+      const fallback =
+        firstDanger?.eventId ?? work[0]?.eventId ?? firstEvent?.eventId;
+      const selection =
+        selectedIndex >= 0
+          ? {
+              id: this.state.selectedEventId,
+              projectFile: files[selectedIndex],
+            }
+          : fallback
+            ? itemReference(fallback)
+            : { id: null, projectFile: null };
       this.publish({
         version: this.state.version + 1,
-        projects: loadedProjects,
-        selectedEventId:
-          selected ??
-          firstDanger?.eventId ??
-          work[0]?.eventId ??
-          firstEvent?.eventId ??
-          null,
+        projects: snapshotProjects,
+        selectedEventId: selection.id,
+        selectedProjectFile: selection.projectFile ?? null,
         error: null,
         manageAvailability: { status: "ready" },
         settings: manage.settings,
@@ -312,7 +382,9 @@ export class BoardSession {
               ...entry,
               ...(entry.load
                 ? { name: loaded?.name ?? entry.file, color: loaded?.color }
-                : await readProjectSummary(this.managePath, entry.file)),
+                : await readProjectSummary(this.managePath, entry.file).catch(
+                    () => ({ name: `${entry.file} (利用不可)` }),
+                  )),
             };
           }),
         ),

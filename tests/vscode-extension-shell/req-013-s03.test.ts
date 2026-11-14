@@ -47,7 +47,7 @@ vi.mock("vscode", () => {
       file: uri,
     },
     ViewColumn: { One: 1 },
-    ConfigurationTarget: { Workspace: 1, Global: 2 },
+    ConfigurationTarget: { Workspace: 2, Global: 1 },
     workspace: {
       workspaceFolders: [{ uri: uri("/workspace") }],
       getConfiguration: () => ({

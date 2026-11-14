@@ -98,3 +98,12 @@ isDefault と自動 Story は使用しない。\
 純粋計算と永続化は Vitest、操作の流れは React Testing Library、実ビルドは Playwright で確認する。\
 `npm run check` は `check:product` の lint、型検査、FSD 検査、全テスト、ビルドの後に、仕様とトレースを検査して台帳を生成する。\
 フックの実行内容も `npm run check` に統一する。
+
+
+## 参照と接続
+
+UUID の一意性は同一 Project ファイル内とする。\
+操作対象は管理ファイルに登録された Project のファイル参照と項目 ID で特定し、曖昧な省略要求は拒否する。\
+画面と計算の ID はその参照を含む表示用のキーへ投影し、保存された UUID は変更しない。\
+管理ファイルはユーザー設定に保存し、yaml と yml を同じ監視対象とする。\
+非読込 Project の概要が取れない場合はファイル名と利用不可の表示を使い、他の正常な Project は配信する。
