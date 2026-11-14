@@ -57,6 +57,16 @@ for (const [name, App] of [
     it("REQ-029-S01/REQ-029-S09 未設定時に二つのbuttonを操作できる", () => {
       render(createElement(App));
       emit({ type: "unconfigured" });
+      if (name === "board") {
+        expect(
+          screen.queryByRole("region", { name: "manage.yamlの設定" }),
+        ).toBeNull();
+        expect(screen.getByRole("status").textContent).toContain(
+          "左の EVENT 一覧",
+        );
+        expect(postMessage.mock.calls.map(([m]) => m.type)).toEqual(["ready"]);
+        return;
+      }
       const choose = screen.getByRole("button", { name: "manage.yamlを選ぶ" });
       const create = screen.getByRole("button", { name: "新しく作る" });
       expect(choose.tagName).toBe("BUTTON");
@@ -84,7 +94,10 @@ for (const [name, App] of [
         },
       });
       expect(screen.getByText("/data/long-path/manage.yaml")).toBeTruthy();
-      expect(screen.getByRole("button", { name: "新しく作る" })).toBeTruthy();
+      if (name === "events")
+        expect(screen.getByRole("button", { name: "新しく作る" })).toBeTruthy();
+      else
+        expect(screen.queryByRole("button", { name: "新しく作る" })).toBeNull();
       expect(screen.getAllByText(/Launch/).length).toBeGreaterThan(0);
       emit({
         type: "snapshot",
@@ -109,23 +122,30 @@ for (const [name, App] of [
           },
         },
       });
-      expect(
-        screen.getByRole("button", { name: "manage.yamlを選ぶ" }),
-      ).toBeTruthy();
+      if (name === "events")
+        expect(
+          screen.getByRole("button", { name: "manage.yamlを選ぶ" }),
+        ).toBeTruthy();
+      else
+        expect(
+          screen.queryByRole("button", { name: "manage.yamlを選ぶ" }),
+        ).toBeNull();
       expect(screen.queryByText("読み込み中")).toBeNull();
     });
     it("REQ-029-S07/REQ-029-S04 失敗後も再操作でき、復帰時に操作エラーが消える", () => {
       render(createElement(App));
       emit({ type: "unconfigured" });
-      fireEvent.click(screen.getByRole("button", { name: "新しく作る" }));
+      if (name === "events")
+        fireEvent.click(screen.getByRole("button", { name: "新しく作る" }));
       emit({
         type: "operationResult",
         payload: { ok: false, error: "書込不可" },
       });
       expect(screen.getByRole("alert").textContent).toBe("書込不可");
-      fireEvent.click(
-        screen.getByRole("button", { name: "manage.yamlを選ぶ" }),
-      );
+      if (name === "events")
+        fireEvent.click(
+          screen.getByRole("button", { name: "manage.yamlを選ぶ" }),
+        );
       emit({ type: "snapshot", payload });
       expect(screen.queryByRole("alert")).toBeNull();
       expect(screen.queryByRole("button", { name: "新しく作る" })).toBeNull();

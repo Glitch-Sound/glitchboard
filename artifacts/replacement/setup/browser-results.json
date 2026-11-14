@@ -1,19 +1,21 @@
 {
-  "verifiedAt": "2026-11-14T03:05:40.495Z",
+  "verifiedAt": "2026-11-14T04:12:11.846Z",
   "results": [
     {
-      "scenario": "REQ-029-S01/REQ-029-S02/REQ-029-S09",
+      "scenario": "REQ-029-S12",
       "theme": "dark",
       "surface": "board",
       "mode": "unset",
-      "passed": true
+      "passed": true,
+      "setupButtons": 0
     },
     {
-      "scenario": "REQ-029-S01/REQ-029-S02/REQ-029-S09",
+      "scenario": "REQ-029-S12",
       "theme": "dark",
       "surface": "board",
       "mode": "missing",
-      "passed": true
+      "passed": true,
+      "setupButtons": 0
     },
     {
       "scenario": "REQ-029-S01/REQ-029-S02/REQ-029-S09",
@@ -30,18 +32,20 @@
       "passed": true
     },
     {
-      "scenario": "REQ-029-S01/REQ-029-S02/REQ-029-S09",
+      "scenario": "REQ-029-S12",
       "theme": "light",
       "surface": "board",
       "mode": "unset",
-      "passed": true
+      "passed": true,
+      "setupButtons": 0
     },
     {
-      "scenario": "REQ-029-S01/REQ-029-S02/REQ-029-S09",
+      "scenario": "REQ-029-S12",
       "theme": "light",
       "surface": "board",
       "mode": "missing",
-      "passed": true
+      "passed": true,
+      "setupButtons": 0
     },
     {
       "scenario": "REQ-029-S01/REQ-029-S02/REQ-029-S09",

@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { resolve } from "node:path";
-import { chromium } from "@playwright/test";
+import { chromium, expect } from "@playwright/test";
 
 const artifacts = resolve(process.env.GLITCHBOARD_VERIFICATION_ARTIFACTS ?? "artifacts/replacement/setup");
 await mkdir(artifacts, { recursive: true });
@@ -29,13 +29,24 @@ try {
     await page.goto("http://manage.test/");
     const choose = page.getByRole("button", { name: "manage.yamlを選ぶ", exact: true });
     const create = page.getByRole("button", { name: "新しく作る", exact: true });
-    await choose.waitFor();
+    if(surface === "events") await choose.waitFor();
+    else await page.getByRole("status",{name:"管理ファイルの接続状態",exact:true}).waitFor();
     for (const mode of ["unset", "missing"]) {
       if (mode === "missing") await page.evaluate(() => window.dispatchEvent(new MessageEvent("message", { data: { type: "snapshot", payload: {
         version: 1, projects: [], selectedEventId: null, error: null,
         settings: { workdays_off: ["sat", "sun"], public_holidays: true }, projectEntries: [],
         manageAvailability: { status: "missing", path: `/data/${"long-directory/".repeat(8)}manage.yaml` },
       } } })));
+      if(surface === "board") {
+        await expect(choose).toHaveCount(0);await expect(create).toHaveCount(0);
+        await expect(page.getByRole("region",{name:"manage.yamlの設定",exact:true})).toHaveCount(0);
+        await expect(page.getByRole("status",{name:"管理ファイルの接続状態",exact:true})).toContainText("左の EVENT 一覧");
+        assert.equal(await page.evaluate(()=>window.requests.some(item=>["createManage","chooseManage"].includes(item.type))),false);
+        assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth <= innerWidth),true);
+        await page.screenshot({path:`${artifacts}/${surface}-${theme}-${mode}.png`});
+        results.push({scenario:"REQ-029-S12",theme,surface,mode,passed:true,setupButtons:0});
+        continue;
+      }
       await choose.waitFor();
       await page.screenshot({ path: `${artifacts}/${surface}-${theme}-${mode}.png` });
       for (const button of [choose, create]) {

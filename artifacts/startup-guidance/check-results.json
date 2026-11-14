@@ -1,0 +1,54 @@
+{
+  "verifiedAt": "2026-11-14T04:26:36.154893+00:00",
+  "final": {
+    "testFiles": 99,
+    "tests": 250,
+    "lint": true,
+    "typecheck": true,
+    "fsd": true,
+    "build": true,
+    "strictSpecs": 7,
+    "traceCheck": true,
+    "whitespaceCheck": true
+  },
+  "change": {
+    "name": "gate-board-startup",
+    "tasks": 4,
+    "requirements": 2,
+    "scenarios": 16,
+    "strictValidationBeforeSync": true,
+    "strictTraceBeforeSync": true,
+    "archived": "openspec/changes/archive/2026-11-14-gate-board-startup"
+  },
+  "regressions": {
+    "newTests": 18,
+    "oldImplementationFailed": 15,
+    "oldImplementationPassed": 3,
+    "freshDeleteAndRestoreBeforeWatcher": true,
+    "settingChangeDuringInitialLoad": true,
+    "singlePanelAcrossRepeatedOpen": true,
+    "selectionCreationAndRestart": true,
+    "existingMainTaskAndDetailDraftsPreserved": true
+  },
+  "realBrowser": {
+    "themes": [
+      "dark",
+      "light"
+    ],
+    "setupCombinations": 8,
+    "setupButtonsOnlyInSidebar": true,
+    "existingMainMissingAndUnsetDraftsPreserved": true,
+    "missingSaveRejectedWithoutProjectWrites": true,
+    "restorationPreservesDraft": true,
+    "normalPersistenceAndProjectScopeRegression": true
+  },
+  "evidence": {
+    "setup": "../replacement/setup/browser-results.json",
+    "persistence": "../replacement/browser-results.json",
+    "scope": "../review/project-scope-results.json"
+  },
+  "manualVsCodeChecksPending": 20,
+  "pushed": false,
+  "published": false,
+  "readmeScreenshotsAdded": false
+}

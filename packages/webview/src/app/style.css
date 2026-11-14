@@ -2135,3 +2135,13 @@ main {
   outline: 1px solid var(--vscode-focusBorder);
   outline-offset: -2px;
 }
+
+.manage-connection-state {
+  margin: 0;
+  color: var(--vscode-descriptionForeground);
+  overflow-wrap: anywhere;
+}
+.manage-connection-state :where(span) {
+  display: block;
+  font-size: 12px;
+}

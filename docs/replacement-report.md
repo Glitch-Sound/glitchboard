@@ -1,5 +1,7 @@
 # リプレース報告
 
+最新の起動と設定案内の集約は [起動改善報告](startup-guidance-report.md) を参照する。
+
 最新の追加下書きの保護は [修正報告](inline-draft-fix-report.md) を参照する。
 
 最新の実機確認後の追加改善は [操作改善報告](interaction-refinement-report.md) に記録する。\

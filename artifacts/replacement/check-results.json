@@ -1,10 +1,10 @@
 {
-  "verifiedAt": "2026-11-14T03:37:36.712271+00:00",
+  "verifiedAt": "2026-11-14T04:26:36.154893+00:00",
   "dataModel": "Project > Event > Task; optional Event > Story > Task",
   "legacyMigrationAndCompatibility": "out of scope by user instruction",
   "final": {
-    "testFiles": 98,
-    "tests": 233,
+    "testFiles": 99,
+    "tests": 250,
     "lint": true,
     "typecheck": true,
     "fsd": true,
@@ -26,7 +26,7 @@
   "calendarCombinations": 12,
   "setupCombinations": 8,
   "layoutThemes": 2,
-  "manualVsCodeChecksPending": 18,
+  "manualVsCodeChecksPending": 20,
   "published": false,
   "pushed": false,
   "reviewChanges": [
@@ -67,5 +67,14 @@
     "strictValidationBeforeSync": true,
     "strictTraceBeforeSync": true,
     "archived": "openspec/changes/archive/2026-11-14-protect-inline-draft-targets"
+  },
+  "startupChange": {
+    "name": "gate-board-startup",
+    "tasks": 4,
+    "requirements": 2,
+    "scenarios": 16,
+    "strictValidationBeforeSync": true,
+    "strictTraceBeforeSync": true,
+    "archived": "openspec/changes/archive/2026-11-14-gate-board-startup"
   }
 }

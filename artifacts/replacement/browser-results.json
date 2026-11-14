@@ -1,5 +1,5 @@
 {
-  "verifiedAt": "2026-11-14T03:32:38.583Z",
+  "verifiedAt": "2026-11-14T04:12:16.078Z",
   "browser": "156.0.8078.4",
   "results": [
     {
@@ -7,9 +7,11 @@
       "passed": true,
       "realYamlPersistence": true,
       "realWriteFailureRecovery": true,
-      "addEventTaskRequests": 5,
+      "addEventTaskRequests": 6,
       "groupedTasksPreserved": true,
       "inlineDraftProtection": true,
+      "singleSetupGuidance": true,
+      "missingAndUnsetPreserveDraft": true,
       "pageErrors": []
     },
     {
@@ -17,9 +19,11 @@
       "passed": true,
       "realYamlPersistence": true,
       "realWriteFailureRecovery": true,
-      "addEventTaskRequests": 5,
+      "addEventTaskRequests": 6,
       "groupedTasksPreserved": true,
       "inlineDraftProtection": true,
+      "singleSetupGuidance": true,
+      "missingAndUnsetPreserveDraft": true,
       "pageErrors": []
     }
   ]

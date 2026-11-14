@@ -27,6 +27,26 @@ export function activate(context: vscode.ExtensionContext): void {
   };
   let watcher: vscode.FileSystemWatcher | undefined;
   let timer: ReturnType<typeof setTimeout> | undefined;
+  let configurationReady: Promise<void> = Promise.resolve();
+  const canOpenBoard = () =>
+    session?.snapshot().manageAvailability?.status === "ready";
+  const waitForConfiguration = async () => {
+    let pending: Promise<void>;
+    do {
+      pending = configurationReady;
+      await pending;
+    } while (pending !== configurationReady);
+  };
+  const prepareBoard = async () => {
+    for (;;) {
+      await waitForConfiguration();
+      const current = session;
+      if (!current) return;
+      // 監視の遅延中も、起動直前の削除と復元を現在の読込結果で判定する。
+      await current.reload();
+      if (current === session) return;
+    }
+  };
   const configure = async () => {
     watcher?.dispose();
     if (timer) clearTimeout(timer);
@@ -72,11 +92,15 @@ export function activate(context: vscode.ExtensionContext): void {
       void sidebar?.webview.postMessage({ type: "unconfigured" });
     }
   };
-  void configure();
+  const reconnect = () => {
+    configurationReady = configure();
+    return configurationReady;
+  };
+  void reconnect();
   context.subscriptions.push(
     vscode.workspace.onDidChangeConfiguration((event) => {
       if (event.affectsConfiguration("glitchboard.manageFile"))
-        void configure();
+        void reconnect();
     }),
   );
   context.subscriptions.push({
@@ -121,7 +145,9 @@ export function activate(context: vscode.ExtensionContext): void {
           selected.fsPath,
           vscode.ConfigurationTarget.Global,
         );
-      if (session?.managePath === selected.fsPath) await session.reload();
+      await reconnect();
+      if (canOpenBoard())
+        await vscode.commands.executeCommand("glitchboard.open");
       return { ok: true };
     } catch (error) {
       return {
@@ -148,14 +174,16 @@ export function activate(context: vscode.ExtensionContext): void {
         vscode.window.registerWebviewViewProvider(id, {
           resolveWebviewView(view) {
             sidebar = view;
-            const showBoard = () => {
-              if (view.visible)
-                void vscode.commands.executeCommand("glitchboard.open");
+            const showBoard = async () => {
+              if (sidebar === view && view.visible !== false)
+                await vscode.commands.executeCommand("glitchboard.open");
             };
-            const visibility = view.onDidChangeVisibility?.(showBoard);
+            const visibility = view.onDidChangeVisibility?.(() => {
+              void showBoard();
+            });
             if (visibility) context.subscriptions.push(visibility);
-            // 解決時はユーザーがサイドバーを開いたため、メイン画面も開く。
-            void vscode.commands.executeCommand("glitchboard.open");
+            // 初回の不在判定を待ち、未設定時の案内は左だけに集める。
+            void showBoard();
             view.webview.options = {
               enableScripts: true,
               localResourceRoots: [context.extensionUri],
@@ -263,9 +291,16 @@ export function activate(context: vscode.ExtensionContext): void {
     registerCommand: (id, callback) => {
       context.subscriptions.push(vscode.commands.registerCommand(id, callback));
     },
-    openEditor: () => {
+    openEditor: async () => {
+      await prepareBoard();
+      if (!canOpenBoard()) {
+        if (sidebar?.show) sidebar.show(false);
+        else await vscode.commands.executeCommand("glitchboard.events.focus");
+        return;
+      }
       if (board) {
         board.reveal();
+        sidebar?.show?.(true);
         return;
       }
       boardReady = false;
@@ -348,7 +383,8 @@ export function activate(context: vscode.ExtensionContext): void {
         board = undefined;
         boardReady = false;
       });
-      sidebar?.show?.(true);
+      if (sidebar?.show) sidebar.show(true);
+      else await vscode.commands.executeCommand("glitchboard.events.focus");
     },
   });
 }

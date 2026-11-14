@@ -11,6 +11,7 @@ import { parse } from "../packages/extension/node_modules/yaml/dist/index.js";
 // 実ビルドのUIと実BoardSessionを接続する。VS Code APIとWebview transportだけを置き換える。
 const artifacts = resolve("artifacts/replacement");
 await mkdir(artifacts, { recursive: true });
+await mkdir(resolve(artifacts,"setup"),{recursive:true});
 const runtime = await mkdtemp(resolve(tmpdir(), "glitchboard-replacement-runtime-"));
 await build({ configFile: false, logLevel: "error", ssr: { noExternal: true }, build: { ssr: resolve("packages/extension/src/session.ts"), outDir: runtime, rollupOptions: { output: { entryFileNames: "session.mjs" } } } });
 const { BoardSession } = await import(pathToFileURL(resolve(runtime, "session.mjs")).href);
@@ -185,13 +186,33 @@ try {
       // 再読込後も追加、名前、ポイント、補足が一致する。
       await page.reload();
       await expect(tasks.getByRole("button", { name: "調査完了へ", exact: true })).toBeVisible();
+      // REQ-029-S03/S11/S12: 既存メインの下書きは欠落と設定解除でも保持し、設定案内を重ねない。
+      await tasks.getByRole("button",{name:"Taskを追加",exact:true}).click();
+      await tasks.getByRole("textbox").fill("起動状態下書き");
+      const managePath=resolve(dataRoot,"manage.yaml"), manageBytes=await readFile(managePath,"utf8");
+      const projectBeforeMissing=await readFile(path,"utf8");
+      await rm(managePath);await session.reload();
+      await expect(tasks.getByRole("textbox")).toHaveValue("起動状態下書き");
+      await expect(page.getByRole("region",{name:"manage.yamlの設定",exact:true})).toHaveCount(0);
+      await expect(page.getByRole("status",{name:"管理ファイルの接続状態",exact:true})).toContainText("左の EVENT 一覧");
+      await tasks.getByRole("textbox").press("Enter");
+      await expect(page.getByRole("alert")).toContainText(/manage.yaml|ENOENT/);
+      await expect(tasks.getByRole("textbox")).toHaveValue("起動状態下書き");
+      assert.equal(await readFile(path,"utf8"),projectBeforeMissing);
+      await page.screenshot({path:resolve(artifacts,"setup",`existing-main-${theme}.png`)});
+      await writeFile(managePath,manageBytes);await session.reload();
+      await dispatch({type:"unconfigured"});
+      await expect(tasks.getByRole("textbox")).toHaveValue("起動状態下書き");
+      await expect(page.getByRole("button",{name:"manage.yamlを選ぶ",exact:true})).toHaveCount(0);
+      await session.reload();await expect(tasks.getByRole("textbox")).toHaveValue("起動状態下書き");
+      await tasks.getByRole("textbox").press("Escape");
       saved = await savedProject();
       const direct = saved.events[0];
       assert.equal(direct.tasks.length, 4);
       assert.deepEqual(direct.tasks[0], { id: direct.tasks[0].id, name: "調査完了へ", points: 8, note: "メモ\n- 確認事項" });
       assert.deepEqual(saved.events[1].stories, [grouped]);
       assert.ok((await readFile(path, "utf8")).includes("# 検証コメント"));
-      assert.equal(requests.filter((request) => request.type === "addEventTask").length, 5); // 成功4件、失敗1件。
+      assert.equal(requests.filter((request) => request.type === "addEventTask").length, 6); // 成功4件、失敗2件(EACCESと管理ファイル不在)。
       await page.screenshot({ path: resolve(artifacts, `board-${theme}.png`) });
       await tasks.getByRole("button", { name: "調査完了への詳細", exact: true }).click();
       // REQ-026-S03: CSSまで含め、一覧と詳細のポイント配色が一致する。
@@ -226,7 +247,7 @@ try {
       await page.getByRole("button", { name: "削除する", exact: true }).click();
       await expect.poll(async () => (await savedProject()).events.some((event) => event.id === eventId)).toBe(false);
       assert.deepEqual(errors, []);
-      results.push({ theme, passed: true, realYamlPersistence: true, realWriteFailureRecovery: true, addEventTaskRequests: 5, groupedTasksPreserved: true, inlineDraftProtection: true, pageErrors: errors });
+      results.push({ theme, passed: true, realYamlPersistence: true, realWriteFailureRecovery: true, addEventTaskRequests: 6, groupedTasksPreserved: true, inlineDraftProtection: true, singleSetupGuidance:true, missingAndUnsetPreserveDraft:true, pageErrors: errors });
       console.log(`${theme}: repeated operations, cancellation, persistence and recovery passed`);
     } finally {
       unsubscribe(); ready = false;

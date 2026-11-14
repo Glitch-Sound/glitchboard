@@ -47,20 +47,23 @@ function start() {
 }
 
 describe("REQ-029 管理ファイルの状態", () => {
-  it("REQ-029-S02 起動時の不在を両画面と後から開く画面へ配信する", async () => {
+  it("REQ-029-S02 起動時の不在を左へ配信し、後から開いてもメインを作らない", async () => {
     start();
     await vi.waitFor(() =>
       expect(latest("events")).toMatchObject({
         manageAvailability: { status: "missing", path },
       }),
     );
-    expect(latest("board")).toEqual(latest("events"));
-    await host.receivers.board?.({ type: "ready" });
-    expect(latest("board")).toMatchObject({
+    await host.openBoard?.();
+    expect(host.createPanel).not.toHaveBeenCalled();
+    expect(host.messages.board).toEqual([]);
+    await host.receivers.events?.({ type: "ready" });
+    const before = latest("events");
+    expect(before).toMatchObject({
       manageAvailability: { status: "missing", path },
     });
     host.provider?.resolveWebviewView({ webview: webview("events") });
-    expect(latest("events")).toEqual(latest("board"));
+    expect(latest("events")).toEqual(before);
     expect(host.update).not.toHaveBeenCalled();
   });
   it("REQ-029-S02 設定変更後の不在と旧監視の通知抑止", async () => {

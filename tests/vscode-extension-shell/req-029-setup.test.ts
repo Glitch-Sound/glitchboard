@@ -28,12 +28,22 @@ beforeEach(async () => {
   root = await fs.mkdtemp(join(tmpdir(), "gb-setup-"));
   disposables = [];
   host.path = join(root, "missing.yaml");
+  await fs.writeFile(host.path, valid);
   activate({
     extensionUri: { fsPath: root },
     subscriptions: disposables,
   } as never);
   host.provider?.resolveWebviewView({ webview: webview("events"), show() {} });
-  host.openBoard?.();
+  await host.openBoard?.();
+  await vi.waitFor(() =>
+    expect(latest("board").manageAvailability?.status).toBe("ready"),
+  );
+  await fs.unlink(host.path);
+  host.watchers
+    .filter((w) => !w.disposed)
+    .forEach((w) => {
+      w.delete?.();
+    });
   await vi.waitFor(() =>
     expect(latest("board")).toMatchObject({
       manageAvailability: { status: "missing" },

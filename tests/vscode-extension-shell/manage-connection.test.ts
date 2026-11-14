@@ -71,7 +71,7 @@ describe("管理ファイルの接続", () => {
         host.openDialog.mockResolvedValueOnce([{ fsPath: path }]);
       } else host.saveDialog.mockResolvedValueOnce({ fsPath: path });
       start();
-      await host.receivers.board?.({ type });
+      await host.receivers.events?.({ type });
       expect(host.update).toHaveBeenCalledWith(
         "manageFile",
         path,

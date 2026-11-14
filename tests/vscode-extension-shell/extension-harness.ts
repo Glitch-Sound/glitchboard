@@ -10,7 +10,7 @@ const host = vi.hoisted(() => ({
     | null
     | ((event: { affectsConfiguration(key: string): boolean }) => void),
   provider: null as null | { resolveWebviewView(view: unknown): void },
-  openBoard: null as null | (() => void),
+  openBoard: null as null | (() => void | Promise<void>),
   receivers: {} as Record<string, Receiver>,
   messages: { board: [] as Message[], events: [] as Message[] },
   watchers: [] as {
@@ -25,6 +25,7 @@ const host = vi.hoisted(() => ({
   saveDialog: vi.fn(),
   update: vi.fn(),
   executeCommand: vi.fn(),
+  closePanel: null as null | (() => void),
   createPanel: vi.fn(),
   revealPanel: vi.fn(),
 }));
@@ -110,13 +111,15 @@ export function vscodeMock() {
         return {
           webview: webview("board"),
           reveal: host.revealPanel,
-          onDidDispose() {},
+          onDidDispose(callback: () => void) {
+            host.closePanel = callback;
+          },
         };
       },
     },
     commands: {
       executeCommand: host.executeCommand,
-      registerCommand: (_id: string, callback: () => void) => {
+      registerCommand: (_id: string, callback: () => void | Promise<void>) => {
         host.openBoard = callback;
         return { dispose() {} };
       },
@@ -145,10 +148,11 @@ export function resetHost() {
   host.saveDialog.mockReset();
   host.update.mockReset();
   host.executeCommand.mockReset();
+  host.closePanel = null;
   host.createPanel.mockReset();
   host.revealPanel.mockReset();
   host.executeCommand.mockImplementation(async (id: string) => {
-    if (id === "glitchboard.open") host.openBoard?.();
+    if (id === "glitchboard.open") await host.openBoard?.();
   });
   host.update.mockImplementation(async (_key: string, path: string) => {
     const changed = host.path !== path;

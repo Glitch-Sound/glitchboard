@@ -30,7 +30,6 @@ import {
 import { Timeline } from "../widgets/timeline/index.js";
 import { WorkloadHeader } from "../widgets/workload/index.js";
 import { localBridge } from "./bridge.js";
-import { ManageSetup } from "./ManageSetup.js";
 import {
   postOperation,
   postTaskPoints,
@@ -121,6 +120,7 @@ export function BoardApp() {
   const detailPanel = useRef<DetailPanelHandle>(null);
   const eventDetails = useRef<EventDetailsHandle>(null);
   const snapshotSelection = useRef<string | null>(null);
+  const visibleSnapshot = useRef<Snapshot | null>(null);
   const [record, setRecord] = useState<{
     kind: ItemKind;
     id: string;
@@ -128,7 +128,19 @@ export function BoardApp() {
   } | null>(null);
   useEffect(
     () =>
-      subscribeSnapshots((next) => {
+      subscribeSnapshots((incoming) => {
+        const previous = visibleSnapshot.current;
+        if (incoming.version === 0 && previous) return;
+        const next =
+          incoming.manageAvailability?.status === "missing" && previous
+            ? {
+                ...previous,
+                version: incoming.version,
+                error: incoming.error,
+                manageAvailability: incoming.manageAvailability,
+              }
+            : incoming;
+        visibleSnapshot.current = next;
         setSnapshot(next);
         const nextSelection = scopedEventSelection(
           next.projects,
@@ -150,7 +162,6 @@ export function BoardApp() {
     const handler = (event: MessageEvent) => {
       if (event.data?.type === "unconfigured") {
         setUnconfigured(true);
-        setSnapshot(null);
       }
     };
     window.addEventListener("message", handler);
@@ -323,21 +334,28 @@ export function BoardApp() {
     });
 
   const missingPath =
-    snapshot?.manageAvailability?.status === "missing"
+    !unconfigured && snapshot?.manageAvailability?.status === "missing"
       ? snapshot.manageAvailability.path
       : undefined;
-  const setupOnly = unconfigured || (!!missingPath && projects.length === 0);
+  const unavailable = unconfigured || Boolean(missingPath);
+  const setupOnly = unavailable && projects.length === 0;
   return (
     <main className="board-page">
-      {(operationError ?? snapshot?.error) && (
+      {(operationError ?? (!unconfigured && snapshot?.error)) && (
         <p role="alert">{operationError ?? snapshot?.error}</p>
       )}
-      {!setupOnly && missingPath && <ManageSetup missingPath={missingPath} />}
+      {unavailable && (
+        <p
+          role="status"
+          aria-label="管理ファイルの接続状態"
+          className="manage-connection-state"
+        >
+          管理ファイルは左の EVENT 一覧で設定できます。
+          {missingPath && <span>{missingPath}</span>}
+        </p>
+      )}
       {setupOnly ? (
-        <>
-          <h1>GlitchBoard</h1>
-          <ManageSetup missingPath={missingPath} />
-        </>
+        <h1>GlitchBoard</h1>
       ) : (
         <>
           <header className="board-header">
