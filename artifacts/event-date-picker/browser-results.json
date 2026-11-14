@@ -1,0 +1,89 @@
+{
+  "date": "2026-11-11",
+  "results": [
+    {
+      "timezoneId": "Asia/Tokyo",
+      "theme": "dark",
+      "surface": "events",
+      "passed": true,
+      "selectedDate": "2026-11-23"
+    },
+    {
+      "timezoneId": "Asia/Tokyo",
+      "theme": "dark",
+      "surface": "fixture",
+      "passed": true,
+      "selectedDate": "2026-11-23"
+    },
+    {
+      "timezoneId": "Asia/Tokyo",
+      "theme": "dark",
+      "surface": "board",
+      "passed": true,
+      "selectedDate": "2026-11-23"
+    },
+    {
+      "timezoneId": "Asia/Tokyo",
+      "theme": "light",
+      "surface": "events",
+      "passed": true,
+      "selectedDate": "2026-11-23"
+    },
+    {
+      "timezoneId": "Asia/Tokyo",
+      "theme": "light",
+      "surface": "fixture",
+      "passed": true,
+      "selectedDate": "2026-11-23"
+    },
+    {
+      "timezoneId": "Asia/Tokyo",
+      "theme": "light",
+      "surface": "board",
+      "passed": true,
+      "selectedDate": "2026-11-23"
+    },
+    {
+      "timezoneId": "America/Los_Angeles",
+      "theme": "dark",
+      "surface": "events",
+      "passed": true,
+      "selectedDate": "2026-11-23"
+    },
+    {
+      "timezoneId": "America/Los_Angeles",
+      "theme": "dark",
+      "surface": "fixture",
+      "passed": true,
+      "selectedDate": "2026-11-23"
+    },
+    {
+      "timezoneId": "America/Los_Angeles",
+      "theme": "dark",
+      "surface": "board",
+      "passed": true,
+      "selectedDate": "2026-11-23"
+    },
+    {
+      "timezoneId": "America/Los_Angeles",
+      "theme": "light",
+      "surface": "events",
+      "passed": true,
+      "selectedDate": "2026-11-23"
+    },
+    {
+      "timezoneId": "America/Los_Angeles",
+      "theme": "light",
+      "surface": "fixture",
+      "passed": true,
+      "selectedDate": "2026-11-23"
+    },
+    {
+      "timezoneId": "America/Los_Angeles",
+      "theme": "light",
+      "surface": "board",
+      "passed": true,
+      "selectedDate": "2026-11-23"
+    }
+  ]
+}

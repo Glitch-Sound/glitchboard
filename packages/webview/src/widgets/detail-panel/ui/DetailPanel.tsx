@@ -1,0 +1,360 @@
+import { useCallback, useEffect, useRef, useState } from "react";
+import type { DescendantCounts } from "../../../../../shared/src/domain/deletion.js";
+import type {
+  Event,
+  Project,
+  Story,
+  Task,
+} from "../../../../../shared/src/domain/index.js";
+import {
+  effectiveTaskPoints,
+  eventPoints,
+  eventSchema,
+  storyPoints,
+} from "../../../../../shared/src/domain/index.js";
+import type { Operation } from "../../../../../shared/src/domain/messages.js";
+import { DeleteDialog } from "../../../features/delete-item/index.js";
+import { DatePicker } from "../../../shared/ui/date-picker/index.js";
+
+export type DetailSelection =
+  | { kind: "project"; item: Project; hierarchy: string[] }
+  | { kind: "event"; item: Event; hierarchy: string[] }
+  | { kind: "story"; item: Story; hierarchy: string[]; parentDue?: string }
+  | { kind: "task"; item: Task; hierarchy: string[]; parentDue?: string };
+
+type EditPatch = Extract<Operation, { type: "editItem" }>["patch"];
+type Props = {
+  selection: DetailSelection;
+  onClose(): void;
+  onSave?: (
+    kind: DetailSelection["kind"],
+    id: string,
+    patch: EditPatch,
+  ) => undefined | boolean | Promise<boolean>;
+  onDelete?: () => void;
+  deleteCounts?: DescendantCounts;
+};
+
+function metrics(selection: DetailSelection): [string, string, string] {
+  switch (selection.kind) {
+    case "project":
+      return [
+        `Event ${selection.item.events.length}件`,
+        `Story ${selection.item.events.reduce((n, event) => n + event.stories.length, 0)}件`,
+        `Task ${selection.item.events.reduce((n, event) => n + event.stories.reduce((m, story) => m + story.tasks.length, 0), 0)}件`,
+      ];
+    case "event": {
+      const points = eventPoints(selection.item);
+      return [
+        `期限 ${selection.item.due}`,
+        `残り ${points.total - points.done}pt`,
+        `完了 ${points.done}pt`,
+      ];
+    }
+    case "story": {
+      const points = storyPoints(selection.item);
+      return [
+        `Task ${selection.item.tasks.length}件`,
+        `残り ${points.total - points.done}pt`,
+        `完了 ${points.done}pt`,
+      ];
+    }
+    case "task":
+      return [
+        `ポイント ${effectiveTaskPoints(selection.item)}pt`,
+        selection.item.doneAt
+          ? `状態 完了 ${selection.item.doneAt}`
+          : "状態 未完了",
+        `期限 ${selection.parentDue ?? "なし"}`,
+      ];
+  }
+}
+
+/** REQ-026/REQ-027/REQ-028: 全階層に共通する詳細、編集、補足。 */
+export function DetailPanel({
+  selection,
+  onClose,
+  onSave,
+  onDelete,
+  deleteCounts,
+}: Props) {
+  const [editing, setEditing] = useState(false);
+  const [editingNote, setEditingNote] = useState(false);
+  const [confirmDelete, setConfirmDelete] = useState(false);
+  const [name, setName] = useState(selection.item.name);
+  const [due, setDue] = useState(
+    selection.kind === "event" ? selection.item.due : "",
+  );
+  const [calendarOpen, setCalendarOpen] = useState(false);
+  const [dueError, setDueError] = useState<string>();
+  const [note, setNote] = useState(selection.item.note ?? "");
+  const [saving, setSaving] = useState(false);
+  const [saveError, setSaveError] = useState<string>();
+  const generation = useRef(0);
+  const panel = useRef<HTMLElement>(null);
+  const pointValues = [1, 2, 3, 5, 8, 13, 21] as const;
+  useEffect(() => {
+    const origin = document.activeElement;
+    panel.current?.querySelector<HTMLButtonElement>(".detail-close")?.focus();
+    return () => {
+      if (origin instanceof HTMLElement && origin.isConnected) origin.focus();
+    };
+  }, []);
+  const cancelEditing = useCallback(() => {
+    generation.current++;
+    setEditing(false);
+    setEditingNote(false);
+    setCalendarOpen(false);
+    setDueError(undefined);
+    setSaveError(undefined);
+  }, []);
+  const beginEditing = (target: "name" | "note") => {
+    cancelEditing();
+    setName(selection.item.name);
+    setDue(selection.kind === "event" ? selection.item.due : "");
+    setNote(selection.item.note ?? "");
+    if (target === "name") setEditing(true);
+    else setEditingNote(true);
+  };
+  const save = async (patch: EditPatch) => {
+    if (saving) return;
+    const current = generation.current;
+    setSaving(true);
+    setSaveError(undefined);
+    try {
+      const result = await onSave?.(selection.kind, selection.item.id, patch);
+      if (current !== generation.current) return;
+      if (result === false)
+        setSaveError("保存に失敗しました。入力を残しています。");
+      else cancelEditing();
+    } catch (error) {
+      if (current === generation.current)
+        setSaveError(error instanceof Error ? error.message : String(error));
+    } finally {
+      setSaving(false);
+    }
+  };
+  useEffect(() => {
+    const close = (event: KeyboardEvent) => {
+      if (event.key !== "Escape" || event.defaultPrevented) return;
+      event.preventDefault();
+      if (confirmDelete) setConfirmDelete(false);
+      else if (editing || editingNote) cancelEditing();
+      else onClose();
+    };
+    window.addEventListener("keydown", close);
+    return () => window.removeEventListener("keydown", close);
+  }, [onClose, confirmDelete, editing, editingNote, cancelEditing]);
+  return (
+    <aside
+      ref={panel}
+      className="detail-panel"
+      role="dialog"
+      aria-label="詳細パネル"
+      aria-modal="false"
+    >
+      <header>
+        <div className="detail-header-content">
+          <small className={`detail-kind detail-kind-${selection.kind}`}>
+            {selection.kind.toUpperCase()}
+          </small>
+          <p className="detail-hierarchy">{selection.hierarchy.join(" / ")}</p>
+          <h2 className="detail-title">{selection.item.name}</h2>
+        </div>
+        <button
+          className="detail-close"
+          type="button"
+          aria-label="詳細を閉じる"
+          onClick={onClose}
+        >
+          ×
+        </button>
+      </header>
+      <div className="detail-metrics">
+        {metrics(selection).map((metric) => {
+          const [label, ...value] = metric.split(" ");
+          return (
+            <span key={metric}>
+              <small>{label}</small>
+              <strong>{value.join(" ")}</strong>
+            </span>
+          );
+        })}
+      </div>
+      {editing && (
+        <form
+          aria-busy={saving}
+          onSubmit={(event) => {
+            event.preventDefault();
+            if (!name.trim()) return;
+            // REQ-027-S03: 追加欄と同じ日付検証を保存前に行う。
+            if (
+              selection.kind === "event" &&
+              !eventSchema.shape.due.safeParse(due).success
+            ) {
+              setDueError(
+                due
+                  ? "YYYY-MM-DDで実在する日付を入力してください。"
+                  : "期限を選んでください。",
+              );
+              if (!due) setCalendarOpen(true);
+              return;
+            }
+            void save(
+              selection.kind === "event"
+                ? { name: name.trim(), due }
+                : { name: name.trim() },
+            );
+          }}
+        >
+          <label>
+            名前{" "}
+            <input
+              value={name}
+              onChange={(event) => setName(event.target.value)}
+              required
+              disabled={saving}
+            />
+          </label>
+          {selection.kind === "event" && (
+            <DatePicker
+              value={due}
+              onChange={(value) => {
+                setDue(value);
+                setDueError(undefined);
+              }}
+              open={calendarOpen}
+              onOpenChange={setCalendarOpen}
+              error={dueError}
+            />
+          )}
+          <button type="submit" disabled={saving}>
+            {saving ? "保存中…" : "保存"}
+          </button>
+          <button type="button" onClick={cancelEditing}>
+            取消
+          </button>
+        </form>
+      )}
+      {selection.kind === "project" && (
+        <label>
+          色{" "}
+          <input
+            type="color"
+            value={selection.item.color}
+            onChange={(event) =>
+              onSave?.("project", selection.item.id, {
+                color: event.target.value,
+              })
+            }
+          />
+        </label>
+      )}
+      {selection.kind === "task" && (
+        <div className="detail-points">
+          <label htmlFor="detail-point-range">
+            ポイント{" "}
+            <strong>
+              {selection.item.points === undefined
+                ? "未見積"
+                : `${selection.item.points}pt`}
+            </strong>
+          </label>
+          <input
+            id="detail-point-range"
+            type="range"
+            min="0"
+            max={pointValues.length - 1}
+            step="1"
+            value={Math.max(0, pointValues.indexOf(selection.item.points ?? 3))}
+            onChange={(event) =>
+              onSave?.("task", selection.item.id, {
+                points: pointValues[Number(event.target.value)] ?? 3,
+              })
+            }
+          />
+          <button
+            type="button"
+            onClick={() =>
+              onSave?.("task", selection.item.id, { points: null })
+            }
+          >
+            未見積に戻す
+          </button>
+        </div>
+      )}
+      <section>
+        <h3>補足</h3>
+        {selection.item.note ? (
+          <p className="detail-note">{selection.item.note}</p>
+        ) : (
+          <button type="button" onClick={() => beginEditing("note")}>
+            + 補足を追加
+          </button>
+        )}
+        {selection.item.note && (
+          <button type="button" onClick={() => beginEditing("note")}>
+            補足を編集
+          </button>
+        )}
+      </section>
+      {editingNote && (
+        <form
+          className="detail-note-form"
+          aria-busy={saving}
+          onSubmit={(event) => {
+            event.preventDefault();
+            void save({ note });
+          }}
+        >
+          <label>
+            補足{" "}
+            <textarea
+              value={note}
+              disabled={saving}
+              onChange={(event) => setNote(event.target.value)}
+            />
+          </label>
+          <button type="submit" disabled={saving}>
+            {saving ? "保存中…" : "補足を保存"}
+          </button>
+          <button type="button" onClick={cancelEditing}>
+            取消
+          </button>
+        </form>
+      )}
+      {saveError && <p role="alert">{saveError}</p>}
+      <footer className="detail-actions">
+        <button
+          className="detail-action"
+          type="button"
+          onClick={() => beginEditing("name")}
+        >
+          編集
+        </button>
+        {onDelete && (
+          <button
+            className="detail-action detail-delete-action"
+            type="button"
+            onClick={() => setConfirmDelete(true)}
+          >
+            削除
+          </button>
+        )}
+      </footer>
+      {confirmDelete && (
+        <DeleteDialog
+          kind={selection.kind}
+          name={selection.item.name}
+          counts={deleteCounts ?? { events: 0, stories: 0, tasks: 0 }}
+          onCancel={() => setConfirmDelete(false)}
+          onConfirm={() => {
+            setConfirmDelete(false);
+            onDelete?.();
+            onClose();
+          }}
+        />
+      )}
+    </aside>
+  );
+}

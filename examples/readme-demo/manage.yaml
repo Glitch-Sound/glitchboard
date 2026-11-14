@@ -1,0 +1,10 @@
+settings:
+  workdays_off: [sat, sun]
+  public_holidays: true
+projects:
+  - file: projects/0001_Atlas.yaml
+    load: true
+  - file: projects/0002_Beacon.yaml
+    load: true
+  - file: projects/0003_Cinder.yaml
+    load: true

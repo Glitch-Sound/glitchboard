@@ -1,0 +1,20 @@
+{
+  "date": "2026-11-11",
+  "environment": "VS Code 1.145.2 macOS arm64, isolated profile, original build",
+  "steps": [
+    "EVENTのEventを追加",
+    "名前を入力",
+    "期限を選ぶをクリック"
+  ],
+  "due": "",
+  "calendarDialogs": 0,
+  "errors": [
+    {
+      "name": "SecurityError",
+      "message": "Uncaught "
+    }
+  ],
+  "pageErrors": [
+    "Failed to execute 'showPicker' on 'HTMLInputElement': showPicker() called from cross-origin iframe."
+  ]
+}

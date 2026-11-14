@@ -1,0 +1,82 @@
+{
+  "name": "glitchboard",
+  "displayName": "GlitchBoard",
+  "description": "Manage personal projects, tasks, and deadlines with timelines and workload insights in VS Code.",
+  "publisher": "Glitch-Sound",
+  "version": "0.2.0",
+  "icon": "media/icon.png",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Glitch-Sound/glitchboard.git",
+    "directory": "packages/extension"
+  },
+  "homepage": "https://github.com/Glitch-Sound/glitchboard#readme",
+  "bugs": {
+    "url": "https://github.com/Glitch-Sound/glitchboard/issues"
+  },
+  "keywords": [
+    "project management",
+    "project-management",
+    "task management",
+    "task tracker",
+    "timeline",
+    "deadline",
+    "workload",
+    "story points",
+    "yaml",
+    "glitchboard"
+  ],
+  "categories": [
+    "Visualization",
+    "Other"
+  ],
+  "type": "module",
+  "main": "./dist/extension.js",
+  "engines": {
+    "vscode": "^1.105.0"
+  },
+  "activationEvents": [
+    "onView:glitchboard.events",
+    "onCommand:glitchboard.open"
+  ],
+  "contributes": {
+    "commands": [
+      {
+        "command": "glitchboard.open",
+        "title": "GlitchBoardを開く"
+      }
+    ],
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "glitchboard",
+          "title": "GlitchBoard",
+          "icon": "media/icon.svg"
+        }
+      ]
+    },
+    "views": {
+      "glitchboard": [
+        {
+          "id": "glitchboard.events",
+          "name": "EVENT一覧",
+          "type": "webview"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "GlitchBoard",
+      "properties": {
+        "glitchboard.manageFile": {
+          "type": "string",
+          "default": "",
+          "description": "manage.yamlの絶対パス"
+        }
+      }
+    }
+  },
+  "dependencies": {
+    "@glitchboard/shared": "workspace:*",
+    "yaml": "^2.8.1"
+  }
+}

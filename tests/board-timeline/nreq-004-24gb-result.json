@@ -1,0 +1,16 @@
+{
+  "environment": "Apple M4, 24GB RAM, VS Code 1.144.0 stable",
+  "projects": 5,
+  "events": 100,
+  "stories": 1000,
+  "tasks": 3000,
+  "toggles": 30,
+  "durationsMs": [
+    234, 203, 217, 201, 221, 220, 235, 197, 221, 221, 217, 220, 198, 239, 222,
+    220, 222, 219, 221, 219, 224, 203, 220, 205, 221, 238, 220, 222, 206, 221
+  ],
+  "p95Ms": 238,
+  "maxMs": 239,
+  "measuredAt": "2026-11-02T21:58:04.083Z",
+  "criterion": "provisional; 16GB baseline pending"
+}

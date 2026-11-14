@@ -1,0 +1,33 @@
+{
+  "date": "2026-11-11",
+  "environment": {
+    "os": "macOS arm64",
+    "node": "24.18.0",
+    "pnpm": "12.16.1",
+    "vscode": "1.145.2 stable"
+  },
+  "red": {
+    "common": "5 failed: calendar missing",
+    "add": "9 failed / 1 passed, including native SecurityError",
+    "detail": "5 failed: picker and validation missing",
+    "escapeOutsideCalendar": "1 failed / 4 passed"
+  },
+  "green": {
+    "allTests": {
+      "files": 80,
+      "tests": 144
+    },
+    "commands": {
+      "corepack pnpm test": "passed",
+      "corepack pnpm typecheck": "passed",
+      "corepack pnpm check": "passed",
+      "corepack pnpm check:fsd": "passed",
+      "corepack pnpm build": "passed",
+      "git diff --check": "passed",
+      "openspec validate fix-event-date-picker --strict": "passed"
+    },
+    "planningFileLinkChecks": 30,
+    "browserCombinations": 12,
+    "native": "addition/edit YAML, timeline, both surfaces; EACCES retry; final Tab/Escape and themes"
+  }
+}

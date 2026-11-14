@@ -1,0 +1,34 @@
+{
+  "verifiedAt": "2026-11-14T00:23:20.940954+00:00",
+  "baseline": {
+    "testFiles": 83,
+    "tests": 152,
+    "passed": true
+  },
+  "final": {
+    "testFiles": 88,
+    "tests": 172,
+    "lint": true,
+    "typecheck": true,
+    "fsd": true,
+    "build": true,
+    "strictSpecs": 7,
+    "traceCheck": true
+  },
+  "change": {
+    "name": "simplify-event-workflow",
+    "tasks": 11,
+    "requirements": 7,
+    "scenarios": 24,
+    "strictValidationBeforeSync": true,
+    "strictTraceBeforeSync": true,
+    "archived": "openspec/changes/archive/2026-11-14-simplify-event-workflow"
+  },
+  "browserResults": "browser-results.json",
+  "calendarCombinations": 12,
+  "setupCombinations": 8,
+  "layoutThemes": 2,
+  "manualVsCodeChecksPending": 9,
+  "published": false,
+  "pushed": false
+}

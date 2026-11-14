@@ -1,0 +1,24 @@
+{
+  "verifiedAt": "2026-11-14T00:19:16.409Z",
+  "browser": "156.0.8078.4",
+  "results": [
+    {
+      "theme": "dark",
+      "passed": true,
+      "realYamlPersistence": true,
+      "realWriteFailureRecovery": true,
+      "addEventTaskRequests": 5,
+      "legacyPreserved": true,
+      "pageErrors": []
+    },
+    {
+      "theme": "light",
+      "passed": true,
+      "realYamlPersistence": true,
+      "realWriteFailureRecovery": true,
+      "addEventTaskRequests": 5,
+      "legacyPreserved": true,
+      "pageErrors": []
+    }
+  ]
+}

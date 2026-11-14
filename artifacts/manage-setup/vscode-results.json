@@ -1,0 +1,16 @@
+{
+  "date": "2026-11-11",
+  "environment": "VS Code stable on macOS arm64, isolated profile, actual VS Code file dialogs",
+  "steps": [
+    "REQ-029-S06 create cancel",
+    "REQ-029-S06 choose cancel",
+    "REQ-029-S05 create at configured path",
+    "REQ-029-S03 file removal",
+    "REQ-029-S10 file restore",
+    "REQ-029-S07 existing file preserved",
+    "REQ-029-S04 select after failure",
+    "REQ-029-S09 light and dark VS Code surfaces",
+    "REQ-029-S05 create from events in light theme",
+    "REQ-029-S04 select from events in light theme"
+  ]
+}
