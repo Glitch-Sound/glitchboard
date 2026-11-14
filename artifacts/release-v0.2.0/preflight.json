@@ -1,0 +1,20 @@
+{
+  "marketplace": "https://marketplace.visualstudio.com/items?itemName=Glitch-Sound.glitchboard",
+  "publisher": "Glitch-Sound",
+  "publisherId": "7c4af253-9c93-4dae-adf3-aa74ef4ede47",
+  "extensionName": "glitchboard",
+  "extensionId": "1f5f7ff2-b364-4729-b6a8-53f56bf480e8",
+  "beforeVersion": "0.1.5",
+  "targetVersion": "0.2.0",
+  "oldRepository": "Glitch-Sound/glitchboard-ex",
+  "oldRepositoryHead": "7daf07c3128eb847d14d9cc374dc72d593329915",
+  "newRepository": "Glitch-Sound/glitchboard",
+  "newRepositoryHeadBefore": "768fd58cecf4def23350a27c8713566cc949eb66",
+  "newRepositoryPushPermission": true,
+  "dryRunPassed": true,
+  "oldIconMatches": true,
+  "oldAndNewLicenseFiles": [],
+  "oldAndNewLicenseField": null,
+  "published015Sha256": "a9ccd32a8f4b850b3d095733c226734e9361dd5552e94019118cf1418b95fee3",
+  "status": "prepared-not-published"
+}

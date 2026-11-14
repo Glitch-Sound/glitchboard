@@ -42,8 +42,8 @@ UI 検査は一時データを作って使い、利用者の管理ファイル�
 ## README と画像の更新
 
 ルートの README.md を正とし、開発情報はこの文書へ置く。\
-`docs:prepare` は末尾の開発案内を除き、画像の相対パスを配布用へ変換して `packages/extension/README.md` を生成する。\
-サンプルデータも配布用へコピーし、配布用 README を個別に編集しない。
+`docs:prepare` は末尾の開発案内を除き、manifest の版に対応する公開タグの HTTPS URL へ画像と原寸リンクを変換し、`packages/extension/README.md` を生成する。\
+変更履歴とサンプルデータも配布用へコピーし、配布用 README と CHANGELOG を個別に編集しない。
 
 ```sh
 npm run build
@@ -72,13 +72,30 @@ README 上の指定幅は全画像を元画像の85%へ揃え、本文幅を超�
 npm run check
 cd packages/extension
 npx --no-install vsce ls --no-dependencies
-npx --no-install vsce package --no-dependencies --no-rewrite-relative-links --out /tmp/glitchboard-0.2.0.vsix
+npx --no-install vsce package --no-dependencies --out /tmp/glitchboard-0.2.0.vsix
 ```
 
 VSIX 内の README、画像、サンプルと実行ファイルを確認し、VS Code の `VSIX からインストール...` で利用できる。\
-`--no-rewrite-relative-links` は未公開リポジトリの URL へ画像を変換しないためのローカル配布用指定である。\
-Marketplace 公開時は公開先のソースと画像の URL、導入案内、ライセンスを別途確認する。\
-現在の Marketplace の同名拡張は旧版であり、このリプレース版を公開済みと扱わない。
+配布用の画像と原寸リンクは公開タグを参照するため、公開前にタグの画像 URL が取得できることを確認する。\
+拡張 ID は旧版と同じ `Glitch-Sound.glitchboard` であり、0.2.0 は既存拡張の更新として配布する。\
+0.1.5 のリポジトリと公開 VSIX には LICENSE ファイルと license 指定がなく、0.2.0 でも新しい利用許諾を追加していない。\
+同じアイコンを継続し、ライセンス不在の警告を隠すオプションは使わない。
+
+## 0.2.0 の配信
+
+README と CHANGELOG の移行非対応の案内、旧ファイルの保全、VSIX の ID と版、画像、全体検査を先に確認する。\
+新リポジトリの main が現在の履歴の祖先であることを確認し、通常の fast-forward で更新する。\
+既存のタグを移動せず、履歴を書き換えない。
+
+```sh
+git tag -a v0.2.0 -m 'GlitchBoard v0.2.0'
+git push --atomic glitchboard main refs/tags/v0.2.0
+```
+
+検証した VSIX を Marketplace の既存 `Glitch-Sound.glitchboard` へアップロードする。\
+新しい拡張の作成と publisher の変更は行わない。\
+サインインと追加の法的同意が必要な場合は利用者が操作し、秘密情報をチャットへ貼らない。\
+公開後に Marketplace の版、repository、画像と変更履歴を再取得し、0.2.0 が表示されることを確認する。
 
 ## OpenSpec とフック
 

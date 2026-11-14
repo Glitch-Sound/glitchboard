@@ -6,8 +6,13 @@ import { packagedReadme, readmeImageScale } from "./prepare-docs.mjs";
 const root = resolve(process.argv[2] ?? ".");
 const read = path => readFile(resolve(root, path), "utf8");
 const readme = await read("README.md"), packaged = await read("packages/extension/README.md");
-assert.equal(packaged, packagedReadme(readme), "配布用 README が最新でない: npm run docs:prepare");
+const extensionManifest = JSON.parse(await read("packages/extension/package.json"));
+assert.equal(packaged, packagedReadme(readme, extensionManifest.version), "配布用 README が最新でない: npm run docs:prepare");
 const manifest = JSON.parse(await read("package.json"));
+assert.equal(await read("packages/extension/CHANGELOG.md"), await read("CHANGELOG.md"), "配布用の変更履歴が最新でない");
+const publishedImageBase = `https://raw.githubusercontent.com/Glitch-Sound/glitchboard/v${extensionManifest.version}/packages/extension/media/readme/`;
+assert.ok(packaged.includes(`<img src="${publishedImageBase}overview.png"`), "配布用画像は公開タグの HTTPS URL を使う");
+assert.ok(packaged.includes(`<a href="${publishedImageBase}overview.png"`), "原寸へのリンクも公開画像へ向ける");
 const capture = JSON.parse(await read("artifacts/readme/capture-results.json"));
 assert.equal(capture.zoomLevel, 0); assert.equal(capture.appearance.fontSize, "13px");
 assert.equal(capture.theme, "Default Dark Modern");
@@ -34,13 +39,22 @@ for (const file of ["README.md", "DEVELOPMENT.md", "packages/extension/README.md
     assert.ok((await stat(path)).isFile(), `${file}: リンク先がない: ${ref}`); links++;
   }
   for (const match of text.matchAll(/<img src="([^\"]+)" width="(\d+)" alt="([^\"]+)">/g)) {
-    const path = resolve(dirname(resolve(root,file)),match[1]), png = await readFile(path);
+    const ref = match[1];
+    if (file === "packages/extension/README.md") assert.ok(ref.startsWith(publishedImageBase),"配布用の全画像を公開タグへ向ける");
+    const path = /^https:\/\//.test(ref) ? resolve(root,"packages/extension/media/readme",basename(new URL(ref).pathname)) : resolve(dirname(resolve(root,file)),ref);
+    if (/^https:\/\//.test(ref)) assert.equal(ref,publishedImageBase+basename(path),"配布用画像の URL は指定の公開タグに限定する");
+    const png = await readFile(path);
     assert.equal(png.subarray(0,8).toString("hex"), "89504e470d0a1a0a", "実画像は PNG とする");
     const width = png.readUInt32BE(16), height = png.readUInt32BE(20);
     assert.equal(Number(match[2]), Math.floor(width * readmeImageScale), "画像の表示倍率が異なる");
     const evidence = capture.captures.find(item => item.name === basename(path,".png"));
     assert.ok(evidence); assert.equal(width, evidence.clip.width); assert.equal(height, evidence.clip.height);
     assert.equal(evidence.scale,"css"); assert.equal(evidence.resized,false); images++;
+  }
+  if (file === "packages/extension/README.md") {
+    const pairs = [...text.matchAll(/<a href="([^\"]+)"><img src="([^\"]+)"/g)];
+    assert.equal(pairs.length, 5);
+    for (const pair of pairs) assert.equal(pair[1], pair[2], "原寸リンクを表示画像と同じ HTTPS URL にする");
   }
   for (const command of source.matchAll(/npm run ([\w:-]+)/g)) assert.ok(manifest.scripts[command[1]], `存在しないコマンド: ${command[0]}`);
 }

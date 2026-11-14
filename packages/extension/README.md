@@ -6,9 +6,14 @@
 期限をタイムラインで確認し、Event ごとの作業を追加、見積もり、完了できる。\
 データはローカルの YAML に保存し、作業フォルダを切り替えても同じボードを使える。
 
-<a href="media/readme/overview.png"><img src="media/readme/overview.png" width="1077" alt="実際の VS Code で左の EVENT 一覧とメインボードを同時に表示した画面"></a>
+**0.1.x から更新する場合:** 0.2.0 は再設計版であり、旧管理ファイルの互換性と移行は提供しない。\
+更新前に `manage.yaml` と Project ファイルをバックアップし、新しい空の保存先から始める。\
+旧ファイルの自動変換、削除は行わない。\
+更新手順と変更点は[変更履歴](https://github.com/Glitch-Sound/glitchboard/blob/v0.2.0/packages/extension/CHANGELOG.md)を参照する。
 
-画面例は撮影用の[サンプルデータ](examples/readme-guide/manage.yaml)を使った実画面である。\
+<a href="https://raw.githubusercontent.com/Glitch-Sound/glitchboard/v0.2.0/packages/extension/media/readme/overview.png"><img src="https://raw.githubusercontent.com/Glitch-Sound/glitchboard/v0.2.0/packages/extension/media/readme/overview.png" width="1077" alt="実際の VS Code で左の EVENT 一覧とメインボードを同時に表示した画面"></a>
+
+画面例は撮影用の[サンプルデータ](https://github.com/Glitch-Sound/glitchboard/blob/v0.2.0/packages/extension/examples/readme-guide/manage.yaml)を使った実画面である。\
 すべて同じダークテーマ、表示倍率で撮影している。\
 全体画像は左の EVENT 一覧とメインボードを同時に表示し、本文幅に合わせて縮小する。\
 画像を開くと元の大きさで文字と操作ボタンを確認できる。
@@ -16,18 +21,17 @@
 ## 導入して使い始める
 
 VS Code 1.105 以降が必要である。\
-この README はリプレース版 0.2.0 向けであり、本版は現在公開準備中である。\
-[Marketplace の同名拡張](https://marketplace.visualstudio.com/items?itemName=Glitch-Sound.glitchboard)は旧版で、管理ファイルの移行と互換性は提供しない。\
-本版では新しい管理ファイルから始める。
+この README は再設計版 0.2.0 向けである。\
+拡張 ID は旧版と同じ `Glitch-Sound.glitchboard` である。
 
-1. 本版の `.vsix` を用意し、VS Code の拡張機能画面の `...` から `VSIX からインストール...` を実行する。
+1. [Marketplace の GlitchBoard](https://marketplace.visualstudio.com/items?itemName=Glitch-Sound.glitchboard)をインストール、または0.2.0へ更新する。
 2. アクティビティバーの GlitchBoard、またはコマンドパレットの `GlitchBoardを開く` を選ぶ。
 3. 初回は左の `新しく作る` で `manage.yaml` の保存先を指定する。\
    既存の本版データがあれば `manage.yamlを選ぶ` を使う。
 4. 設定後に開くボードの PROJECT の `+` で Project を作る。
 5. 左の EVENT の `+` で名前と期限を登録し、下部の Task の `+` で作業を追加する。
 
-<a href="media/readme/setup.png"><img src="media/readme/setup.png" width="232" alt="初回だけ左の EVENT 一覧に表示する管理ファイルの選択と作成"></a>
+<a href="https://raw.githubusercontent.com/Glitch-Sound/glitchboard/v0.2.0/packages/extension/media/readme/setup.png"><img src="https://raw.githubusercontent.com/Glitch-Sound/glitchboard/v0.2.0/packages/extension/media/readme/setup.png" width="232" alt="初回だけ左の EVENT 一覧に表示する管理ファイルの選択と作成"></a>
 
 設定済みなら、次回は EVENT 一覧とメインボードが一緒に開く。\
 管理ファイルが未設定または見つからない場合は、左だけに設定案内を表示する。
@@ -40,7 +44,7 @@ Event は期限のある目標、Task はそのための作業を表す。\
 Event へ直接追加した Task は、一覧の `Taks` に表示する。\
 必要なときだけ Story の `+` でグループを作り、その Story を選んで Task を追加できる。
 
-<a href="media/readme/tasks.png"><img src="media/readme/tasks.png" width="797" alt="Event の要約、任意の Story と Taks、完了チェックとポイントを持つ Task 一覧"></a>
+<a href="https://raw.githubusercontent.com/Glitch-Sound/glitchboard/v0.2.0/packages/extension/media/readme/tasks.png"><img src="https://raw.githubusercontent.com/Glitch-Sound/glitchboard/v0.2.0/packages/extension/media/readme/tasks.png" width="797" alt="Event の要約、任意の Story と Taks、完了チェックとポイントを持つ Task 一覧"></a>
 
 | やりたいこと           | 操作                                                                                |
 | ---------------------- | ----------------------------------------------------------------------------------- |
@@ -54,7 +58,7 @@ Event へ直接追加した Task は、一覧の `Taks` に表示する。\
 | Project の色を変える   | Project 詳細のピッカー、または `#RRGGBB` のカラーコードを使う                       |
 | 削除する               | 詳細の `削除` から、子項目を含む件数を確認して確定する                              |
 
-<a href="media/readme/task-points.png"><img src="media/readme/task-points.png" width="357" alt="Task 詳細でポイントのバッジを開き、7段階の数値とスライダーを選べる画面"></a>
+<a href="https://raw.githubusercontent.com/Glitch-Sound/glitchboard/v0.2.0/packages/extension/media/readme/task-points.png"><img src="https://raw.githubusercontent.com/Glitch-Sound/glitchboard/v0.2.0/packages/extension/media/readme/task-points.png" width="357" alt="Task 詳細でポイントのバッジを開き、7段階の数値とスライダーを選べる画面"></a>
 
 ポイントと完了チェックはその場で保存する。\
 完了済み Task のポイントを変える場合は、チェックを外してから操作する。
@@ -62,7 +66,7 @@ Event へ直接追加した Task は、一覧の `Taks` に表示する。\
 Event の期限は `YYYY-MM-DD` の入力とカレンダーの両方に対応する。\
 日付を選んでから `追加` または `保存` で確定し、カレンダー内の Esc はカレンダーだけを閉じる。
 
-<a href="media/readme/event-add.png"><img src="media/readme/event-add.png" width="238" alt="Event 追加で Project と名前を指定し、期限のカレンダーを開いた画面"></a>
+<a href="https://raw.githubusercontent.com/Glitch-Sound/glitchboard/v0.2.0/packages/extension/media/readme/event-add.png"><img src="https://raw.githubusercontent.com/Glitch-Sound/glitchboard/v0.2.0/packages/extension/media/readme/event-add.png" width="238" alt="Event 追加で Project と名前を指定し、期限のカレンダーを開いた画面"></a>
 
 編集中の移動では保存、破棄、キャンセルを選べる。\
 追加先が変わる場合も下書きを確認し、キャンセルでは元の入力と選択を保つ。\

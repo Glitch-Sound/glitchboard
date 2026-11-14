@@ -1,0 +1,9 @@
+
+ RUN  v3.2.7 /Users/glitch/Developer/glitchboard
+
+ ✓ tests/vscode-extension-shell/release-preservation.test.ts (3 tests) 54ms
+
+ Test Files  1 passed (1)
+      Tests  3 passed (3)
+   Start at  02:20:16
+   Duration  390ms (transform 107ms, setup 0ms, collect 175ms, tests 54ms, environment 0ms, prepare 37ms)

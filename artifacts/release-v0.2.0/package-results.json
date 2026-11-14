@@ -1,0 +1,48 @@
+{
+  "publisher": "Glitch-Sound",
+  "name": "glitchboard",
+  "version": "0.2.0",
+  "sameExtensionAs": "0.1.5",
+  "identity": {
+    "Language": "en-US",
+    "Id": "glitchboard",
+    "Version": "0.2.0",
+    "Publisher": "Glitch-Sound"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Glitch-Sound/glitchboard.git",
+    "directory": "packages/extension"
+  },
+  "vsix": "/Users/glitch/Developer/glitchboard/artifacts/release-v0.2.0/glitchboard-0.2.0.vsix",
+  "sha256": "0a8c9601d7eb87e5adf12fefbcc5aa7c0d10e4acdc655c7c6e1e6b51dde6d1a3",
+  "bytes": 560517,
+  "files": 21,
+  "readmeExact": true,
+  "changelogExact": true,
+  "images": 5,
+  "publicImageUrls": [
+    "https://raw.githubusercontent.com/Glitch-Sound/glitchboard/v0.2.0/packages/extension/media/readme/event-add.png",
+    "https://raw.githubusercontent.com/Glitch-Sound/glitchboard/v0.2.0/packages/extension/media/readme/overview.png",
+    "https://raw.githubusercontent.com/Glitch-Sound/glitchboard/v0.2.0/packages/extension/media/readme/setup.png",
+    "https://raw.githubusercontent.com/Glitch-Sound/glitchboard/v0.2.0/packages/extension/media/readme/task-points.png",
+    "https://raw.githubusercontent.com/Glitch-Sound/glitchboard/v0.2.0/packages/extension/media/readme/tasks.png"
+  ],
+  "originalImageLinksExact": true,
+  "iconMatchesPublished015": true,
+  "iconDimensions": [
+    256,
+    256
+  ],
+  "licenseMatchesPublished015": true,
+  "licenseFiles": [],
+  "licenseField": null,
+  "builtFilesMatch": [
+    "extension/dist/extension.js",
+    "extension/dist/webview/style.css",
+    "extension/dist/webview/events.js",
+    "extension/dist/webview/board.js",
+    "extension/dist/webview/assets/style-D-l9oYLj.js"
+  ],
+  "status": "validated-not-published"
+}

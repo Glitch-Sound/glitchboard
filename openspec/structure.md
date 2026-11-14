@@ -83,7 +83,8 @@ glitchboard-data/
 ## 利用者向け文書と配布
 
 ルートの README.md は利用者向けの正本とし、開発手順はルートの DEVELOPMENT.md に分ける。\
-配布用の packages/extension/README.md は docs:prepare で開発案内を除いた利用者向け部分から生成し、相対画像パスを変換する。\
+配布用の packages/extension/README.md は docs:prepare で開発案内を除いた利用者向け部分から生成し、画像と原寸リンクを manifest の版の公開タグの HTTPS URL へ変換する。\
+変更履歴の正本はルートの CHANGELOG.md とし、配布用へ同期する。\
 サンプルの正本は examples/readme-guide、実画面の画像は packages/extension/media/readme に置く。\
 配布用にもサンプルを同期し、過去の検証用 artifacts は VSIX に含めない。\
 撮影条件と公開説明の調査、文書とパッケージの検証結果は artifacts/readme と docs/readme-report.md に記録する。

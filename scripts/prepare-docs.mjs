@@ -5,10 +5,14 @@ import { spawnSync } from "node:child_process";
 
 // 通常のデスクトップ表示で画像間の文字の縮尺を揃える。
 export const readmeImageScale = 0.85;
-export function packagedReadme(source) {
+export function packagedReadme(source, version) {
   const end = source.indexOf("\n## 開発\n");
   if (end < 0) throw new Error("README の末尾に開発案内がない");
-  return source.slice(0, end).trimEnd().replaceAll("packages/extension/media/readme/", "media/readme/") + "\n";
+  const repository = `https://github.com/Glitch-Sound/glitchboard/blob/v${version}/packages/extension/`;
+  const images = `https://raw.githubusercontent.com/Glitch-Sound/glitchboard/v${version}/packages/extension/media/readme/`;
+  return source.slice(0, end).trimEnd()
+    .replaceAll("packages/extension/media/readme/", images)
+    .replace(/\[([^\]]+)\]\(([^)]+)\)/g, (all, label, path) => /^https:\/\//.test(path) ? all : `[${label}](${new URL(path, repository).href})`) + "\n";
 }
 export async function prepareDocs() {
   let readme = await readFile("README.md", "utf8");
@@ -22,7 +26,9 @@ export async function prepareDocs() {
   if (formatted.status !== 0) throw new Error(formatted.stderr);
   readme = formatted.stdout;
   await writeFile("README.md", readme);
-  await writeFile("packages/extension/README.md", packagedReadme(readme));
+  const { version } = JSON.parse(await readFile("packages/extension/package.json", "utf8"));
+  await writeFile("packages/extension/README.md", packagedReadme(readme, version));
+  await copyFile("CHANGELOG.md", "packages/extension/CHANGELOG.md");
   const target = "packages/extension/examples/readme-guide";
   await rm(target, { recursive: true, force: true });
   for (const file of ["manage.yaml", "projects/0001_Webサイト.yaml", "projects/0002_記事制作.yaml", "projects/0003_学習メモ.yaml"]) {

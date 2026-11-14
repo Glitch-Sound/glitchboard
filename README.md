@@ -6,6 +6,11 @@
 期限をタイムラインで確認し、Event ごとの作業を追加、見積もり、完了できる。\
 データはローカルの YAML に保存し、作業フォルダを切り替えても同じボードを使える。
 
+**0.1.x から更新する場合:** 0.2.0 は再設計版であり、旧管理ファイルの互換性と移行は提供しない。\
+更新前に `manage.yaml` と Project ファイルをバックアップし、新しい空の保存先から始める。\
+旧ファイルの自動変換、削除は行わない。\
+更新手順と変更点は[変更履歴](CHANGELOG.md)を参照する。
+
 <a href="packages/extension/media/readme/overview.png"><img src="packages/extension/media/readme/overview.png" width="1077" alt="実際の VS Code で左の EVENT 一覧とメインボードを同時に表示した画面"></a>
 
 画面例は撮影用の[サンプルデータ](examples/readme-guide/manage.yaml)を使った実画面である。\
@@ -16,11 +21,10 @@
 ## 導入して使い始める
 
 VS Code 1.105 以降が必要である。\
-この README はリプレース版 0.2.0 向けであり、本版は現在公開準備中である。\
-[Marketplace の同名拡張](https://marketplace.visualstudio.com/items?itemName=Glitch-Sound.glitchboard)は旧版で、管理ファイルの移行と互換性は提供しない。\
-本版では新しい管理ファイルから始める。
+この README は再設計版 0.2.0 向けである。\
+拡張 ID は旧版と同じ `Glitch-Sound.glitchboard` である。
 
-1. 本版の `.vsix` を用意し、VS Code の拡張機能画面の `...` から `VSIX からインストール...` を実行する。
+1. [Marketplace の GlitchBoard](https://marketplace.visualstudio.com/items?itemName=Glitch-Sound.glitchboard)をインストール、または0.2.0へ更新する。
 2. アクティビティバーの GlitchBoard、またはコマンドパレットの `GlitchBoardを開く` を選ぶ。
 3. 初回は左の `新しく作る` で `manage.yaml` の保存先を指定する。\
    既存の本版データがあれば `manage.yamlを選ぶ` を使う。

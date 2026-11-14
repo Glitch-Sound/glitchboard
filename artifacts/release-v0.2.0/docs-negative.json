@@ -1,0 +1,30 @@
+{
+  "baselinePassed": true,
+  "results": [
+    {
+      "fault": "missing image",
+      "rejected": true
+    },
+    {
+      "fault": "wrong scale",
+      "rejected": true
+    },
+    {
+      "fault": "stale readme",
+      "rejected": true
+    },
+    {
+      "fault": "missing command",
+      "rejected": true
+    },
+    {
+      "fault": "omitted events",
+      "rejected": true
+    },
+    {
+      "fault": "generator leaves one original image link relative",
+      "rejected": true,
+      "independentOfGeneratorExpectation": true
+    }
+  ]
+}
