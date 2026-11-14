@@ -141,6 +141,7 @@ export function EventsApp() {
           ) : (
             <EventList
               projects={projects}
+              selectedEventId={selection}
               today={today}
               danger={danger.events}
               target={target}

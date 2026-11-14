@@ -2,15 +2,23 @@ type Props = {
   name: string;
   note?: string;
   icon?: "info" | "document";
+  selected?: boolean;
   onOpen(): void;
 };
 
 /** REQ-026: 補足の有無に応じた詳細ボタン。 */
-export function DetailButton({ name, note, icon = "info", onOpen }: Props) {
+export function DetailButton({
+  name,
+  note,
+  icon = "info",
+  selected,
+  onOpen,
+}: Props) {
   return (
     <button
       type="button"
       className={`detail-button ${note ? "has-note" : "no-note"} ${icon === "document" ? "detail-button-document" : ""}`}
+      data-selected={selected || undefined}
       aria-label={`${name}の詳細`}
       title={`${name}の詳細を開く`}
       onClick={(event) => {

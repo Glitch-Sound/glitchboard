@@ -348,7 +348,7 @@ export function EventDetails({
       }
     >
       <RecordSurface
-        className="event-summary"
+        className="event-summary selected"
         name={event.name}
         onSelect={() => onSelectRecord?.("event", event.id)}
       >
@@ -388,6 +388,7 @@ export function EventDetails({
             {onOpenDetail && (
               <DetailButton
                 name={event.name}
+                selected
                 note={event.note}
                 icon="document"
                 onOpen={() => onOpenDetail("event", event.id)}
@@ -680,6 +681,7 @@ export function EventDetails({
                 {onOpenDetail && (
                   <DetailButton
                     name={task.name}
+                    selected={selectedTaskId === task.id}
                     note={task.note}
                     icon="document"
                     onOpen={() => onOpenDetail("task", task.id)}

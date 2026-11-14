@@ -491,6 +491,12 @@ export function Timeline({
                     <DetailButton
                       name={project.name}
                       note={project.note}
+                      selected={
+                        selectedProjectId === project.id ||
+                        project.events.some(
+                          (event) => event.id === selectedEventId,
+                        )
+                      }
                       icon="document"
                       onOpen={() => onOpenDetail("project", project.id)}
                     />
@@ -523,7 +529,9 @@ export function Timeline({
                     }
                   >
                     {events.length > 0 && (
-                      <div className="marker-wrap">
+                      <div
+                        className={`marker-wrap${selected ? " selected" : ""}`}
+                      >
                         <button
                           type="button"
                           className={`event-marker ${urgent ? "danger" : caution ? "caution" : ""}`}
@@ -545,6 +553,7 @@ export function Timeline({
                           <DetailButton
                             name={events[0].name}
                             note={events[0].note}
+                            selected={Boolean(selected)}
                             icon="document"
                             onOpen={() => onOpenDetail("event", events[0].id)}
                           />
@@ -563,7 +572,14 @@ export function Timeline({
                         {open === key && (
                           <div role="listbox" className="marker-list">
                             {events.map((event) => (
-                              <div key={event.id}>
+                              <div
+                                key={event.id}
+                                className={
+                                  event.id === selectedEventId
+                                    ? "selected"
+                                    : undefined
+                                }
+                              >
                                 <button
                                   role="option"
                                   aria-selected={event.id === selectedEventId}
@@ -579,6 +595,7 @@ export function Timeline({
                                   <DetailButton
                                     name={event.name}
                                     note={event.note}
+                                    selected={event.id === selectedEventId}
                                     icon="document"
                                     onOpen={() =>
                                       onOpenDetail("event", event.id)

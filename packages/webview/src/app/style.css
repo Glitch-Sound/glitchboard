@@ -385,6 +385,9 @@ main {
 .detail-button.no-note {
   color: var(--vscode-descriptionForeground);
 }
+.detail-button[data-selected="true"] {
+  color: var(--vscode-list-activeSelectionForeground, var(--vscode-foreground));
+}
 .detail-panel {
   position: fixed;
   z-index: 20;
@@ -987,6 +990,16 @@ main {
   white-space: nowrap;
   vertical-align: middle;
 }
+.project-row > th[scope="row"] {
+  cursor: pointer;
+}
+.project-row > th:has(:focus-visible) {
+  outline: 1px solid var(--vscode-focusBorder);
+  outline-offset: -2px;
+}
+.project-name .item-name:hover {
+  text-decoration: none;
+}
 .project-row:has(.project-drag-handle) .project-name {
   max-width: calc(100% - 86px);
 }
@@ -1507,6 +1520,9 @@ main {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+.task-line .task-name:hover {
+  text-decoration: none;
 }
 .task-line.completed .task-name {
   text-decoration: line-through;
@@ -2050,6 +2066,20 @@ main {
 }
 .task-line.selected {
   background: var(--vscode-list-inactiveSelectionBackground);
+}
+/* REQ-035: 確定した Event を Story と同じ選択背景と枠で示す。 */
+.event-row.selected,
+.event-summary.selected,
+.marker-wrap.selected,
+.marker-list > .selected {
+  background: color-mix(
+    in srgb,
+    var(--vscode-list-activeSelectionBackground) 35%,
+    transparent
+  );
+  outline: 1px solid
+    color-mix(in srgb, var(--vscode-focusBorder) 40%, transparent);
+  outline-offset: -1px;
 }
 .unsaved-backdrop {
   position: fixed;

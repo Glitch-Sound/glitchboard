@@ -1,0 +1,41 @@
+{
+  "verifiedAt": "2026-11-14T11:42:31.376243+00:00",
+  "change": {
+    "name": "refine-record-selection",
+    "tasks": 4,
+    "modifiedRequirements": 2,
+    "scenarios": 8,
+    "newScenarios": 3,
+    "archived": "openspec/changes/archive/2026-11-14-refine-record-selection",
+    "strictValidationBeforeSync": true,
+    "strictTraceBeforeSync": true,
+    "mainSpecMergeVerified": true
+  },
+  "final": {
+    "testFiles": 106,
+    "tests": 296,
+    "lint": true,
+    "typecheck": true,
+    "fsd": true,
+    "build": true,
+    "strictSpecs": 7,
+    "traceCheck": true,
+    "uiScripts": 9,
+    "whitespaceCheck": true
+  },
+  "browser": "156.0.8078.4",
+  "themes": [
+    "dark",
+    "light"
+  ],
+  "statesPerTheme": 13,
+  "screenshotsAfter": 26,
+  "beforeFailures": 32,
+  "focusBeforeFailures": 2,
+  "afterFailures": 0,
+  "storyStylesUnchanged": true,
+  "keyboardAndGuardedSelection": true,
+  "manualVsCodeChecksPending": 38,
+  "published": false,
+  "pushed": false
+}

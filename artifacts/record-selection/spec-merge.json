@@ -1,0 +1,13 @@
+{
+  "change": "refine-record-selection",
+  "mainSpec": "openspec/specs/item-details/spec.md",
+  "modifiedRequirements": [
+    "REQ-026",
+    "REQ-035"
+  ],
+  "purposePreserved": true,
+  "untouchedRequirementsPreserved": true,
+  "deltaMatched": true,
+  "beforeSha256": "d57ff7c782f998bc12b5029885f44aea387e8c9dae72725671ea48b42b4d201d",
+  "afterSha256": "b4d483e243253861e5638b70952bf640119180b66b5c724a4cf19bd61f931214"
+}

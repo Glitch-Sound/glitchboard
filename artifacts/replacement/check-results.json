@@ -1,5 +1,5 @@
 {
-  "verifiedAt": "2026-11-14T06:33:04.545933+00:00",
+  "verifiedAt": "2026-11-14T11:42:31.376243+00:00",
   "dataModel": "Project > Event > Task; optional Event > Story > Task",
   "legacyMigrationAndCompatibility": "out of scope by user instruction",
   "final": {
@@ -26,7 +26,7 @@
   "calendarCombinations": 12,
   "setupCombinations": 8,
   "layoutThemes": 2,
-  "manualVsCodeChecksPending": 35,
+  "manualVsCodeChecksPending": 38,
   "published": false,
   "pushed": false,
   "reviewChanges": [
@@ -126,5 +126,27 @@
     "screenshotsBefore": 14,
     "screenshotsAfter": 14,
     "uiScripts": 8
+  },
+  "recordSelection": {
+    "name": "refine-record-selection",
+    "tasks": 4,
+    "modifiedRequirements": 2,
+    "scenarios": 8,
+    "newScenarios": 3,
+    "archived": "openspec/changes/archive/2026-11-14-refine-record-selection",
+    "strictValidationBeforeSync": true,
+    "strictTraceBeforeSync": true,
+    "mainSpecMergeVerified": true,
+    "uiScripts": 9,
+    "themes": [
+      "dark",
+      "light"
+    ],
+    "statesPerTheme": 13,
+    "screenshotsAfter": 26,
+    "beforeFailures": 32,
+    "focusBeforeFailures": 2,
+    "afterFailures": 0,
+    "storyStylesUnchanged": true
   }
 }

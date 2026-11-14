@@ -11,6 +11,7 @@ type Props = {
   today: string;
   target: TargetFilter;
   danger?: Record<string, EventDanger>;
+  selectedEventId?: string | null;
   onSelect?: (eventId: string) => void;
   onOpenDetail?: (eventId: string) => void;
 };
@@ -21,6 +22,7 @@ export function EventList({
   today,
   target,
   danger = {},
+  selectedEventId,
   onSelect,
   onOpenDetail,
 }: Props) {
@@ -56,7 +58,7 @@ export function EventList({
                   <RecordSurface
                     key={event.id}
                     name={event.name}
-                    className={`event-row${isDanger ? " danger-text" : ""}`}
+                    className={`event-row${event.id === selectedEventId ? " selected" : ""}${isDanger ? " danger-text" : ""}`}
                     onSelect={() => onSelect?.(event.id)}
                   >
                     <button
@@ -86,6 +88,7 @@ export function EventList({
                       <DetailButton
                         name={event.name}
                         note={event.note}
+                        selected={event.id === selectedEventId}
                         icon="document"
                         onOpen={() => onOpenDetail(event.id)}
                       />

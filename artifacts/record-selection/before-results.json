@@ -1,0 +1,404 @@
+{
+  "verifiedAt": "2026-11-14T11:29:49.437Z",
+  "browser": "156.0.8078.4",
+  "results": [
+    {
+      "theme": "dark",
+      "samples": {
+        "projectUnselected": {
+          "color": "rgb(163, 163, 163)",
+          "background": "rgba(0, 0, 0, 0)",
+          "outline": "rgb(163, 163, 163) none 3px",
+          "border": "1px solid rgb(69, 69, 69)",
+          "cursor": "pointer",
+          "decoration": "none"
+        },
+        "projectSelected": {
+          "color": "rgb(163, 163, 163)",
+          "background": "rgba(0, 0, 0, 0)",
+          "outline": "rgb(163, 163, 163) none 3px",
+          "border": "1px solid rgb(69, 69, 69)",
+          "cursor": "pointer",
+          "decoration": "none"
+        },
+        "sidebarSelected": {
+          "color": "rgb(212, 212, 212)",
+          "background": "rgba(0, 0, 0, 0)",
+          "outline": "rgb(212, 212, 212) none 3px",
+          "border": "",
+          "cursor": "auto",
+          "decoration": "none"
+        },
+        "sidebarUnselected": {
+          "color": "rgb(244, 135, 113)",
+          "background": "rgba(0, 0, 0, 0)",
+          "outline": "rgb(244, 135, 113) none 3px",
+          "border": "",
+          "cursor": "auto",
+          "decoration": "none"
+        },
+        "eventSelected": {
+          "color": "rgb(244, 135, 113)",
+          "background": "rgba(0, 0, 0, 0)",
+          "outline": "rgb(244, 135, 113) none 3px",
+          "border": "",
+          "cursor": "auto",
+          "decoration": "none"
+        }
+      },
+      "story": {
+        "directSelected": {
+          "row": {
+            "color": "rgb(255, 255, 255)",
+            "background": "color(srgb 0.14902 0.309804 0.470588 / 0.35)",
+            "outline": "color(srgb 0 0.498039 0.831373 / 0.4) solid 1px",
+            "border": "",
+            "cursor": "auto",
+            "decoration": "none"
+          },
+          "button": {
+            "color": "rgb(255, 255, 255)",
+            "background": "rgba(0, 0, 0, 0)",
+            "outline": "rgb(255, 255, 255) none 3px",
+            "border": "0px none rgb(255, 255, 255)",
+            "cursor": "pointer",
+            "decoration": "none"
+          }
+        },
+        "optionalUnselected": {
+          "row": {
+            "color": "rgb(212, 212, 212)",
+            "background": "rgba(0, 0, 0, 0)",
+            "outline": "rgb(212, 212, 212) none 3px",
+            "border": "",
+            "cursor": "auto",
+            "decoration": "none"
+          },
+          "detail": {
+            "color": "rgb(163, 163, 163)",
+            "background": "rgba(0, 0, 0, 0)",
+            "outline": "rgb(163, 163, 163) none 3px",
+            "border": "1px solid rgb(69, 69, 69)",
+            "cursor": "pointer",
+            "decoration": "none"
+          }
+        },
+        "optionalHover": {
+          "color": "rgb(212, 212, 212)",
+          "background": "rgba(0, 0, 0, 0)",
+          "outline": "rgb(212, 212, 212) none 3px",
+          "border": "0px none rgb(212, 212, 212)",
+          "cursor": "pointer",
+          "decoration": "none"
+        },
+        "optionalFocus": {
+          "color": "rgb(212, 212, 212)",
+          "background": "rgba(0, 0, 0, 0)",
+          "outline": "rgb(0, 127, 212) solid 2px",
+          "border": "0px none rgb(212, 212, 212)",
+          "cursor": "pointer",
+          "decoration": "none"
+        },
+        "optionalSelected": {
+          "row": {
+            "color": "rgb(255, 255, 255)",
+            "background": "color(srgb 0.14902 0.309804 0.470588 / 0.35)",
+            "outline": "color(srgb 0 0.498039 0.831373 / 0.4) solid 1px",
+            "border": "",
+            "cursor": "auto",
+            "decoration": "none"
+          },
+          "detail": {
+            "color": "rgb(255, 255, 255)",
+            "background": "rgba(0, 0, 0, 0)",
+            "outline": "rgb(255, 255, 255) none 3px",
+            "border": "1px solid rgb(69, 69, 69)",
+            "cursor": "pointer",
+            "decoration": "none"
+          }
+        }
+      },
+      "captures": [
+        "story-reference",
+        "project-unselected-hover",
+        "project-focus",
+        "project-selected",
+        "events-selected",
+        "event-unselected-hover",
+        "event-focus",
+        "event-same-day",
+        "task-unselected-hover",
+        "task-focus",
+        "task-selected",
+        "pending-change",
+        "events-after-save"
+      ],
+      "errors": [],
+      "guardedSelection": true
+    },
+    {
+      "theme": "light",
+      "samples": {
+        "projectUnselected": {
+          "color": "rgb(97, 97, 97)",
+          "background": "rgba(0, 0, 0, 0)",
+          "outline": "rgb(97, 97, 97) none 3px",
+          "border": "1px solid rgb(204, 204, 204)",
+          "cursor": "pointer",
+          "decoration": "none"
+        },
+        "projectSelected": {
+          "color": "rgb(97, 97, 97)",
+          "background": "rgba(0, 0, 0, 0)",
+          "outline": "rgb(97, 97, 97) none 3px",
+          "border": "1px solid rgb(204, 204, 204)",
+          "cursor": "pointer",
+          "decoration": "none"
+        },
+        "sidebarSelected": {
+          "color": "rgb(51, 51, 51)",
+          "background": "rgba(0, 0, 0, 0)",
+          "outline": "rgb(51, 51, 51) none 3px",
+          "border": "",
+          "cursor": "auto",
+          "decoration": "none"
+        },
+        "sidebarUnselected": {
+          "color": "rgb(199, 46, 15)",
+          "background": "rgba(0, 0, 0, 0)",
+          "outline": "rgb(199, 46, 15) none 3px",
+          "border": "",
+          "cursor": "auto",
+          "decoration": "none"
+        },
+        "eventSelected": {
+          "color": "rgb(199, 46, 15)",
+          "background": "rgba(0, 0, 0, 0)",
+          "outline": "rgb(199, 46, 15) none 3px",
+          "border": "",
+          "cursor": "auto",
+          "decoration": "none"
+        }
+      },
+      "story": {
+        "directSelected": {
+          "row": {
+            "color": "rgb(17, 17, 17)",
+            "background": "color(srgb 0.8 0.898039 1 / 0.35)",
+            "outline": "color(srgb 0 0.498039 0.831373 / 0.4) solid 1px",
+            "border": "",
+            "cursor": "auto",
+            "decoration": "none"
+          },
+          "button": {
+            "color": "rgb(17, 17, 17)",
+            "background": "rgba(0, 0, 0, 0)",
+            "outline": "rgb(17, 17, 17) none 3px",
+            "border": "0px none rgb(17, 17, 17)",
+            "cursor": "pointer",
+            "decoration": "none"
+          }
+        },
+        "optionalUnselected": {
+          "row": {
+            "color": "rgb(51, 51, 51)",
+            "background": "rgba(0, 0, 0, 0)",
+            "outline": "rgb(51, 51, 51) none 3px",
+            "border": "",
+            "cursor": "auto",
+            "decoration": "none"
+          },
+          "detail": {
+            "color": "rgb(97, 97, 97)",
+            "background": "rgba(0, 0, 0, 0)",
+            "outline": "rgb(97, 97, 97) none 3px",
+            "border": "1px solid rgb(204, 204, 204)",
+            "cursor": "pointer",
+            "decoration": "none"
+          }
+        },
+        "optionalHover": {
+          "color": "rgb(51, 51, 51)",
+          "background": "rgba(0, 0, 0, 0)",
+          "outline": "rgb(51, 51, 51) none 3px",
+          "border": "0px none rgb(51, 51, 51)",
+          "cursor": "pointer",
+          "decoration": "none"
+        },
+        "optionalFocus": {
+          "color": "rgb(51, 51, 51)",
+          "background": "rgba(0, 0, 0, 0)",
+          "outline": "rgb(0, 127, 212) solid 2px",
+          "border": "0px none rgb(51, 51, 51)",
+          "cursor": "pointer",
+          "decoration": "none"
+        },
+        "optionalSelected": {
+          "row": {
+            "color": "rgb(17, 17, 17)",
+            "background": "color(srgb 0.8 0.898039 1 / 0.35)",
+            "outline": "color(srgb 0 0.498039 0.831373 / 0.4) solid 1px",
+            "border": "",
+            "cursor": "auto",
+            "decoration": "none"
+          },
+          "detail": {
+            "color": "rgb(17, 17, 17)",
+            "background": "rgba(0, 0, 0, 0)",
+            "outline": "rgb(17, 17, 17) none 3px",
+            "border": "1px solid rgb(204, 204, 204)",
+            "cursor": "pointer",
+            "decoration": "none"
+          }
+        }
+      },
+      "captures": [
+        "story-reference",
+        "project-unselected-hover",
+        "project-focus",
+        "project-selected",
+        "events-selected",
+        "event-unselected-hover",
+        "event-focus",
+        "event-same-day",
+        "task-unselected-hover",
+        "task-focus",
+        "task-selected",
+        "pending-change",
+        "events-after-save"
+      ],
+      "errors": [],
+      "guardedSelection": true
+    }
+  ],
+  "failures": [
+    {
+      "theme": "dark",
+      "message": "Project 名のホバーに下線を出さない"
+    },
+    {
+      "theme": "dark",
+      "message": "Project セルの余白はポインター"
+    },
+    {
+      "theme": "dark",
+      "message": "選択 Project の詳細を選択前景にする"
+    },
+    {
+      "theme": "dark",
+      "message": "左の対象 Event を選択表示"
+    },
+    {
+      "theme": "dark",
+      "message": "左の選択 Event の詳細色"
+    },
+    {
+      "theme": "dark",
+      "message": "ホバーとフォーカスが外れても Story と同じ選択背景を保持する"
+    },
+    {
+      "theme": "dark",
+      "message": "補足がある選択 Event も詳細を強調"
+    },
+    {
+      "theme": "dark",
+      "message": "要約の Event の詳細を強調"
+    },
+    {
+      "theme": "dark",
+      "message": "選択 Event を含む同日マーカーを強調"
+    },
+    {
+      "theme": "dark",
+      "message": "同日一覧の選択詳細を強調"
+    },
+    {
+      "theme": "dark",
+      "message": "Task のホバー下線を出さない"
+    },
+    {
+      "theme": "dark",
+      "message": "選択 Task の詳細を強調"
+    },
+    {
+      "theme": "dark",
+      "message": "移動確認中は元の選択色"
+    },
+    {
+      "theme": "dark",
+      "message": "キャンセル後も元の選択色"
+    },
+    {
+      "theme": "dark",
+      "message": "保存失敗後も元の選択色"
+    },
+    {
+      "theme": "dark",
+      "message": "保存成功後に選択色が移る"
+    },
+    {
+      "theme": "light",
+      "message": "Project 名のホバーに下線を出さない"
+    },
+    {
+      "theme": "light",
+      "message": "Project セルの余白はポインター"
+    },
+    {
+      "theme": "light",
+      "message": "選択 Project の詳細を選択前景にする"
+    },
+    {
+      "theme": "light",
+      "message": "左の対象 Event を選択表示"
+    },
+    {
+      "theme": "light",
+      "message": "左の選択 Event の詳細色"
+    },
+    {
+      "theme": "light",
+      "message": "ホバーとフォーカスが外れても Story と同じ選択背景を保持する"
+    },
+    {
+      "theme": "light",
+      "message": "補足がある選択 Event も詳細を強調"
+    },
+    {
+      "theme": "light",
+      "message": "要約の Event の詳細を強調"
+    },
+    {
+      "theme": "light",
+      "message": "選択 Event を含む同日マーカーを強調"
+    },
+    {
+      "theme": "light",
+      "message": "同日一覧の選択詳細を強調"
+    },
+    {
+      "theme": "light",
+      "message": "Task のホバー下線を出さない"
+    },
+    {
+      "theme": "light",
+      "message": "選択 Task の詳細を強調"
+    },
+    {
+      "theme": "light",
+      "message": "移動確認中は元の選択色"
+    },
+    {
+      "theme": "light",
+      "message": "キャンセル後も元の選択色"
+    },
+    {
+      "theme": "light",
+      "message": "保存失敗後も元の選択色"
+    },
+    {
+      "theme": "light",
+      "message": "保存成功後に選択色が移る"
+    }
+  ]
+}
