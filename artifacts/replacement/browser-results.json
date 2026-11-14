@@ -1,5 +1,5 @@
 {
-  "verifiedAt": "2026-11-14T03:13:33.551Z",
+  "verifiedAt": "2026-11-14T03:32:38.583Z",
   "browser": "156.0.8078.4",
   "results": [
     {
@@ -9,6 +9,7 @@
       "realWriteFailureRecovery": true,
       "addEventTaskRequests": 5,
       "groupedTasksPreserved": true,
+      "inlineDraftProtection": true,
       "pageErrors": []
     },
     {
@@ -18,6 +19,7 @@
       "realWriteFailureRecovery": true,
       "addEventTaskRequests": 5,
       "groupedTasksPreserved": true,
+      "inlineDraftProtection": true,
       "pageErrors": []
     }
   ]

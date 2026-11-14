@@ -23,7 +23,10 @@ import {
   type DetailPanelHandle,
   type DetailSelection,
 } from "../widgets/detail-panel/index.js";
-import { EventDetails } from "../widgets/event-details/index.js";
+import {
+  EventDetails,
+  type EventDetailsHandle,
+} from "../widgets/event-details/index.js";
 import { Timeline } from "../widgets/timeline/index.js";
 import { WorkloadHeader } from "../widgets/workload/index.js";
 import { localBridge } from "./bridge.js";
@@ -116,6 +119,7 @@ export function BoardApp() {
     id: string;
   } | null>(null);
   const detailPanel = useRef<DetailPanelHandle>(null);
+  const eventDetails = useRef<EventDetailsHandle>(null);
   const snapshotSelection = useRef<string | null>(null);
   const [record, setRecord] = useState<{
     kind: ItemKind;
@@ -222,30 +226,30 @@ export function BoardApp() {
   ) => {
     const target = detailFor(projects, kind, id);
     if (!target) return;
-    const commit = () => {
-      const project = projects.find(
-        (p) =>
-          p.id === id ||
-          p.events.some(
+    const project = projects.find(
+      (p) =>
+        p.id === id ||
+        p.events.some(
+          (e) =>
+            e.id === id ||
+            e.tasks?.some((t) => t.id === id) ||
+            e.stories.some(
+              (st) => st.id === id || st.tasks.some((t) => t.id === id),
+            ),
+        ),
+    );
+    const event =
+      kind === "project"
+        ? project?.events[0]
+        : project?.events.find(
             (e) =>
               e.id === id ||
               e.tasks?.some((t) => t.id === id) ||
               e.stories.some(
                 (st) => st.id === id || st.tasks.some((t) => t.id === id),
               ),
-          ),
-      );
-      const event =
-        kind === "project"
-          ? project?.events[0]
-          : project?.events.find(
-              (e) =>
-                e.id === id ||
-                e.tasks?.some((t) => t.id === id) ||
-                e.stories.some(
-                  (st) => st.id === id || st.tasks.some((t) => t.id === id),
-                ),
-            );
+          );
+    const commit = () => {
       setRecord({ kind, id, groupId });
       setSelectedEventId(event?.id ?? null);
       if (event)
@@ -255,9 +259,31 @@ export function BoardApp() {
         });
       if (openDetail || detailTarget) setDetailTarget({ kind, id });
     };
-    if (detailTarget && (detailTarget.kind !== kind || detailTarget.id !== id))
-      detailPanel.current ? detailPanel.current.requestLeave(commit) : commit();
-    else commit();
+    const destinationStory =
+      groupId === null
+        ? null
+        : kind === "story"
+          ? id
+          : kind === "task"
+            ? (event?.stories.find((story) =>
+                story.tasks.some((task) => task.id === id),
+              )?.id ?? null)
+            : undefined;
+    const leaveInline = () => {
+      if (eventDetails.current)
+        eventDetails.current.requestLeave(commit, {
+          eventId: event?.id ?? null,
+          storyId: destinationStory,
+        });
+      else commit();
+    };
+    if (
+      detailTarget &&
+      (detailTarget.kind !== kind || detailTarget.id !== id) &&
+      detailPanel.current
+    )
+      detailPanel.current.requestLeave(leaveInline);
+    else leaveInline();
   };
   const navigate = useRef(chooseRecord);
   navigate.current = chooseRecord;
@@ -275,7 +301,8 @@ export function BoardApp() {
   const selectedStoryId =
     record?.groupId === null
       ? null
-      : record?.kind === "story"
+      : record?.kind === "story" &&
+          selectedEvent?.stories.some((story) => story.id === record.id)
         ? record.id
         : record?.kind === "task"
           ? (selectedEvent?.stories.find((story) =>
@@ -392,6 +419,7 @@ export function BoardApp() {
               {selectedEvent ? (
                 <EventDetails
                   key={selectedEvent.id}
+                  ref={eventDetails}
                   event={selectedEvent}
                   selectedStoryId={selectedStoryId}
                   selectedTaskId={

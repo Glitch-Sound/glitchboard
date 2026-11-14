@@ -1,0 +1,58 @@
+{
+  "verifiedAt": "2026-11-14T03:37:36.712271+00:00",
+  "final": {
+    "testFiles": 98,
+    "tests": 233,
+    "lint": true,
+    "typecheck": true,
+    "fsd": true,
+    "build": true,
+    "strictSpecs": 7,
+    "traceCheck": true,
+    "whitespaceCheck": true
+  },
+  "change": {
+    "name": "protect-inline-draft-targets",
+    "tasks": 4,
+    "requirements": 1,
+    "scenarios": 8,
+    "strictValidationBeforeSync": true,
+    "strictTraceBeforeSync": true,
+    "archived": "openspec/changes/archive/2026-11-14-protect-inline-draft-targets"
+  },
+  "regressions": {
+    "newTests": 17,
+    "oldImplementationFailed": 14,
+    "oldImplementationPassed": 3,
+    "passesWereDetailGuardCancellationVia": [
+      "space",
+      "detail",
+      "sidebar"
+    ]
+  },
+  "realBrowser": {
+    "themes": [
+      "dark",
+      "light"
+    ],
+    "wholeRowAndNameNavigation": true,
+    "detailCancelPreservesTaskDraft": true,
+    "realEaccesRecovery": true,
+    "originalStoryWriteOnly": true,
+    "cancelAndFailurePreserveBytes": true,
+    "otherEventStoryAndCommentPreserved": true,
+    "projectScopeAndSidebarRegression": true,
+    "layoutThemes": 2,
+    "calendarCombinations": 12
+  },
+  "evidence": {
+    "realPersistence": "../replacement/browser-results.json",
+    "projectScope": "../review/project-scope-results.json",
+    "layout": "../replacement/layout/results.json",
+    "calendar": "../replacement/calendar/browser-results.json"
+  },
+  "manualVsCodeChecksPending": 18,
+  "pushed": false,
+  "published": false,
+  "readmeScreenshotsAdded": false
+}

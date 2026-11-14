@@ -135,6 +135,45 @@ try {
       await expect(tasks.getByRole("textbox")).toHaveValue("通常StoryのTask");
       await tasks.getByRole("textbox").press("Enter");
       await expect(tasks.getByRole("button", { name: "通常StoryのTask", exact: true })).toBeVisible();
+      // REQ-034-S05/S06: 名前と余白は同じ確認を通し、詳細の確認取消でも追加下書きを守る。
+      await tasks.getByRole("button", {name:"Taskを追加",exact:true}).click();
+      await tasks.getByRole("textbox").fill("移動下書き");
+      const beforeDraft=await readFile(path,"utf8");
+      await groups.getByRole("button",{name:"Taksを選択",exact:true}).click({position:{x:4,y:10}});
+      const draftPrompt=page.getByRole("alertdialog",{name:"未保存の追加入力",exact:true});
+      await draftPrompt.getByRole("button",{name:"キャンセル",exact:true}).click();
+      await expect(tasks.getByRole("textbox")).toHaveValue("移動下書き");
+      await groups.getByRole("button",{name:"必要な作業グループの詳細",exact:true}).click();
+      await detail.getByRole("button",{name:"編集",exact:true}).click();
+      await detail.getByLabel("名前",{exact:true}).fill("捨てない詳細");
+      await groups.locator(".story-select").filter({hasText:"Taks"}).click();
+      await page.getByRole("alertdialog",{name:"未保存の編集",exact:true}).getByRole("button",{name:"キャンセル",exact:true}).click();
+      await expect(detail.getByLabel("名前",{exact:true})).toHaveValue("捨てない詳細");
+      await expect(tasks.getByRole("textbox")).toHaveValue("移動下書き");
+      assert.equal(await readFile(path,"utf8"),beforeDraft);
+      await detail.getByRole("button",{name:"取消",exact:true}).click();
+      await detail.getByRole("button",{name:"詳細を閉じる",exact:true}).click();
+      // REQ-034-S07: 実EACCESの失敗でも元Storyを保ち、同じ追加先へ再送する。
+      await groups.getByRole("button",{name:"Taksを選択",exact:true}).click({position:{x:4,y:10}});
+      await chmod(dataRoot,0o555);
+      await draftPrompt.getByRole("button",{name:"追加して進む",exact:true}).click();
+      await expect(draftPrompt.getByRole("alert")).toContainText("追加に失敗");
+      await expect(tasks.getByRole("textbox")).toHaveValue("移動下書き");
+      assert.equal(await readFile(path,"utf8"),beforeDraft);
+      await chmod(dataRoot,0o755);
+      await draftPrompt.getByRole("button",{name:"追加して進む",exact:true}).click();
+      await expect(draftPrompt).toHaveCount(0);
+      const afterDraft=await savedProject();
+      assert.equal(afterDraft.events[0].tasks.length,4);
+      assert.deepEqual(afterDraft.events[0].stories[0].tasks.map(task=>task.name),["通常StoryのTask","移動下書き"]);
+      assert.deepEqual(afterDraft.events[1].stories,[grouped]);
+      await groups.locator(".story-select").filter({hasText:"必要な作業グループ"}).click();
+      await tasks.getByRole("button",{name:"移動下書きの詳細",exact:true}).click();
+      await detail.getByRole("button",{name:"削除",exact:true}).click();
+      await page.getByRole("button",{name:"削除する",exact:true}).click();
+      await expect(tasks.getByRole("button",{name:"移動下書き",exact:true})).toHaveCount(0);
+      // 追加の回帰で使った削除の件数を、以下の元の削除確認とは別に数える。
+      const draftDeleteCount=requests.filter(request=>request.type === "deleteItem").length;
       // REQ-031-S06: 端へ調整後の縮小でも上下下限を維持する。
       const handle = page.getByRole("separator");
       await handle.focus();
@@ -175,7 +214,7 @@ try {
       await detail.getByRole("button", { name: "削除", exact: true }).click();
       await expect(page.getByRole("dialog", { name: "削除確認", exact: true })).toContainText("ストーリー 1件、タスク 5件も削除されます。");
       await page.getByRole("button", { name: "キャンセル", exact: true }).click();
-      assert.equal(requests.filter((request) => request.type === "deleteItem").length, 0);
+      assert.equal(requests.filter((request) => request.type === "deleteItem").length, draftDeleteCount);
       await page.keyboard.press("Escape");
       await tasks.getByRole("button", { name: "実装の詳細", exact: true }).click();
       await detail.getByRole("button", { name: "削除", exact: true }).click();
@@ -187,7 +226,7 @@ try {
       await page.getByRole("button", { name: "削除する", exact: true }).click();
       await expect.poll(async () => (await savedProject()).events.some((event) => event.id === eventId)).toBe(false);
       assert.deepEqual(errors, []);
-      results.push({ theme, passed: true, realYamlPersistence: true, realWriteFailureRecovery: true, addEventTaskRequests: 5, groupedTasksPreserved: true, pageErrors: errors });
+      results.push({ theme, passed: true, realYamlPersistence: true, realWriteFailureRecovery: true, addEventTaskRequests: 5, groupedTasksPreserved: true, inlineDraftProtection: true, pageErrors: errors });
       console.log(`${theme}: repeated operations, cancellation, persistence and recovery passed`);
     } finally {
       unsubscribe(); ready = false;
