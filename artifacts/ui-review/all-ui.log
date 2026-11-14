@@ -1,0 +1,27 @@
+
+> test:ui
+> node scripts/verify-replacement.mjs && node scripts/verify-project-scope.mjs && node scripts/verify-reconnection-drafts.mjs && node scripts/verify-manage-setup.mjs && node scripts/verify-ui-review.mjs && node scripts/verify-board-layout.mjs && node scripts/verify-event-date-picker.mjs
+
+dark: repeated operations, cancellation, persistence and recovery passed
+light: repeated operations, cancellation, persistence and recovery passed
+dark: duplicate UUID scope passed with real YAML and both surfaces
+light: duplicate UUID scope passed with real YAML and both surfaces
+dark: reconnection input protection passed
+light: reconnection input protection passed
+8 theme/surface/state combinations passed
+dark: hex input, persistence and whole UI walkthrough passed
+light: hex input, persistence and whole UI walkthrough passed
+Both themes passed: 3:2 split, drag/keyboard resizing, compact rows, drag/keyboard reorder, scrolling, viewport resize, minimum heights. /Users/glitch/Developer/glitchboard/artifacts/replacement/layout
+Asia/Tokyo dark events
+Asia/Tokyo dark fixture
+Asia/Tokyo dark board
+Asia/Tokyo light events
+Asia/Tokyo light fixture
+Asia/Tokyo light board
+America/Los_Angeles dark events
+America/Los_Angeles dark fixture
+America/Los_Angeles dark board
+America/Los_Angeles light events
+America/Los_Angeles light fixture
+America/Los_Angeles light board
+12 timezone/theme/surface combinations passed

@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState } from "react";
+import { normalizeProjectColor } from "../../../../../shared/src/domain/color.js";
 import { eventSchema } from "../../../../../shared/src/domain/index.js";
+import { ColorInput } from "../../../shared/ui/color-input/index.js";
 import { DatePicker } from "../../../shared/ui/date-picker/index.js";
 
 type Kind = "project" | "event" | "story" | "task";
@@ -136,6 +138,7 @@ export function InlineAdd({
           onSubmit={async (event) => {
             event.preventDefault();
             if (saving || !name.trim()) return;
+            if (kind === "project" && !normalizeProjectColor(color)) return;
             // REQ-022-S07: 不正値は保持し、期限を選び直してから送信する。
             if (
               kind === "event" &&
@@ -153,7 +156,10 @@ export function InlineAdd({
             try {
               const saved = await onSubmit({
                 name: name.trim(),
-                color: kind === "project" ? color : undefined,
+                color:
+                  kind === "project"
+                    ? (normalizeProjectColor(color) ?? undefined)
+                    : undefined,
                 due: kind === "event" ? due : undefined,
                 projectId: kind === "event" ? selectedProjectId : undefined,
               });
@@ -182,11 +188,11 @@ export function InlineAdd({
             onChange={(event) => setName(event.target.value)}
           />
           {kind === "project" && (
-            <input
-              type="color"
-              aria-label="色"
+            <ColorInput
               value={color}
-              onChange={(event) => setColor(event.target.value)}
+              fallback={nextProjectColor(usedColors)}
+              disabled={saving}
+              onChange={setColor}
             />
           )}
           {kind === "event" &&

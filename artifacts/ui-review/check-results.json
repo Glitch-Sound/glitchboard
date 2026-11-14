@@ -1,0 +1,38 @@
+{
+  "verifiedAt": "2026-11-14T06:06:53.658751+00:00",
+  "final": {
+    "testFiles": 106,
+    "tests": 296,
+    "lint": true,
+    "typecheck": true,
+    "fsd": true,
+    "build": true,
+    "strictSpecs": 7,
+    "traceCheck": true,
+    "whitespaceCheck": true
+  },
+  "changes": [
+    "2026-11-14-add-project-hex-input",
+    "2026-11-14-refine-reviewed-ui"
+  ],
+  "newTests": 27,
+  "uiScripts": 7,
+  "reviewThemes": [
+    "dark",
+    "light"
+  ],
+  "reviewStatesPerTheme": 28,
+  "reviewScreenshots": 56,
+  "calendarCombinations": 12,
+  "setupCombinations": 8,
+  "browserRuntimeErrors": 0,
+  "manualVsCodeChecksPending": 34,
+  "checkProductCommandChanged": false,
+  "testUiCommandExpanded": true,
+  "readmeScreenshotsAdded": false,
+  "published": false,
+  "pushed": false,
+  "strictChangeValidationBeforeSync": true,
+  "strictTraceBeforeSync": true,
+  "mainSpecMergeVerified": true
+}

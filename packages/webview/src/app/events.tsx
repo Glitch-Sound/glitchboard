@@ -12,6 +12,8 @@ import {
   EventList,
   type TargetFilter,
 } from "../pages/event-list/index.js";
+import { EmptyState } from "../shared/ui/empty-state/index.js";
+import { OperationError } from "../shared/ui/operation-error/index.js";
 import { localBridge } from "./bridge.js";
 import { ManageSetup } from "./ManageSetup.js";
 import {
@@ -84,7 +86,7 @@ export function EventsApp() {
   return (
     <main className="events-page">
       {(operationError ?? snapshot?.error) && (
-        <p role="alert">{operationError ?? snapshot?.error}</p>
+        <OperationError message={operationError ?? snapshot?.error ?? ""} />
       )}
       {!setupOnly && missingPath && <ManageSetup missingPath={missingPath} />}
       {setupOnly ? (
@@ -132,22 +134,31 @@ export function EventsApp() {
               }
             />
           </div>
-          <EventList
-            projects={projects}
-            today={today}
-            danger={danger.events}
-            target={target}
-            onOpenDetail={(eventId) =>
-              postOperation(operationsBridge, {
-                type: "selectEvent",
-                eventId,
-                openDetail: true,
-              })
-            }
-            onSelect={(eventId) =>
-              postOperation(operationsBridge, { type: "selectEvent", eventId })
-            }
-          />
+          {projects.length === 0 ? (
+            <EmptyState
+              kind={snapshot.projectEntries.length ? "load" : "project"}
+            />
+          ) : (
+            <EventList
+              projects={projects}
+              today={today}
+              danger={danger.events}
+              target={target}
+              onOpenDetail={(eventId) =>
+                postOperation(operationsBridge, {
+                  type: "selectEvent",
+                  eventId,
+                  openDetail: true,
+                })
+              }
+              onSelect={(eventId) =>
+                postOperation(operationsBridge, {
+                  type: "selectEvent",
+                  eventId,
+                })
+              }
+            />
+          )}
         </>
       ) : (
         "読み込み中"

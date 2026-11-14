@@ -1,10 +1,10 @@
 {
-  "verifiedAt": "2026-11-14T05:02:17.106263+00:00",
+  "verifiedAt": "2026-11-14T06:06:53.658931+00:00",
   "dataModel": "Project > Event > Task; optional Event > Story > Task",
   "legacyMigrationAndCompatibility": "out of scope by user instruction",
   "final": {
-    "testFiles": 101,
-    "tests": 269,
+    "testFiles": 106,
+    "tests": 296,
     "lint": true,
     "typecheck": true,
     "fsd": true,
@@ -26,7 +26,7 @@
   "calendarCombinations": 12,
   "setupCombinations": 8,
   "layoutThemes": 2,
-  "manualVsCodeChecksPending": 27,
+  "manualVsCodeChecksPending": 34,
   "published": false,
   "pushed": false,
   "reviewChanges": [
@@ -86,5 +86,21 @@
     "strictValidationBeforeSync": true,
     "strictTraceBeforeSync": true,
     "mainSpecMergeVerified": true
+  },
+  "uiReview": {
+    "changes": [
+      "2026-11-14-add-project-hex-input",
+      "2026-11-14-refine-reviewed-ui"
+    ],
+    "newTests": 27,
+    "uiScripts": 7,
+    "reviewThemes": [
+      "dark",
+      "light"
+    ],
+    "reviewStatesPerTheme": 28,
+    "reviewScreenshots": 56,
+    "calendarCombinations": 12,
+    "setupCombinations": 8
   }
 }

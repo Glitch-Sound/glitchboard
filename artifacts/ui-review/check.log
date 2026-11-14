@@ -1,0 +1,221 @@
+
+> check
+> npm run check:product && npx --no-install openspec validate --specs --strict && node scripts/openspec-trace.mjs check && node scripts/openspec-trace.mjs generate
+
+
+> check:product
+> npm run lint && npm run typecheck && npm run check:fsd && npm test && npm run build
+
+
+> lint
+> biome check .
+
+Checked 185 files in 33ms. No fixes applied.
+
+> typecheck
+> tsc --noEmit -p tsconfig.json
+
+
+> check:fsd
+> CHOKIDAR_USEPOLLING=1 steiger packages/webview/src
+
+✔ No problems found!
+
+> test
+> vitest run
+
+
+ RUN  v3.2.7 /Users/glitch/Developer/glitchboard
+
+ ✓ tests/detail-panel/event-date-picker.test.tsx (5 tests) 528ms
+ ✓ tests/shared-ui/date-picker.test.tsx (5 tests) 601ms
+ ✓ tests/hierarchy-operations/event-date-picker.test.tsx (8 tests) 631ms
+ ✓ tests/shared-ui/project-color.test.tsx (10 tests) 633ms
+ ✓ tests/board-timeline/project-scope.test.tsx (2 tests) 625ms
+   ✓ Projectを含む画面の対象参照 > REQ-005-S05 2番目のEventと詳細を表示し、編集、完了、削除に同じファイル参照を送る  620ms
+ ✓ tests/vscode-extension-shell/startup-guidance.test.tsx (5 tests) 632ms
+ ✓ tests/board-timeline/board-workflow.test.tsx (4 tests) 786ms
+   ✓ ボードの入口 > REQ-035-S01 レコード選択と詳細ボタンを区別し、チェックとStory選択は独立する  417ms
+ ✓ tests/detail-panel/edit-workflow.test.tsx (5 tests) 307ms
+ ✓ tests/board-timeline/event-workflow.test.tsx (5 tests) 504ms
+ ✓ tests/board-timeline/project-reorder.test.tsx (4 tests) 295ms
+ ✓ tests/vscode-extension-shell/req-029-ui.test.tsx (10 tests) 464ms
+ ✓ tests/shared-ui/reviewed-states.test.tsx (5 tests) 208ms
+ ✓ tests/vscode-extension-shell/regression-webview.test.ts (6 tests) 492ms
+ ✓ tests/detail-panel/req-027-s02.test.ts (2 tests) 168ms
+ ✓ tests/board-timeline/story-add-form.test.ts (2 tests) 203ms
+ ✓ tests/board-timeline/project-reorder-error.test.tsx (1 test) 246ms
+ ✓ tests/board-timeline/ui-refinement.test.ts (2 tests) 229ms
+ ✓ tests/board-timeline/task-add-form.test.ts (2 tests) 208ms
+ ✓ tests/event-list-filtering/ui-refinement.test.ts (2 tests) 258ms
+ ✓ tests/board-timeline/project-add-row.test.ts (1 test) 184ms
+ ✓ tests/hierarchy-operations/regression-inline-add.test.ts (1 test) 213ms
+ ✓ tests/board-timeline/unified-navigation.test.tsx (9 tests) 2575ms
+   ✓ 統一した選択と詳細 > REQ-035-S01 名前と行は選択し、詳細は独立し、開いていれば追従する  560ms
+   ✓ 統一した選択と詳細 > REQ-041-S01 REQ-041-S03 保存失敗は移動せず、成功後だけ移動し二重送信しない  407ms
+   ✓ 統一した選択と詳細 > REQ-041-S03 不正な期限は移動せず、修正した元Eventへ保存する  386ms
+   ✓ 統一した選択と詳細 > REQ-035-S01 仮想TaksもStory選択から戻り、独立操作は詳細対象を変えない  384ms
+ ✓ tests/board-timeline/req-016-s04.test.ts (2 tests) 145ms
+ ✓ tests/board-timeline/req-016-s01.test.ts (1 test) 153ms
+ ✓ tests/shared-ui/color-input.test.tsx (1 test) 143ms
+ ✓ tests/detail-panel/req-026-s01.test.ts (1 test) 169ms
+ ✓ tests/hierarchy-operations/req-025-s02.test.ts (1 test) 155ms
+ ✓ tests/hierarchy-operations/req-025-s01.test.ts (3 tests) 296ms
+ ✓ tests/detail-panel/req-027-s01.test.ts (2 tests) 243ms
+ ✓ tests/hierarchy-operations/req-023-s01.test.ts (2 tests) 217ms
+ ✓ tests/event-list-filtering/filter-dismiss.test.tsx (1 test) 152ms
+ ✓ tests/hierarchy-operations/req-022-s02.test.ts (1 test) 146ms
+ ✓ tests/detail-panel/req-028-s03.test.ts (1 test) 150ms
+ ✓ tests/board-timeline/timeline-dimensions.test.tsx (2 tests) 166ms
+ ✓ tests/detail-panel/req-026-s02.test.ts (1 test) 142ms
+ ✓ tests/board-timeline/board-split-resize.test.tsx (2 tests) 132ms
+ ✓ tests/detail-panel/ui-refinement.test.ts (2 tests) 162ms
+ ✓ tests/hierarchy-operations/req-023-s02.test.ts (1 test) 185ms
+ ✓ tests/event-list-filtering/req-020-s01.test.ts (1 test) 58ms
+ ✓ tests/board-timeline/req-018-s01.test.ts (1 test) 29ms
+ ✓ tests/board-timeline/req-016-s02.test.ts (2 tests) 55ms
+ ✓ tests/board-timeline/req-017-s02.test.ts (1 test) 34ms
+ ✓ tests/board-timeline/req-018-s03.test.ts (3 tests) 28ms
+ ✓ tests/board-timeline/regression-labels.test.ts (2 tests) 38ms
+ ✓ tests/board-timeline/req-017-s01.test.ts (1 test) 32ms
+ ✓ tests/board-timeline/req-018-s02.test.ts (1 test) 30ms
+ ✓ tests/vscode-extension-shell/req-013-s01-snapshot-validation.test.ts (1 test) 6ms
+ ✓ tests/vscode-extension-shell/req-013-s03.test.ts (1 test) 107ms
+ ✓ tests/data-persistence/project-scope.test.ts (20 tests) 172ms
+ ✓ tests/hierarchy-operations/event-tasks.test.ts (6 tests) 106ms
+ ✓ tests/vscode-extension-shell/project-scope.test.ts (1 test) 63ms
+ ✓ tests/data-persistence/project-order.test.ts (3 tests) 58ms
+ ✓ tests/vscode-extension-shell/nreq-001-s01.test.ts (1 test) 28ms
+ ✓ tests/vscode-extension-shell/req-029-state.test.ts (6 tests) 539ms
+ ✓ tests/hierarchy-operations/req-024-s01.test.ts (1 test) 27ms
+ ✓ tests/data-persistence/req-003-s02.test.ts (1 test) 26ms
+ ✓ tests/hierarchy-operations/req-024-s02.test.ts (1 test) 25ms
+ ✓ tests/board-timeline/inline-draft-navigation.test.tsx (17 tests) 5510ms
+   ✓ 追加の下書きと選択の保護 > REQ-034-S05 name の移動取消は元の入力と追加先を保つ  471ms
+   ✓ 追加の下書きと選択の保護 > REQ-034-S05 space の移動取消は元の入力と追加先を保つ  330ms
+   ✓ 追加の下書きと選択の保護 > REQ-034-S05 project の移動取消は元の入力と追加先を保つ  372ms
+   ✓ 追加の下書きと選択の保護 > REQ-034-S06 詳細切替 name の取消ではTask追加の下書きも消えない  370ms
+   ✓ 追加の下書きと選択の保護 > REQ-034-S06 詳細切替 space の取消ではTask追加の下書きも消えない  334ms
+   ✓ 追加の下書きと選択の保護 > REQ-034-S06 詳細切替 detail の取消ではTask追加の下書きも消えない  372ms
+   ✓ 追加の下書きと選択の保護 > REQ-034-S06 詳細切替 sidebar の取消ではTask追加の下書きも消えない  320ms
+   ✓ 追加の下書きと選択の保護 > REQ-034-S07 保存失敗と再送は同じStoryを使い、成功するまで移動しない  547ms
+   ✓ 追加の下書きと選択の保護 > REQ-034-S08 明示的に破棄するまでは保持し、同じ追加先のTask選択は入力を残す  457ms
+ ✓ tests/event-list-filtering/req-020-s02.test.ts (1 test) 28ms
+ ✓ tests/vscode-extension-shell/req-013-s04-default-selection.test.ts (1 test) 21ms
+ ✓ tests/vscode-extension-shell/req-014-s01.test.ts (1 test) 21ms
+ ✓ tests/vscode-extension-shell/startup-gating.test.ts (13 tests) 861ms
+ ✓ tests/vscode-extension-shell/req-013-s01.test.ts (1 test) 28ms
+ ✓ tests/vscode-extension-shell/req-013-s02.test.ts (1 test) 23ms
+ ✓ tests/data-persistence/req-002-s02.test.ts (1 test) 14ms
+ ✓ tests/data-persistence/req-004-s02.test.ts (1 test) 11ms
+ ✓ tests/data-persistence/req-003-s01.test.ts (1 test) 16ms
+ ✓ tests/data-persistence/read-only-load.test.ts (1 test) 17ms
+ ✓ tests/data-persistence/req-005-s01.test.ts (1 test) 15ms
+ ✓ tests/hierarchy-operations/req-022-s01.test.ts (1 test) 16ms
+ ✓ tests/workload-analytics/project-scope.test.ts (1 test) 6ms
+ ✓ tests/data-persistence/req-004-s01.test.ts (1 test) 11ms
+ ✓ tests/data-persistence/req-005-s02.test.ts (1 test) 11ms
+ ✓ tests/workload-analytics/req-007-s01.test.ts (1 test) 1ms
+ ✓ tests/data-persistence/req-001-s02.test.ts (1 test) 6ms
+ ✓ tests/data-persistence/req-002-s01.test.ts (1 test) 15ms
+ ✓ tests/data-persistence/req-001-s01.test.ts (1 test) 7ms
+ ✓ tests/vscode-extension-shell/connection-protocol.test.ts (2 tests) 3ms
+ ✓ tests/vscode-extension-shell/manage-connection.test.ts (5 tests) 1293ms
+   ✓ 管理ファイルの接続 > REQ-039-S02 実登録パターンが .yaml の変更、削除、作成へ反応する  572ms
+   ✓ 管理ファイルの接続 > REQ-039-S02 実登録パターンが .yml の変更、削除、作成へ反応する  582ms
+ ✓ tests/workload-analytics/req-008-s01.test.ts (1 test) 7ms
+ ✓ tests/board-timeline/nreq-003-s01.test.ts (1 test) 6ms
+ ✓ tests/workload-analytics/req-009-s01.test.ts (1 test) 2ms
+ ✓ tests/vscode-extension-shell/req-014-setup-schema.test.ts (1 test) 2ms
+ ✓ tests/board-timeline/req-015-s01.test.ts (1 test) 3ms
+ ✓ tests/shared-ui/project-color-format.test.ts (10 tests) 2ms
+ ✓ tests/workload-analytics/req-011-s02.test.ts (1 test) 4ms
+ ✓ tests/workload-analytics/event-task-integration.test.ts (2 tests) 3ms
+ ✓ tests/vscode-extension-shell/req-029-setup.test.ts (14 tests) 1530ms
+ ✓ tests/workload-analytics/req-011-s01.test.ts (1 test) 4ms
+ ✓ tests/workload-analytics/regressions.test.ts (2 tests) 1ms
+ ✓ tests/event-list-filtering/req-021-s01.test.ts (1 test) 3ms
+ ✓ tests/hierarchy-operations/req-022-s04.test.ts (1 test) 3ms
+ ✓ tests/workload-analytics/req-006-s01.test.ts (1 test) 1ms
+ ✓ tests/event-list-filtering/req-019-s01.test.ts (1 test) 2ms
+ ✓ tests/workload-analytics/req-007-s02.test.ts (1 test) 3ms
+ ✓ tests/vscode-extension-shell/req-012-s01.test.ts (1 test) 3ms
+ ✓ tests/workload-analytics/req-007-s04.test.ts (1 test) 2ms
+ ✓ tests/workload-analytics/req-009-s02.test.ts (1 test) 3ms
+ ✓ tests/workload-analytics/req-010-s01.test.ts (1 test) 2ms
+ ✓ tests/workload-analytics/req-007-s03.test.ts (1 test) 3ms
+ ✓ tests/workload-analytics/req-010-s02.test.ts (1 test) 1ms
+ ✓ tests/event-list-filtering/req-019-s02.test.ts (1 test) 2ms
+ ✓ tests/workload-analytics/req-011-s03.test.ts (1 test) 3ms
+ ✓ tests/workload-analytics/req-008-s02.test.ts (1 test) 2ms
+ ✓ tests/workload-analytics/req-006-s02.test.ts (1 test) 1ms
+ ✓ tests/vscode-extension-shell/reconnection-drafts.test.tsx (17 tests) 5038ms
+   ✓ REQ-013-S05 同一ファイルの反復再設定は非既定 Event/Story と両下書きを保持する  513ms
+   ✓ REQ-013-S06 detail の取消は接続と未保存入力を変更しない  345ms
+   ✓ REQ-013-S07 元の詳細と Task を保存した後で別管理ファイルへ切り替える  391ms
+   ✓ REQ-013-S08 保存失敗は元の下書きと設定を保持し、再試行は1回だけ保存する  316ms
+   ✓ REQ-013-S08 保存失敗後もキャンセルでき、再選択時に入力が残る  319ms
+   ✓ REQ-013-S11 Project 追加失敗後のキャンセルは名前と色を残す  325ms
+   ✓ REQ-013-S08 詳細保存の失敗と取消は Task の下書きも保持する  347ms
+   ✓ REQ-013-S12 別接続の欠落中は前の表示を読取専用にし、復元時に新しい入力を失わない  372ms
+
+ Test Files  106 passed (106)
+      Tests  296 passed (296)
+   Start at  15:04:47
+   Duration  11.06s (transform 1.16s, setup 0ms, collect 12.24s, tests 29.78s, environment 13.30s, prepare 3.81s)
+
+
+> build
+> vite build --config packages/webview/vite.config.ts && vite build --config packages/extension/vite.config.ts
+
+vite v7.3.7 building client environment for production...
+transforming...
+node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/core/util.js (400:0): A comment
+
+"// Wrapped in a `@__PURE__` IIFE: esbuild never tree-shakes a top-level initializer that contains a member access on `Number`, so the bare object literal survived into every bundle."
+
+in "node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/core/util.js" contains an annotation that Rollup cannot interpret due to the position of the comment. The comment will be removed to avoid issues.
+node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/core/regexes.js (74:0): A comment
+
+"/** Anchors a pattern source. The interpolation lives here rather than at the call site because
+ * esbuild will not drop a `@__PURE__` call whose own argument interpolates a variable, but it
+ * will drop `anchor(dateSource)`. Keeping it inline pinned `date` into every bundle. */"
+
+in "node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/core/regexes.js" contains an annotation that Rollup cannot interpret due to the position of the comment. The comment will be removed to avoid issues.
+✓ 182 modules transformed.
+rendering chunks...
+computing gzip size...
+packages/extension/dist/webview/style.css                  51.94 kB │ gzip:   9.42 kB
+packages/extension/dist/webview/events.js                   6.75 kB │ gzip:   2.95 kB
+packages/extension/dist/webview/board.js                   45.66 kB │ gzip:  14.36 kB
+packages/extension/dist/webview/assets/style-Cg3iCNNA.js  484.05 kB │ gzip: 116.78 kB
+✓ built in 604ms
+vite v7.3.7 building ssr environment for production...
+transforming...
+node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/core/util.js (400:0): A comment
+
+"// Wrapped in a `@__PURE__` IIFE: esbuild never tree-shakes a top-level initializer that contains a member access on `Number`, so the bare object literal survived into every bundle."
+
+in "node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/core/util.js" contains an annotation that Rollup cannot interpret due to the position of the comment. The comment will be removed to avoid issues.
+node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/core/regexes.js (74:0): A comment
+
+"/** Anchors a pattern source. The interpolation lives here rather than at the call site because
+ * esbuild will not drop a `@__PURE__` call whose own argument interpolates a variable, but it
+ * will drop `anchor(dateSource)`. Keeping it inline pinned `date` into every bundle. */"
+
+in "node_modules/.pnpm/zod@4.6.7/node_modules/zod/v4/core/regexes.js" contains an annotation that Rollup cannot interpret due to the position of the comment. The comment will be removed to avoid issues.
+✓ 269 modules transformed.
+rendering chunks...
+packages/extension/dist/extension.js  710.20 kB
+✓ built in 420ms
+✓ spec/board-visualization
+✓ spec/data-management
+✓ spec/event-navigation
+✓ spec/hierarchy-editing
+✓ spec/item-details
+✓ spec/vscode-integration
+✓ spec/workload-analysis
+Totals: 7 passed, 0 failed (7 items)
+情報: 実機確認: 未確認または不合格 34 件 (REQ-033-S01, REQ-033-S02, REQ-034-S01, REQ-034-S03, REQ-035-S01, REQ-036-S02, REQ-036-S03, REQ-037-S01, REQ-031-S06, REQ-005-S05, REQ-039-S01, REQ-039-S02, REQ-003-S03, REQ-012-S02, REQ-040-S01, REQ-041-S04, REQ-026-S03, REQ-034-S05, REQ-012-S03, REQ-029-S12, REQ-013-S05, REQ-013-S06, REQ-013-S07, REQ-013-S08, REQ-013-S10, REQ-013-S11, REQ-013-S12, REQ-042-S06, REQ-019-S04, REQ-020-S04, REQ-026-S04, REQ-014-S03, REQ-043-S01, REQ-016-S06)
+問題なし
+openspec/traceability.md を生成した

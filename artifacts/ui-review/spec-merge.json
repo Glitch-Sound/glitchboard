@@ -1,0 +1,32 @@
+[
+  {
+    "capability": "board-visualization",
+    "modified": 1,
+    "added": 1,
+    "purposeAndOtherRequirementsPreserved": true
+  },
+  {
+    "capability": "event-navigation",
+    "modified": 2,
+    "added": 0,
+    "purposeAndOtherRequirementsPreserved": true
+  },
+  {
+    "capability": "hierarchy-editing",
+    "modified": 1,
+    "added": 0,
+    "purposeAndOtherRequirementsPreserved": true
+  },
+  {
+    "capability": "item-details",
+    "modified": 1,
+    "added": 0,
+    "purposeAndOtherRequirementsPreserved": true
+  },
+  {
+    "capability": "vscode-integration",
+    "modified": 1,
+    "added": 0,
+    "purposeAndOtherRequirementsPreserved": true
+  }
+]

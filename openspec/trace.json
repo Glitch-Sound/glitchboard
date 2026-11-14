@@ -1,3 +1,9 @@
 {
-  "testGlobs": ["tests/**/*.test.ts", "tests/**/*.test.tsx", "scripts/verify-*.mjs"]
+  "testGlobs": [
+    "**/test_*",
+    "**/*_test.*",
+    "**/*.test.*",
+    "**/*.spec.*",
+    "scripts/verify-*.mjs"
+  ]
 }

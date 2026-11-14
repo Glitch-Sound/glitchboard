@@ -1,0 +1,12 @@
+{
+  "unitEmptyAndError": 5,
+  "unitFilterDismiss": 1,
+  "unitCombinedColorAcknowledgement": 1,
+  "browserFailuresBeforeFix": [
+    "EVENT 行の名前幅と詳細の崩れ",
+    "共通詳細16pxと30pxの不一致",
+    "暗色タイトルのコントラスト",
+    "menu 変数がない場合の背景透明化",
+    "月の期限マーカーと詳細の重なり"
+  ]
+}

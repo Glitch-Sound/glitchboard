@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { projectColorSchema } from "./color.js";
 
 const isoDate = z
   .string()
@@ -46,7 +47,7 @@ export const eventSchema = z.object({
 
 export const projectSchema = z.object({
   ...common,
-  color: z.string().regex(/^#[0-9a-fA-F]{6}$/),
+  color: projectColorSchema,
   events: z.array(eventSchema),
 });
 

@@ -1,0 +1,17 @@
+{
+  "verifiedAt": "2026-11-14T05:27:43.312024+00:00",
+  "testFiles": 104,
+  "tests": 289,
+  "productCheck": true,
+  "strictSpecs": 7,
+  "strictChange": true,
+  "strictTrace": true,
+  "browserThemes": [
+    "dark",
+    "light"
+  ],
+  "change": "2026-11-14-add-project-hex-input",
+  "readmeScreenshotsAdded": false,
+  "published": false,
+  "pushed": false
+}

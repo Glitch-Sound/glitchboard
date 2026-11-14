@@ -7,6 +7,7 @@ import {
   useRef,
   useState,
 } from "react";
+import { normalizeProjectColor } from "../../../../../shared/src/domain/color.js";
 import type { DescendantCounts } from "../../../../../shared/src/domain/deletion.js";
 import type {
   Event,
@@ -23,6 +24,10 @@ import {
 } from "../../../../../shared/src/domain/index.js";
 import type { Operation } from "../../../../../shared/src/domain/messages.js";
 import { DeleteDialog } from "../../../features/delete-item/index.js";
+import {
+  ColorInput,
+  hexColorError,
+} from "../../../shared/ui/color-input/index.js";
 import { DatePicker } from "../../../shared/ui/date-picker/index.js";
 import { PointSelector } from "../../../shared/ui/point-selector/index.js";
 
@@ -94,6 +99,16 @@ export function DetailPanel({
   onDelete,
   deleteCounts,
 }: Props) {
+  const storedColor =
+    selection.kind === "project" ? selection.item.color : "#000000";
+  const [color, setColor] = useState(storedColor);
+  const previousColor = useRef(storedColor);
+  const colorDirty = selection.kind === "project" && color !== storedColor;
+  useEffect(() => {
+    const previous = previousColor.current;
+    previousColor.current = storedColor;
+    setColor((value) => (value === previous ? storedColor : value));
+  }, [storedColor]);
   const [editing, setEditing] = useState(false);
   const [editingNote, setEditingNote] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState(false);
@@ -122,13 +137,13 @@ export function DetailPanel({
         onCancel?.();
         return;
       }
-      if (editing || editingNote) {
+      if (editing || editingNote || colorDirty) {
         leaveCancelled.current = onCancel;
         pendingRef.current = action;
         setPendingLeave(() => action);
       } else action();
     },
-    [saving, editing, editingNote],
+    [saving, editing, editingNote, colorDirty],
   );
   useImperativeHandle(ref, () => ({ requestLeave }));
   const prompt = useRef<HTMLDivElement>(null);
@@ -189,6 +204,7 @@ export function DetailPanel({
         setSaveError("保存に失敗しました。入力を残しています。");
         return false;
       }
+      if (patch.color) setColor(patch.color);
       cancelEditing();
       return true;
     } catch (error) {
@@ -200,28 +216,55 @@ export function DetailPanel({
     }
   };
   const saveCurrent = async () => {
-    if (editingNote) return save({ note });
-    if (!name.trim()) {
-      setSaveError("名前を入力してください。");
-      return false;
+    const patch: EditPatch = {};
+    if (editingNote) patch.note = note;
+    if (editing) {
+      if (!name.trim()) {
+        setSaveError("名前を入力してください。");
+        return false;
+      }
+      if (
+        selection.kind === "event" &&
+        !eventSchema.shape.due.safeParse(due).success
+      ) {
+        const reason = due
+          ? "YYYY-MM-DDで実在する日付を入力してください。"
+          : "期限を選んでください。";
+        setDueError(reason);
+        if (pendingRef.current) setSaveError(reason);
+        else if (!due) setCalendarOpen(true);
+        return false;
+      }
+      patch.name = name.trim();
+      if (selection.kind === "event") patch.due = due;
     }
-    if (
-      selection.kind === "event" &&
-      !eventSchema.shape.due.safeParse(due).success
-    ) {
-      const reason = due
-        ? "YYYY-MM-DDで実在する日付を入力してください。"
-        : "期限を選んでください。";
-      setDueError(reason);
-      if (pendingRef.current) setSaveError(reason);
-      else if (!due) setCalendarOpen(true);
-      return false;
+    if (colorDirty) {
+      const normalized = normalizeProjectColor(color);
+      if (!normalized) {
+        setSaveError(hexColorError);
+        return false;
+      }
+      patch.color = normalized;
     }
-    return save(
-      selection.kind === "event"
-        ? { name: name.trim(), due }
-        : { name: name.trim() },
-    );
+    return save(patch);
+  };
+  const saveColor = async (value: string) => {
+    const normalized = normalizeProjectColor(value);
+    if (!normalized || saving) return;
+    setSaving(true);
+    setSaveError(undefined);
+    try {
+      const saved = await onSave?.("project", selection.item.id, {
+        color: normalized,
+      });
+      if (saved === false)
+        setSaveError("保存に失敗しました。入力を残しています。");
+      else setColor(normalized);
+    } catch (error) {
+      setSaveError(error instanceof Error ? error.message : String(error));
+    } finally {
+      setSaving(false);
+    }
   };
   useEffect(() => {
     const close = (event: KeyboardEvent) => {
@@ -330,18 +373,45 @@ export function DetailPanel({
         </form>
       )}
       {selection.kind === "project" && (
-        <label>
-          色{" "}
-          <input
-            type="color"
-            value={selection.item.color}
-            onChange={(event) =>
-              onSave?.("project", selection.item.id, {
-                color: event.target.value,
-              })
-            }
+        <form
+          className="detail-color-form"
+          onSubmit={(event) => {
+            event.preventDefault();
+            void saveColor(color);
+          }}
+        >
+          <h3>Project の色</h3>
+          <ColorInput
+            value={color}
+            fallback={storedColor}
+            disabled={saving}
+            onChange={setColor}
+            onPick={(value) => {
+              void saveColor(value);
+            }}
+            onCancel={() => {
+              setColor(storedColor);
+              setSaveError(undefined);
+            }}
           />
-        </label>
+          {colorDirty && (
+            <div className="color-actions">
+              <button type="submit" disabled={saving}>
+                色を保存
+              </button>
+              <button
+                type="button"
+                disabled={saving}
+                onClick={() => {
+                  setColor(storedColor);
+                  setSaveError(undefined);
+                }}
+              >
+                色を取消
+              </button>
+            </div>
+          )}
+        </form>
       )}
       {selection.kind === "task" && (
         <div className="detail-points">
@@ -376,7 +446,7 @@ export function DetailPanel({
           aria-busy={saving}
           onSubmit={(event) => {
             event.preventDefault();
-            void save({ note });
+            void saveCurrent();
           }}
         >
           <label>
@@ -467,6 +537,7 @@ export function DetailPanel({
               onClick={() => {
                 const next = pendingRef.current;
                 cancelEditing();
+                setColor(storedColor);
                 clearPending();
                 next?.();
               }}

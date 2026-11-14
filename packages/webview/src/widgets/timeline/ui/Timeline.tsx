@@ -12,9 +12,14 @@ import {
   isWorkday,
   type WorkdaySettings,
 } from "../../../../../shared/src/calculation/dates.js";
+import { normalizeProjectColor } from "../../../../../shared/src/domain/color.js";
 import type { Project } from "../../../../../shared/src/domain/index.js";
 import { DetailButton } from "../../../features/detail-button/index.js";
 import { nextProjectColor } from "../../../features/inline-add/index.js";
+import {
+  ColorInput,
+  hexColorError,
+} from "../../../shared/ui/color-input/index.js";
 
 import { TimelineFrame, type TimelineLayout } from "./TimelineFrame.js";
 
@@ -240,11 +245,16 @@ export function Timeline({
   const prompt = useRef<HTMLDivElement>(null);
   const saveProject = async () => {
     if (projectBusy.current || !projectName.trim()) return false;
+    const normalizedColor = normalizeProjectColor(projectColor);
+    if (!normalizedColor) {
+      setSaveError(hexColorError);
+      return false;
+    }
     projectBusy.current = true;
     setSavingProject(true);
     setSaveError(null);
     try {
-      const saved = await onAddProject?.(projectName.trim(), projectColor);
+      const saved = await onAddProject?.(projectName.trim(), normalizedColor);
       if (saved) cancelProject();
       else setSaveError("追加に失敗しました。入力を残しています。");
       return Boolean(saved);
@@ -602,19 +612,6 @@ export function Timeline({
                     await saveProject();
                   }}
                 >
-                  <label className="timeline-project-color">
-                    <span
-                      className="timeline-project-color-dot"
-                      style={{ backgroundColor: projectColor }}
-                      aria-hidden="true"
-                    />
-                    <input
-                      type="color"
-                      aria-label="色"
-                      value={projectColor}
-                      onChange={(event) => setProjectColor(event.target.value)}
-                    />
-                  </label>
                   <input
                     ref={projectNameInput}
                     type="text"
@@ -622,6 +619,14 @@ export function Timeline({
                     placeholder="プロジェクト名 — Enterで追加"
                     value={projectName}
                     onChange={(event) => setProjectName(event.target.value)}
+                  />
+                  <ColorInput
+                    value={projectColor}
+                    fallback={nextProjectColor(
+                      projects.map((project) => project.color),
+                    )}
+                    disabled={savingProject}
+                    onChange={setProjectColor}
                   />
                   {projectName.trim() && (
                     <button type="submit" disabled={savingProject}>

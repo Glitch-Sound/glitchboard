@@ -1,0 +1,222 @@
+{
+  "verifiedAt": "2026-11-14T05:58:49.002Z",
+  "browser": "156.0.8078.4",
+  "results": [
+    {
+      "theme": "dark",
+      "reviewCheck": "all",
+      "visuals": {
+        "rows": {
+          "240": {
+            "controlSize": 30,
+            "nameWidth": 108.171875,
+            "detailWidth": 30,
+            "detailHeight": 30,
+            "selectionRight": 190,
+            "detailLeft": 198
+          },
+          "280": {
+            "controlSize": 30,
+            "nameWidth": 148.171875,
+            "detailWidth": 30,
+            "detailHeight": 30,
+            "selectionRight": 230,
+            "detailLeft": 238
+          }
+        },
+        "title": [
+          {
+            "accent": "#ffffff",
+            "foreground": [
+              225,
+              225,
+              225
+            ],
+            "background": [
+              24,
+              24,
+              24
+            ],
+            "contrast": 13.578337668642439
+          },
+          {
+            "accent": "#000000",
+            "foreground": [
+              148,
+              148,
+              148
+            ],
+            "background": [
+              24,
+              24,
+              24
+            ],
+            "contrast": 5.853450251763656
+          },
+          {
+            "accent": "#abcdef",
+            "foreground": [
+              200,
+              210,
+              220
+            ],
+            "background": [
+              24,
+              24,
+              24
+            ],
+            "contrast": 11.590588502790046
+          }
+        ]
+      },
+      "passed": true,
+      "hexCreateEditReload": true,
+      "invalidCancelFailure": true,
+      "combinedDirtyGuard": true,
+      "sidebarColorSynced": true,
+      "screenshots": 28,
+      "captures": [
+        "project-add-invalid",
+        "project-color-invalid",
+        "color-save-error",
+        "project-detail",
+        "board",
+        "events",
+        "filters",
+        "all-events",
+        "unloaded-board",
+        "unloaded-events",
+        "event-detail",
+        "event-edit-calendar",
+        "event-edit",
+        "story-detail",
+        "task-detail",
+        "task-points",
+        "task-edit",
+        "delete-confirm",
+        "event-add",
+        "empty-board",
+        "empty-events",
+        "event-empty-board",
+        "event-empty-events",
+        "filtered-empty-events",
+        "setup",
+        "missing",
+        "yaml-error",
+        "yaml-error-events"
+      ],
+      "unnamedButtons": 0,
+      "nestedButtons": 0,
+      "pageOverflow": false,
+      "errors": []
+    },
+    {
+      "theme": "light",
+      "reviewCheck": "all",
+      "visuals": {
+        "rows": {
+          "240": {
+            "controlSize": 30,
+            "nameWidth": 108.171875,
+            "detailWidth": 30,
+            "detailHeight": 30,
+            "selectionRight": 190,
+            "detailLeft": 198
+          },
+          "280": {
+            "controlSize": 30,
+            "nameWidth": 148.171875,
+            "detailWidth": 30,
+            "detailHeight": 30,
+            "selectionRight": 230,
+            "detailLeft": 238
+          }
+        },
+        "title": [
+          {
+            "accent": "#ffffff",
+            "foreground": [
+              112,
+              112,
+              112
+            ],
+            "background": [
+              255,
+              255,
+              255
+            ],
+            "contrast": 4.952143998137194
+          },
+          {
+            "accent": "#000000",
+            "foreground": [
+              36,
+              36,
+              36
+            ],
+            "background": [
+              255,
+              255,
+              255
+            ],
+            "contrast": 15.522910417680388
+          },
+          {
+            "accent": "#abcdef",
+            "foreground": [
+              87,
+              97,
+              107
+            ],
+            "background": [
+              255,
+              255,
+              255
+            ],
+            "contrast": 6.311172552234648
+          }
+        ]
+      },
+      "passed": true,
+      "hexCreateEditReload": true,
+      "invalidCancelFailure": true,
+      "combinedDirtyGuard": true,
+      "sidebarColorSynced": true,
+      "screenshots": 28,
+      "captures": [
+        "project-add-invalid",
+        "project-color-invalid",
+        "color-save-error",
+        "project-detail",
+        "board",
+        "events",
+        "filters",
+        "all-events",
+        "unloaded-board",
+        "unloaded-events",
+        "event-detail",
+        "event-edit-calendar",
+        "event-edit",
+        "story-detail",
+        "task-detail",
+        "task-points",
+        "task-edit",
+        "delete-confirm",
+        "event-add",
+        "empty-board",
+        "empty-events",
+        "event-empty-board",
+        "event-empty-events",
+        "filtered-empty-events",
+        "setup",
+        "missing",
+        "yaml-error",
+        "yaml-error-events"
+      ],
+      "unnamedButtons": 0,
+      "nestedButtons": 0,
+      "pageOverflow": false,
+      "errors": []
+    }
+  ]
+}

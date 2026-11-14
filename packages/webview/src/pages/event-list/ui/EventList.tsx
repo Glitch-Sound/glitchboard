@@ -2,6 +2,7 @@ import type { EventDanger } from "../../../../../shared/src/calculation/danger.j
 import { calendarDayDifference } from "../../../../../shared/src/calculation/dates.js";
 import type { Project } from "../../../../../shared/src/domain/index.js";
 import { DetailButton } from "../../../features/detail-button/index.js";
+import { EmptyState } from "../../../shared/ui/empty-state/index.js";
 import { RecordSurface } from "../../../shared/ui/record-surface/index.js";
 import { groupEvents, type TargetFilter } from "../model/groupEvents.js";
 
@@ -24,6 +25,8 @@ export function EventList({
   onOpenDetail,
 }: Props) {
   const groups = groupEvents(projects, today, target);
+  if (Object.values(groups).every((events) => events.length === 0))
+    return <EmptyState kind="filter" />;
   const labels = {
     overdue: "期限切れ・未完了",
     week: "今週",

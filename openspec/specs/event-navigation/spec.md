@@ -36,6 +36,13 @@ Event追加欄は見出し直下へ差し込み、名前の案内と小さなPro
 - **WHEN** EVENT一覧を開く。
 - **THEN** ボードと同じ危険判定により、そのEventの文字が赤くなる。
 
+#### Scenario: REQ-019-S04 - 狭い左ペインの行表示
+
+- **GIVEN** 幅の狭い EVENT 一覧に名前、補足のある Event がある。
+- **WHEN** 一覧を表示する。
+- **THEN** Event 名と Project、残り日数を2行で読め、期限と独立した詳細ボタンが重ならず、行の余白と名前で選択できる。
+- **AND** 詳細ボタンは他の共通詳細ボタンと同じ操作領域とし、選択と詳細を二重送信しない。
+
 ### Requirement: REQ-020 - 抽出条件とProject切り替え
 
 WHEN 漏斗から抽出条件を変えたとき、GlitchBoardは SHALL 対象と読込Projectを反映し、条件と表示Event件数を見出しの下に示し、初期状態から変更した条件数を漏斗バッジに示す。\
@@ -62,6 +69,12 @@ WHEN 漏斗から抽出条件を変えたとき、GlitchBoardは SHALL 対象と
 - **GIVEN** loadがfalseのProjectファイルに名前「B」が保存されている。
 - **WHEN** 抽出条件を開く。
 - **THEN** ファイルの場所ではなく「B」を表示する。
+
+#### Scenario: REQ-020-S04 - 抽出条件の終了
+
+- **GIVEN** 抽出条件のポップオーバーが開いている。
+- **WHEN** Escape を押すか、ポップオーバーと入口の外をクリックする。
+- **THEN** 選択済みの条件を維持して閉じ、Escape の場合は抽出条件ボタンへフォーカスを戻す。
 
 ### Requirement: REQ-021 - Eventへの移動
 WHEN EVENT一覧の行を選んだとき、GlitchBoardは SHALL ボードを開いて同じEventを選択し、該当Eventの詳細エリアを表示する。\

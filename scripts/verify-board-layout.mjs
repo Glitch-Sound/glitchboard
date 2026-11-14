@@ -75,6 +75,20 @@ try {
       await page.locator(".project-actions .detail-button").first().click();
       await expect(page.getByRole("dialog", { name: "詳細パネル", exact: true })).toBeVisible();
       await page.getByRole("button", { name: "詳細を閉じる", exact: true }).click();
+      if(period === "month") {
+        // REQ-016-S06: 月の密なセルでも ◆ と詳細を重ねない。
+        const wrap=page.locator(".marker-wrap").filter({has:page.locator(":scope > .detail-button")}).first();
+        const marker=wrap.locator(".event-marker"),detail=wrap.locator(":scope > .detail-button");
+        const before=await wrap.evaluate(node=>{const a=node.querySelector(".event-marker").getBoundingClientRect(),b=node.querySelector(".detail-button").getBoundingClientRect();return {overlap:a.left<b.right&&a.right>b.left&&a.top<b.bottom&&a.bottom>b.top,opacity:getComputedStyle(node.querySelector(".detail-button")).opacity};});
+        assert.equal(before.opacity,"0",JSON.stringify(before));
+        await marker.hover();await expect(detail).toHaveCSS("opacity","1");
+        const hoverBox=await detail.boundingBox();await page.mouse.move(hoverBox.x+hoverBox.width/2,hoverBox.y+hoverBox.height/2,{steps:20});await expect(detail).toHaveCSS("opacity","1");
+        await page.screenshot({path:`${artifacts}/${theme}-month-actions.png`});
+        const a=await marker.boundingBox(),b=await detail.boundingBox();assert.ok(a.y>=b.y+b.height || b.y>=a.y+a.height,"月表示の詳細と◆が重なっている");
+        await detail.click();await expect(page.getByRole("dialog",{name:"詳細パネル",exact:true})).toBeVisible();await page.getByRole("button",{name:"詳細を閉じる",exact:true}).click();
+        await marker.focus();await page.keyboard.press("Tab");await expect(detail).toBeFocused();await page.keyboard.press("Enter");await expect(page.getByRole("dialog",{name:"詳細パネル",exact:true})).toBeVisible();await page.getByRole("button",{name:"詳細を閉じる",exact:true}).click();
+        await page.getByRole("button",{name:"月",exact:true}).focus();await page.mouse.move(0,0);
+      }
       await page.screenshot({ path: `${artifacts}/${theme}-${period}.png` });
     }
     await page.screenshot({ path: `${artifacts}/${theme}-default.png` });
@@ -181,7 +195,7 @@ try {
       assert.ok(await panel.evaluate((node) => { node.scrollTop = 500; return node.scrollTop; }) > 0);
     }
     assert.deepEqual(errors, []);
-    results.push({ theme, verifiedAt: new Date().toISOString(), browser: browser.version(), scenarios: ["REQ-016-S05", "REQ-031-S01", "REQ-031-S02", "REQ-031-S03", "REQ-031-S04", "REQ-031-S05", "REQ-032-S01", "REQ-032-S02", "REQ-032-S06"], initial, rowHeights, periodRows, expanded, minimized, tiny, cancelled, reorderOperations: countBeforeEdges, passed: true });
+    results.push({ theme, verifiedAt: new Date().toISOString(), browser: browser.version(), scenarios: ["REQ-016-S05", "REQ-016-S06", "REQ-031-S01", "REQ-031-S02", "REQ-031-S03", "REQ-031-S04", "REQ-031-S05", "REQ-032-S01", "REQ-032-S02", "REQ-032-S06"], initial, rowHeights, periodRows, expanded, minimized, tiny, cancelled, reorderOperations: countBeforeEdges, passed: true });
     await page.close();
   }
   await writeFile(`${artifacts}/results.json`, JSON.stringify(results, null, 2));

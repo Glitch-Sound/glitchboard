@@ -22,6 +22,8 @@ import {
   navigationMessageSchema,
 } from "../../../shared/src/domain/messages.js";
 import { BoardSplit, displayDays, type Period } from "../pages/board/index.js";
+import { EmptyState } from "../shared/ui/empty-state/index.js";
+import { OperationError } from "../shared/ui/operation-error/index.js";
 import {
   DetailPanel,
   type DetailPanelHandle,
@@ -429,7 +431,7 @@ export function BoardApp() {
   return (
     <main className="board-page">
       {(operationError ?? (!unconfigured && snapshot?.error)) && (
-        <p role="alert">{operationError ?? snapshot?.error}</p>
+        <OperationError message={operationError ?? snapshot?.error ?? ""} />
       )}
       {unavailable && (
         <p
@@ -592,18 +594,15 @@ export function BoardApp() {
                   onOpenDetail={(kind, id) => chooseRecord(kind, id, true)}
                 />
               ) : (
-                <div className="board-empty">
-                  <h2>
-                    {projects.length
-                      ? "Event を追加しましょう"
-                      : "Project を追加して始めましょう"}
-                  </h2>
-                  <p>
-                    {projects.length
-                      ? "左の EVENT 一覧の ＋ から名前と期限を設定します。そのまま Task を追加できます。"
-                      : "タイムラインの Project ＋ から名前と色を設定します。"}
-                  </p>
-                </div>
+                <EmptyState
+                  kind={
+                    projects.length
+                      ? "event"
+                      : snapshot?.projectEntries.length
+                        ? "load"
+                        : "project"
+                  }
+                />
               )}
             </div>
           </BoardSplit>

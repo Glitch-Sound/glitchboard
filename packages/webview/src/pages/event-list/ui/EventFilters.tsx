@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { todayInTokyo } from "../../../../../shared/src/calculation/dates.js";
 import type { Project } from "../../../../../shared/src/domain/index.js";
 import { groupEvents, type TargetFilter } from "../model/groupEvents.js";
@@ -23,6 +23,31 @@ export function EventFilters({
   today = todayInTokyo(),
 }: Props) {
   const [open, setOpen] = useState(false);
+  const container = useRef<HTMLDivElement>(null);
+  const trigger = useRef<HTMLButtonElement>(null);
+  useEffect(() => {
+    if (!open) return;
+    const onEscape = (event: KeyboardEvent) => {
+      if (event.key !== "Escape" || event.defaultPrevented) return;
+      event.preventDefault();
+      event.stopPropagation();
+      setOpen(false);
+      trigger.current?.focus();
+    };
+    const outside = (event: PointerEvent) => {
+      if (
+        event.target instanceof Node &&
+        !container.current?.contains(event.target)
+      )
+        setOpen(false);
+    };
+    document.addEventListener("keydown", onEscape);
+    document.addEventListener("pointerdown", outside);
+    return () => {
+      document.removeEventListener("keydown", onEscape);
+      document.removeEventListener("pointerdown", outside);
+    };
+  }, [open]);
   const groups = groupEvents(projects, today, target);
   const count = Object.values(groups).reduce(
     (sum, rows) => sum + rows.length,
@@ -32,9 +57,10 @@ export function EventFilters({
     Number(target !== "pending") +
     projectEntries.filter((entry) => !entry.load).length;
   return (
-    <div className="event-filters">
+    <div ref={container} className="event-filters">
       <button
         type="button"
+        ref={trigger}
         aria-label="抽出条件"
         aria-expanded={open}
         onClick={() => setOpen(!open)}

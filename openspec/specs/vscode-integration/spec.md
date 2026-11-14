@@ -141,6 +141,13 @@ WHEN Webviewから操作を受けたとき、GlitchBoardは SHALL 共有スキ�
 - **WHEN** 失敗理由をWebviewへ返す。
 - **THEN** 操作した画面の上部に理由を表示する。
 
+#### Scenario: REQ-014-S03 - 左右で読めるエラー
+
+- **GIVEN** メインまたは幅の狭い EVENT 一覧で、長いパスを含む保存または読込の失敗がある。
+- **WHEN** 失敗理由を表示する。
+- **THEN** 共通の警告アイコンと枠を持つエラー領域に理由を省略せず折り返し、ページ全体を横へはみ出させない。
+- **AND** 既存の role=alert と失敗理由の内容を維持し、成功後に古いエラーを消す。
+
 ### Requirement: REQ-029 - 管理ファイル未設定時の案内
 
 WHEN `glitchboard.manageFile`が未設定、または設定先の管理ファイルが存在しないと判明したとき、GlitchBoardは SHALL EVENT一覧だけに、背景、枠、余白を持つ「manage.yamlを選ぶ」「新しく作る」ボタンを提示する。\
