@@ -25,7 +25,8 @@ try {
   const other = { id: id(1), name: "検証プロジェクト", color: "#d08228", events: [{ id: id(2), name: "別Projectの予定", due: "2026-11-19", tasks: [{ id: id(4), name: "別の作業", points: 1 }], stories: [] }] };
   const a = resolve(root, "A.yaml"), b = resolve(root, "B.yaml"), manage = resolve(root, "manage.yaml");
   await writeFile(a, JSON.stringify(source)); await writeFile(b, JSON.stringify(other));
-  await writeFile(manage, JSON.stringify({ settings: { workdays_off: ["sat", "sun"], public_holidays: true }, projects: [{ file: "A.yaml", load: true }, { file: "B.yaml", load: true }] }));
+  await writeFile(resolve(root, "C.yaml"), JSON.stringify({ id: id(1), name: "空のProject", color: "#44aa77", events: [] }));
+  await writeFile(manage, JSON.stringify({ settings: { workdays_off: ["sat", "sun"], public_holidays: true }, projects: [{ file: "A.yaml", load: true }, { file: "B.yaml", load: true }, { file: "C.yaml", load: true }] }));
   const session = new BoardSession(manage); await session.reload(); session.selectEvent(id(2), "A.yaml");
   let board, failNext = false;
   const dispatch = (page, data) => page.evaluate(message => window.dispatchEvent(new MessageEvent("message", { data: message })), data);
@@ -126,6 +127,27 @@ try {
    assert.equal(parse(await readFile(a, "utf8")).events[0].name, "保存する公開準備"); assert.deepEqual(parse(await readFile(b, "utf8")), other);
    verify(await eventRow("別Projectの予定").evaluate(node => node.classList.contains("selected")), "保存成功後に選択色が移る");
    await capture(sidebar, "events-after-save"); await detail.getByRole("button", { name: "詳細を閉じる", exact: true }).click();
+   // REQ-035-S05: 空の Project は元の Event を左へ残さず、確認取消では解除しない。
+   await eventRow("別Projectの予定").getByRole("button", { name: "別Projectの予定の詳細", exact: true }).click();
+   await detail.getByRole("button", { name: "編集", exact: true }).click(); await detail.getByLabel("名前", { exact: true }).fill("破棄する下書き");
+   await project("空のProject").getByRole("button", { name: "空のProject", exact: true }).click();
+   await expect(board.getByRole("alertdialog", { name: "未保存の編集", exact: true })).toBeVisible();
+   await board.getByRole("button", { name: "キャンセル", exact: true }).click();
+   await expect(detail.getByLabel("名前", { exact: true })).toHaveValue("破棄する下書き");
+   verify(await eventRow("別Projectの予定").evaluate(node => node.classList.contains("selected")), "空 Project への移動取消は元の選択を維持");
+   await project("空のProject").getByRole("button", { name: "空のProject", exact: true }).click();
+   await board.getByRole("button", { name: "破棄して進む", exact: true }).click();
+   await expect(board.locator(".detail-target")).toHaveText("PROJECT : 空のProject");
+   await expect(board.getByRole("region", { name: "Event詳細" })).toHaveCount(0);
+   await expect.poll(() => session.snapshot().selectedEventId).toBe(null);
+   await dispatch(board, snap());
+   await board.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
+   verify(await sidebar.locator(".event-row.selected").count() === 0, "空 Project の選択確定は左の Event 選択を解除");
+   verify(await project("空のProject").evaluate(node => getComputedStyle(node).borderInlineStartColor) === "rgb(68, 170, 119)", "解除の応答後も空 Project の選択左線を保持");
+   verify((await style(project("空のProject").locator(".detail-button"))).color === selectedInk, "解除の応答後も空 Project の詳細を強調");
+   assert.deepEqual(parse(await readFile(b, "utf8")), other);
+   assert.deepEqual(parse(await readFile(resolve(root, "C.yaml"), "utf8")), { id: id(1), name: "空のProject", color: "#44aa77", events: [] });
+   await capture(board, "empty-project"); await capture(sidebar, "events-cleared");
    if (phase === "after") { const baseline = JSON.parse(await readFile(resolve(artifacts, "before-results.json"), "utf8")); assert.deepEqual(story, baseline.results.find(r => r.theme === theme).story, "Story の選択、未選択、ホバー、フォーカスの表現を変更しない"); }
    assert.deepEqual(errors, []); results.push({ theme, samples, story, captures, errors, guardedSelection: true });
    console.log(`${theme}: selection states, keyboard, independent operations and edit guards verified`);

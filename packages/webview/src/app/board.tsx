@@ -301,11 +301,12 @@ export function BoardApp() {
     const commit = () => {
       setRecord({ kind, id, groupId });
       setSelectedEventId(event?.id ?? null);
-      if (event)
-        postOperation(operationsBridge, {
-          type: "selectEvent",
-          eventId: event.id,
-        });
+      // REQ-035-S05: 自分の選択確定の応答で空Projectの選択を消さない。
+      snapshotSelection.current = event?.id ?? null;
+      postOperation(operationsBridge, {
+        type: "selectEvent",
+        eventId: event?.id ?? null,
+      });
       if (openDetail || detailTarget) setDetailTarget({ kind, id });
     };
     const destinationStory =

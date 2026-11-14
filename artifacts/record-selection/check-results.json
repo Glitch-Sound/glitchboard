@@ -1,5 +1,5 @@
 {
-  "verifiedAt": "2026-11-14T11:42:31.376243+00:00",
+  "verifiedAt": "2026-11-14T11:57:03.103389+00:00",
   "change": {
     "name": "refine-record-selection",
     "tasks": 4,
@@ -12,8 +12,8 @@
     "mainSpecMergeVerified": true
   },
   "final": {
-    "testFiles": 106,
-    "tests": 296,
+    "testFiles": 107,
+    "tests": 298,
     "lint": true,
     "typecheck": true,
     "fsd": true,
@@ -28,14 +28,29 @@
     "dark",
     "light"
   ],
-  "statesPerTheme": 13,
-  "screenshotsAfter": 26,
+  "statesPerTheme": 15,
+  "screenshotsAfter": 30,
   "beforeFailures": 32,
   "focusBeforeFailures": 2,
   "afterFailures": 0,
   "storyStylesUnchanged": true,
   "keyboardAndGuardedSelection": true,
-  "manualVsCodeChecksPending": 38,
+  "manualVsCodeChecksPending": 39,
   "published": false,
-  "pushed": false
+  "pushed": false,
+  "emptyProjectChange": {
+    "name": "clear-empty-project-selection",
+    "tasks": 3,
+    "modifiedRequirements": 1,
+    "scenarios": 5,
+    "newScenarios": 1,
+    "archived": "openspec/changes/archive/2026-11-14-clear-empty-project-selection",
+    "strictValidationBeforeSync": true,
+    "strictTraceBeforeSync": true,
+    "mainSpecMergeVerified": true,
+    "schemaAndSessionAndHostRedTests": 3,
+    "emptyBeforeFailures": 2,
+    "emptyAckBeforeFailures": 4,
+    "afterFailures": 0
+  }
 }

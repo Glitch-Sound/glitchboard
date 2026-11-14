@@ -1,0 +1,10 @@
+
+ RUN  v3.2.7 /Users/glitch/Developer/glitchboard
+
+ ✓ tests/data-persistence/clear-selection.test.ts (2 tests) 15ms
+ ✓ tests/vscode-extension-shell/project-scope.test.ts (1 test) 61ms
+
+ Test Files  2 passed (2)
+      Tests  3 passed (3)
+   Start at  20:48:54
+   Duration  288ms (transform 90ms, setup 0ms, collect 200ms, tests 76ms, environment 0ms, prepare 59ms)

@@ -1,0 +1,9 @@
+{
+  "change": "clear-empty-project-selection",
+  "mainSpec": "openspec/specs/item-details/spec.md",
+  "purposePreserved": true,
+  "untouchedRequirementsPreserved": true,
+  "deltaMatched": true,
+  "beforeSha256": "b4d483e243253861e5638b70952bf640119180b66b5c724a4cf19bd61f931214",
+  "afterSha256": "ff0c47706a312895a963ebf92a44090280843dbc950d594b0d9777e6076eaf8c"
+}

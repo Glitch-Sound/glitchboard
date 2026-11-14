@@ -1,0 +1,8 @@
+✓ spec/board-visualization
+✓ spec/data-management
+✓ spec/event-navigation
+✓ spec/hierarchy-editing
+✓ spec/item-details
+✓ spec/vscode-integration
+✓ spec/workload-analysis
+Totals: 7 passed, 0 failed (7 items)

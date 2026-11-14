@@ -92,6 +92,13 @@ it("REQ-005-S05 サイドバーの実ハンドラはProject参照を落とさず
     });
     expect(latest("events")).toEqual(latest("board"));
     expect(host.executeCommand).toHaveBeenCalledWith("glitchboard.open");
+    // REQ-035-S05: ボードの解除要求は移動要求へ変換せず、左右へ反映する。
+    await host.receivers.board?.({ type: "selectEvent", eventId: null });
+    expect(latest("board")).toMatchObject({
+      selectedEventId: null,
+      selectedProjectFile: null,
+    });
+    expect(latest("events")).toEqual(latest("board"));
   } finally {
     disposables.forEach((d) => {
       d.dispose();

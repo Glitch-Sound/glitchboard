@@ -1,5 +1,5 @@
 {
-  "verifiedAt": "2026-11-14T11:36:54.956Z",
+  "verifiedAt": "2026-11-14T11:53:58.585Z",
   "browser": "156.0.8078.4",
   "results": [
     {
@@ -131,7 +131,9 @@
         "task-focus",
         "task-selected",
         "pending-change",
-        "events-after-save"
+        "events-after-save",
+        "empty-project",
+        "events-cleared"
       ],
       "errors": [],
       "guardedSelection": true
@@ -265,7 +267,9 @@
         "task-focus",
         "task-selected",
         "pending-change",
-        "events-after-save"
+        "events-after-save",
+        "empty-project",
+        "events-cleared"
       ],
       "errors": [],
       "guardedSelection": true

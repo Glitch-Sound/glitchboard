@@ -108,7 +108,7 @@ export const operationSchema = z.discriminatedUnion("type", [
     type: z.literal("selectEvent"),
     openDetail: z.boolean().optional(),
     projectFile: z.string().min(1).optional(),
-    eventId: z.uuid(),
+    eventId: z.uuid().nullable(),
   }),
   z.object({
     type: z.literal("createProject"),
