@@ -21,6 +21,9 @@ const host = vi.hoisted(() => ({
     base: string;
     pattern: string;
   }[],
+  onMessage: null as
+    | null
+    | ((surface: "board" | "events", message: Message) => void),
   openDialog: vi.fn(),
   saveDialog: vi.fn(),
   update: vi.fn(),
@@ -38,6 +41,7 @@ export function webview(surface: "board" | "events") {
     asWebviewUri: (target: unknown) => target,
     postMessage: async (message: Message) => {
       host.messages[surface].push(message);
+      host.onMessage?.(surface, message);
       return true;
     },
     onDidReceiveMessage: (receiver: Receiver) => {
@@ -144,6 +148,7 @@ export function resetHost() {
   host.messages.board = [];
   host.messages.events = [];
   host.watchers = [];
+  host.onMessage = null;
   host.openDialog.mockReset();
   host.saveDialog.mockReset();
   host.update.mockReset();

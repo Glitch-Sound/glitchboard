@@ -34,7 +34,9 @@ export type DetailSelection = { projectColor?: string } & (
 );
 
 type EditPatch = Extract<Operation, { type: "editItem" }>["patch"];
-export type DetailPanelHandle = { requestLeave(action: () => void): void };
+export type DetailPanelHandle = {
+  requestLeave(action: () => void, onCancel?: () => void): void;
+};
 type Props = {
   ref?: Ref<DetailPanelHandle>;
   selection: DetailSelection;
@@ -108,14 +110,20 @@ export function DetailPanel({
   const panel = useRef<HTMLElement>(null);
   const [pendingLeave, setPendingLeave] = useState<(() => void) | null>(null);
   const pendingRef = useRef<(() => void) | null>(null);
+  const leaveCancelled = useRef<(() => void) | undefined>(undefined);
   const requestLeave = useCallback(
-    (action: () => void) => {
-      if (pendingRef.current) return;
+    (action: () => void, onCancel?: () => void) => {
+      if (pendingRef.current) {
+        onCancel?.();
+        return;
+      }
       if (saving) {
         setSaveError("保存中です。完了後にもう一度操作してください。");
+        onCancel?.();
         return;
       }
       if (editing || editingNote) {
+        leaveCancelled.current = onCancel;
         pendingRef.current = action;
         setPendingLeave(() => action);
       } else action();
@@ -136,8 +144,14 @@ export function DetailPanel({
   }, [pendingLeave]);
   const clearPending = useCallback(() => {
     pendingRef.current = null;
+    leaveCancelled.current = undefined;
     setPendingLeave(null);
   }, []);
+  const cancelPending = useCallback(() => {
+    const cancel = leaveCancelled.current;
+    clearPending();
+    cancel?.();
+  }, [clearPending]);
   useEffect(() => {
     const origin = document.activeElement;
     panel.current?.querySelector<HTMLButtonElement>(".detail-close")?.focus();
@@ -214,7 +228,7 @@ export function DetailPanel({
       if (event.key !== "Escape" || event.defaultPrevented) return;
       event.preventDefault();
       if (pendingRef.current) {
-        if (!saving) clearPending();
+        if (!saving) cancelPending();
       } else if (confirmDelete) setConfirmDelete(false);
       else if (editing || editingNote) requestLeave(cancelEditing);
       else requestLeave(onClose);
@@ -228,7 +242,7 @@ export function DetailPanel({
     editingNote,
     cancelEditing,
     saving,
-    clearPending,
+    cancelPending,
     requestLeave,
   ]);
   return (
@@ -427,7 +441,7 @@ export function DetailPanel({
               if (event.key === "Escape") {
                 event.preventDefault();
                 event.stopPropagation();
-                if (!saving) clearPending();
+                if (!saving) cancelPending();
               }
             }}
           >
@@ -459,7 +473,7 @@ export function DetailPanel({
             >
               破棄して進む
             </button>
-            <button type="button" disabled={saving} onClick={clearPending}>
+            <button type="button" disabled={saving} onClick={cancelPending}>
               キャンセル
             </button>
           </div>

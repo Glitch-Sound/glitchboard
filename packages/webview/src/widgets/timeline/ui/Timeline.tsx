@@ -1,4 +1,12 @@
-import { type DragEvent, useEffect, useRef, useState } from "react";
+import {
+  type DragEvent,
+  type Ref,
+  useEffect,
+  useImperativeHandle,
+  useRef,
+  useState,
+} from "react";
+import { createPortal } from "react-dom";
 import type { EventDanger } from "../../../../../shared/src/calculation/danger.js";
 import {
   isWorkday,
@@ -11,7 +19,11 @@ import { nextProjectColor } from "../../../features/inline-add/index.js";
 import { TimelineFrame, type TimelineLayout } from "./TimelineFrame.js";
 
 type Period = "three-days" | "week" | "month";
+export type TimelineHandle = {
+  requestLeave(action: () => void, onCancel?: () => void): void;
+};
 type Props = {
+  ref?: Ref<TimelineHandle>;
   projects: readonly Project[];
   initialLayout?: Partial<TimelineLayout>;
   onLayoutChange?: (layout: TimelineLayout) => void;
@@ -155,6 +167,7 @@ function RequiredPace({
 
 /** REQ-016/REQ-032: 期限表示と、保存結果に従うProjectの並べ替えを扱う。 */
 export function Timeline({
+  ref,
   projects,
   initialLayout,
   onLayoutChange,
@@ -218,6 +231,71 @@ export function Timeline({
     setAddingProject(false);
     setProjectName("");
   };
+  const projectBusy = useRef(false);
+  const pendingLeave = useRef<{ action(): void; cancel?: () => void } | null>(
+    null,
+  );
+  const [leaving, setLeaving] = useState(false);
+  const [saveError, setSaveError] = useState<string | null>(null);
+  const prompt = useRef<HTMLDivElement>(null);
+  const saveProject = async () => {
+    if (projectBusy.current || !projectName.trim()) return false;
+    projectBusy.current = true;
+    setSavingProject(true);
+    setSaveError(null);
+    try {
+      const saved = await onAddProject?.(projectName.trim(), projectColor);
+      if (saved) cancelProject();
+      else setSaveError("追加に失敗しました。入力を残しています。");
+      return Boolean(saved);
+    } catch (error) {
+      setSaveError(error instanceof Error ? error.message : String(error));
+      return false;
+    } finally {
+      projectBusy.current = false;
+      setSavingProject(false);
+    }
+  };
+  useImperativeHandle(ref, () => ({
+    requestLeave(action, onCancel) {
+      if (pendingLeave.current || projectBusy.current) {
+        onCancel?.();
+        return;
+      }
+      if (addingProject && projectName.length > 0) {
+        pendingLeave.current = { action, cancel: onCancel };
+        setSaveError(null);
+        setLeaving(true);
+      } else {
+        cancelProject();
+        action();
+      }
+    },
+  }));
+  const cancelLeave = () => {
+    if (projectBusy.current) return;
+    const cancel = pendingLeave.current?.cancel;
+    pendingLeave.current = null;
+    setLeaving(false);
+    cancel?.();
+  };
+  const finishLeave = () => {
+    const next = pendingLeave.current;
+    pendingLeave.current = null;
+    setLeaving(false);
+    cancelProject();
+    next?.action();
+  };
+  useEffect(() => {
+    if (!leaving) return;
+    const origin = document.activeElement;
+    prompt.current
+      ?.querySelector<HTMLButtonElement>("button:last-child")
+      ?.focus();
+    return () => {
+      if (origin instanceof HTMLElement && origin.isConnected) origin.focus();
+    };
+  }, [leaving]);
   const columns = [...days];
   return (
     <TimelineFrame
@@ -521,17 +599,7 @@ export function Timeline({
                   }}
                   onSubmit={async (event) => {
                     event.preventDefault();
-                    if (savingProject || !projectName.trim()) return;
-                    setSavingProject(true);
-                    try {
-                      const saved = await onAddProject(
-                        projectName.trim(),
-                        projectColor,
-                      );
-                      if (saved) cancelProject();
-                    } finally {
-                      setSavingProject(false);
-                    }
+                    await saveProject();
                   }}
                 >
                   <label className="timeline-project-color">
@@ -589,6 +657,70 @@ export function Timeline({
           </tr>
         </tbody>
       </table>
+      {leaving &&
+        createPortal(
+          <div className="unsaved-backdrop">
+            <div
+              ref={prompt}
+              role="alertdialog"
+              aria-modal="true"
+              aria-label="未保存の Project 追加"
+              className="unsaved-dialog"
+              onKeyDown={(event) => {
+                if (event.key === "Escape") {
+                  event.preventDefault();
+                  event.stopPropagation();
+                  cancelLeave();
+                }
+                if (event.key === "Tab") {
+                  const buttons = Array.from(
+                    prompt.current?.querySelectorAll<HTMLButtonElement>(
+                      "button:not(:disabled)",
+                    ) ?? [],
+                  );
+                  const current = buttons.indexOf(
+                    document.activeElement as HTMLButtonElement,
+                  );
+                  event.preventDefault();
+                  buttons[
+                    (current + (event.shiftKey ? -1 : 1) + buttons.length) %
+                      buttons.length
+                  ]?.focus();
+                }
+              }}
+            >
+              <h3>未保存の Project 追加があります</h3>
+              <p>
+                元の管理ファイルへ追加するか、入力を破棄するか選んでください。
+              </p>
+              {saveError && <p role="alert">{saveError}</p>}
+              <button
+                type="button"
+                disabled={savingProject}
+                onClick={async () => {
+                  if (await saveProject()) finishLeave();
+                }}
+              >
+                {savingProject ? "追加中…" : "追加して進む"}
+              </button>
+              <button
+                type="button"
+                disabled={savingProject}
+                onClick={finishLeave}
+              >
+                破棄して進む
+              </button>
+              <button
+                type="button"
+                disabled={savingProject}
+                onClick={cancelLeave}
+              >
+                キャンセル
+              </button>
+            </div>
+          </div>,
+          document.body,
+        )}
     </TimelineFrame>
   );
 }

@@ -7,6 +7,7 @@ export const snapshotMessageSchema = z.object({
   type: z.literal("snapshot"),
   payload: z.object({
     version: z.number().int().nonnegative(),
+    connectionId: z.string().min(1).optional(),
     projects: z.array(
       projectSchema.extend({ sourceFile: z.string().min(1).optional() }),
     ),
@@ -65,6 +66,7 @@ export const operationSchema = z.discriminatedUnion("type", [
     kind: z.enum(["project", "event", "story", "task"]),
     id: z.uuid(),
     version: z.number().int().nonnegative(),
+    connectionId: z.string().min(1).optional(),
     expected: z.object({
       events: z.number().int().nonnegative(),
       stories: z.number().int().nonnegative(),
@@ -167,8 +169,31 @@ export const navigationMessageSchema = z.object({
   type: z.literal("navigateRecord"),
   payload: z.object({
     kind: z.literal("event"),
+    connectionId: z.string().min(1).optional(),
     id: z.uuid(),
     projectFile: z.string().min(1).optional(),
     openDetail: z.boolean(),
   }),
+});
+
+/** REQ-013: 接続先を確定する前にボードの未保存入力を解決する。 */
+export const connectionChangeRequestSchema = z.strictObject({
+  type: z.literal("prepareConnectionChange"),
+  requestId: z.number().int().positive(),
+});
+export const connectionChangeResultSchema = z.strictObject({
+  type: z.literal("connectionChangeResult"),
+  requestId: z.number().int().positive(),
+  ok: z.boolean(),
+});
+
+/** 表示時の接続を要求に結び、遅延した操作の誤配送を防ぐ。 */
+export const operationConnectionSchema = z.object({
+  connectionId: z.string().min(1).optional(),
+});
+
+/** 接続確定と失敗のどちらでも一時的な入力停止を解除する。 */
+export const connectionChangeSettledSchema = z.strictObject({
+  type: z.literal("connectionChangeSettled"),
+  requestId: z.number().int().positive(),
 });

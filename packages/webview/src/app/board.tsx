@@ -16,7 +16,11 @@ import {
   scopeProjects,
 } from "../../../shared/src/domain/identity.js";
 import type { Project } from "../../../shared/src/domain/index.js";
-import { navigationMessageSchema } from "../../../shared/src/domain/messages.js";
+import {
+  connectionChangeRequestSchema,
+  connectionChangeSettledSchema,
+  navigationMessageSchema,
+} from "../../../shared/src/domain/messages.js";
 import { BoardSplit, displayDays, type Period } from "../pages/board/index.js";
 import {
   DetailPanel,
@@ -27,10 +31,11 @@ import {
   EventDetails,
   type EventDetailsHandle,
 } from "../widgets/event-details/index.js";
-import { Timeline } from "../widgets/timeline/index.js";
+import { Timeline, type TimelineHandle } from "../widgets/timeline/index.js";
 import { WorkloadHeader } from "../widgets/workload/index.js";
 import { localBridge } from "./bridge.js";
 import {
+  connectionBridge,
   postOperation,
   postTaskPoints,
   sendOperation,
@@ -108,6 +113,9 @@ function detailFor(
 export function BoardApp() {
   const [snapshot, setSnapshot] = useState<Snapshot | null>(null);
   const [unconfigured, setUnconfigured] = useState(false);
+  const [staleDisplay, setStaleDisplay] = useState(false);
+  const [connectionPending, setConnectionPending] = useState(false);
+  const connectionPendingId = useRef<number | null>(null);
   const [operationError, setOperationError] = useState<string | null>(null);
   const [period, setPeriod] = useState<Period>("week");
   const [selectedEventId, setSelectedEventId] = useState<
@@ -119,6 +127,7 @@ export function BoardApp() {
   } | null>(null);
   const detailPanel = useRef<DetailPanelHandle>(null);
   const eventDetails = useRef<EventDetailsHandle>(null);
+  const timeline = useRef<TimelineHandle>(null);
   const snapshotSelection = useRef<string | null>(null);
   const visibleSnapshot = useRef<Snapshot | null>(null);
   const [record, setRecord] = useState<{
@@ -130,7 +139,24 @@ export function BoardApp() {
     () =>
       subscribeSnapshots((incoming) => {
         const previous = visibleSnapshot.current;
-        if (incoming.version === 0 && previous) return;
+        if (incoming.version === 0 && previous) {
+          if (
+            incoming.connectionId &&
+            previous.connectionId &&
+            incoming.connectionId !== previous.connectionId
+          )
+            setStaleDisplay(true);
+          return;
+        }
+        setStaleDisplay(
+          Boolean(
+            incoming.manageAvailability?.status === "missing" &&
+              previous &&
+              incoming.connectionId &&
+              previous.connectionId &&
+              incoming.connectionId !== previous.connectionId,
+          ),
+        );
         const next =
           incoming.manageAvailability?.status === "missing" && previous
             ? {
@@ -140,6 +166,12 @@ export function BoardApp() {
                 manageAvailability: incoming.manageAvailability,
               }
             : incoming;
+        if (next.connectionId !== previous?.connectionId) {
+          setRecord(null);
+          setSelectedEventId(undefined);
+          setDetailTarget(null);
+          lastDetail.current = null;
+        }
         visibleSnapshot.current = next;
         setSnapshot(next);
         const nextSelection = scopedEventSelection(
@@ -171,6 +203,10 @@ export function BoardApp() {
 
   const today = useToday();
   const days = displayDays(period, today);
+  const operationsBridge = connectionBridge(
+    localBridge(),
+    snapshot?.connectionId,
+  );
   const projects = scopeProjects(snapshot?.projects ?? []);
   const settings = snapshot?.settings ?? {
     workdays_off: ["sat", "sun"],
@@ -264,7 +300,7 @@ export function BoardApp() {
       setRecord({ kind, id, groupId });
       setSelectedEventId(event?.id ?? null);
       if (event)
-        postOperation(localBridge(), {
+        postOperation(operationsBridge, {
           type: "selectEvent",
           eventId: event.id,
         });
@@ -302,9 +338,60 @@ export function BoardApp() {
     const handler = (event: MessageEvent) => {
       const message = navigationMessageSchema.safeParse(event.data);
       if (message.success) {
-        const { kind, id, projectFile, openDetail } = message.data.payload;
+        const { kind, id, projectFile, openDetail, connectionId } =
+          message.data.payload;
+        if (
+          connectionId &&
+          connectionId !== visibleSnapshot.current?.connectionId
+        )
+          return;
         navigate.current(kind, scopedId(projectFile, id), openDetail);
       }
+    };
+    window.addEventListener("message", handler);
+    return () => window.removeEventListener("message", handler);
+  }, []);
+  useEffect(() => {
+    const handler = (event: MessageEvent) => {
+      const settled = connectionChangeSettledSchema.safeParse(event.data);
+      if (settled.success) {
+        if (connectionPendingId.current === settled.data.requestId) {
+          connectionPendingId.current = null;
+          setConnectionPending(false);
+        }
+        return;
+      }
+      const request = connectionChangeRequestSchema.safeParse(event.data);
+      if (!request.success) return;
+      const respond = (ok: boolean) => {
+        if (ok) {
+          connectionPendingId.current = request.data.requestId;
+          setConnectionPending(true);
+        }
+        localBridge()?.postMessage({
+          type: "connectionChangeResult",
+          requestId: request.data.requestId,
+          ok,
+        });
+      };
+      const cancel = () => respond(false);
+      const leaveProject = () => {
+        if (timeline.current)
+          timeline.current.requestLeave(() => respond(true), cancel);
+        else respond(true);
+      };
+      const leaveInline = () => {
+        if (eventDetails.current)
+          eventDetails.current.requestLeave(
+            leaveProject,
+            { eventId: null },
+            cancel,
+          );
+        else leaveProject();
+      };
+      if (detailPanel.current)
+        detailPanel.current.requestLeave(leaveInline, cancel);
+      else leaveInline();
     };
     window.addEventListener("message", handler);
     return () => window.removeEventListener("message", handler);
@@ -325,7 +412,7 @@ export function BoardApp() {
     id: string,
     expected: DescendantCounts,
   ) =>
-    postOperation(localBridge(), {
+    postOperation(operationsBridge, {
       type: "deleteItem",
       kind,
       id,
@@ -352,12 +439,16 @@ export function BoardApp() {
         >
           管理ファイルは左の EVENT 一覧で設定できます。
           {missingPath && <span>{missingPath}</span>}
+          {staleDisplay && <span>前の接続の表示は読み取り専用です。</span>}
         </p>
       )}
       {setupOnly ? (
         <h1>GlitchBoard</h1>
       ) : (
-        <>
+        <div
+          className="board-interaction"
+          inert={connectionPending || staleDisplay}
+        >
           <header className="board-header">
             <div className="board-title">
               <h1>GlitchBoard</h1>
@@ -392,6 +483,8 @@ export function BoardApp() {
           <BoardSplit>
             <div className="timeline-panel">
               <Timeline
+                key={snapshot?.connectionId ?? "initial"}
+                ref={timeline}
                 projects={projects}
                 initialLayout={localBridge()?.getState?.()?.timelineLayout}
                 onLayoutChange={(timelineLayout) => {
@@ -417,14 +510,14 @@ export function BoardApp() {
                 pace={actual.pace}
                 learning={actual.learning}
                 onAddProject={(name, color) =>
-                  sendOperation(localBridge(), {
+                  sendOperation(operationsBridge, {
                     type: "createProject",
                     name,
                     color,
                   })
                 }
                 onMoveProject={(projectId, targetProjectId, placement) =>
-                  sendOperation(localBridge(), {
+                  sendOperation(operationsBridge, {
                     type: "moveProject",
                     projectId,
                     targetProjectId,
@@ -436,7 +529,7 @@ export function BoardApp() {
             <div className="board-details-panel">
               {selectedEvent ? (
                 <EventDetails
-                  key={selectedEvent.id}
+                  key={`${snapshot?.connectionId ?? ""}:${selectedEvent.id}`}
                   ref={eventDetails}
                   event={selectedEvent}
                   selectedStoryId={selectedStoryId}
@@ -464,32 +557,32 @@ export function BoardApp() {
                     )?.color
                   }
                   onPointsChange={(taskId, points) => {
-                    const bridge = localBridge();
-                    if (bridge) postTaskPoints(bridge, taskId, points);
+                    if (operationsBridge)
+                      postTaskPoints(operationsBridge, taskId, points);
                   }}
                   onDoneChange={(taskId, done) =>
-                    postOperation(localBridge(), {
+                    postOperation(operationsBridge, {
                       type: "setTaskDone",
                       taskId,
                       done,
                     })
                   }
                   onAddStory={(eventId, name) =>
-                    sendOperation(localBridge(), {
+                    sendOperation(operationsBridge, {
                       type: "addStory",
                       eventId,
                       name,
                     })
                   }
                   onAddTask={(storyId, name) =>
-                    sendOperation(localBridge(), {
+                    sendOperation(operationsBridge, {
                       type: "addTask",
                       storyId,
                       name,
                     })
                   }
                   onAddEventTask={(eventId, name) =>
-                    sendOperation(localBridge(), {
+                    sendOperation(operationsBridge, {
                       type: "addEventTask",
                       eventId,
                       name,
@@ -516,12 +609,12 @@ export function BoardApp() {
           </BoardSplit>
           {detailSelection && (
             <DetailPanel
-              key={detailSelection.item.id}
+              key={`${snapshot?.connectionId ?? ""}:${detailSelection.item.id}`}
               ref={detailPanel}
               selection={detailSelection}
               onClose={() => setDetailTarget(null)}
               onSave={(kind, id, patch) =>
-                sendOperation(localBridge(), {
+                sendOperation(operationsBridge, {
                   type: "editItem",
                   kind,
                   id,
@@ -550,7 +643,7 @@ export function BoardApp() {
               }}
             />
           )}
-        </>
+        </div>
       )}
     </main>
   );

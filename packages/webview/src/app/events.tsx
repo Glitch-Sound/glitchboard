@@ -15,6 +15,7 @@ import {
 import { localBridge } from "./bridge.js";
 import { ManageSetup } from "./ManageSetup.js";
 import {
+  connectionBridge,
   postOperation,
   sendOperation,
   subscribeOperationResults,
@@ -51,6 +52,10 @@ export function EventsApp() {
     return () => window.removeEventListener("message", handler);
   }, []);
   useEffect(() => subscribeOperationResults(setOperationError), []);
+  const operationsBridge = connectionBridge(
+    localBridge(),
+    snapshot?.connectionId,
+  );
   const projects = scopeProjects(snapshot?.projects ?? []);
   const selection = scopedEventSelection(
     snapshot?.projects ?? [],
@@ -103,7 +108,7 @@ export function EventsApp() {
                   )?.id ?? projects[0]?.id
                 }
                 onSubmit={({ name, due, projectId }) =>
-                  sendOperation(localBridge(), {
+                  sendOperation(operationsBridge, {
                     type: "addEvent",
                     name,
                     due,
@@ -119,7 +124,7 @@ export function EventsApp() {
               today={today}
               onTargetChange={setTarget}
               onProjectChange={(file, load) =>
-                postOperation(localBridge(), {
+                postOperation(operationsBridge, {
                   type: "setProjectLoaded",
                   file,
                   load,
@@ -133,14 +138,14 @@ export function EventsApp() {
             danger={danger.events}
             target={target}
             onOpenDetail={(eventId) =>
-              postOperation(localBridge(), {
+              postOperation(operationsBridge, {
                 type: "selectEvent",
                 eventId,
                 openDetail: true,
               })
             }
             onSelect={(eventId) =>
-              postOperation(localBridge(), { type: "selectEvent", eventId })
+              postOperation(operationsBridge, { type: "selectEvent", eventId })
             }
           />
         </>

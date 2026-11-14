@@ -1,10 +1,10 @@
 {
-  "verifiedAt": "2026-11-14T04:26:36.154893+00:00",
+  "verifiedAt": "2026-11-14T05:02:17.106263+00:00",
   "dataModel": "Project > Event > Task; optional Event > Story > Task",
   "legacyMigrationAndCompatibility": "out of scope by user instruction",
   "final": {
-    "testFiles": 99,
-    "tests": 250,
+    "testFiles": 101,
+    "tests": 269,
     "lint": true,
     "typecheck": true,
     "fsd": true,
@@ -26,7 +26,7 @@
   "calendarCombinations": 12,
   "setupCombinations": 8,
   "layoutThemes": 2,
-  "manualVsCodeChecksPending": 20,
+  "manualVsCodeChecksPending": 27,
   "published": false,
   "pushed": false,
   "reviewChanges": [
@@ -76,5 +76,15 @@
     "strictValidationBeforeSync": true,
     "strictTraceBeforeSync": true,
     "archived": "openspec/changes/archive/2026-11-14-gate-board-startup"
+  },
+  "reconnectionChange": {
+    "name": "preserve-reconnection-drafts",
+    "tasks": 4,
+    "modifiedRequirements": 1,
+    "scenarios": 12,
+    "archived": "openspec/changes/archive/2026-11-14-preserve-reconnection-drafts",
+    "strictValidationBeforeSync": true,
+    "strictTraceBeforeSync": true,
+    "mainSpecMergeVerified": true
   }
 }

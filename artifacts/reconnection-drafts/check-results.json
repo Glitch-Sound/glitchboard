@@ -1,0 +1,35 @@
+{
+  "verifiedAt": "2026-11-14T05:02:17.106082+00:00",
+  "final": {
+    "testFiles": 101,
+    "tests": 269,
+    "lint": true,
+    "typecheck": true,
+    "fsd": true,
+    "build": true,
+    "strictSpecs": 7,
+    "traceCheck": true,
+    "whitespaceCheck": true
+  },
+  "newTests": 19,
+  "change": {
+    "name": "preserve-reconnection-drafts",
+    "tasks": 4,
+    "modifiedRequirements": 1,
+    "scenarios": 12,
+    "archived": "openspec/changes/archive/2026-11-14-preserve-reconnection-drafts",
+    "strictValidationBeforeSync": true,
+    "strictTraceBeforeSync": true,
+    "mainSpecMergeVerified": true
+  },
+  "browserThemes": [
+    "dark",
+    "light"
+  ],
+  "browserRuntimeErrors": 0,
+  "manualVsCodeChecksPending": 27,
+  "published": false,
+  "pushed": false,
+  "readmeScreenshotsAdded": false,
+  "productCheckCommandChanged": false
+}

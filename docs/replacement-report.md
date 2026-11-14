@@ -149,3 +149,10 @@ UI の標準検証コマンド test:ui に、同一 UUID を使う実操作の�
 最終実機確認13件を利用者向けに残し、それ以外の未解決指摘はない。
 
 設計と検証は scope-project-items の [設計](../openspec/changes/archive/2026-11-14-scope-project-items/design.md)と[検証](../openspec/changes/archive/2026-11-14-scope-project-items/verification.md)、fix-manage-connection の [設計](../openspec/changes/archive/2026-11-14-fix-manage-connection/design.md)と[検証](../openspec/changes/archive/2026-11-14-fix-manage-connection/verification.md)へ記録し、正式仕様と同期してアーカイブした。
+
+## 再設定時の下書き保護後の結果
+
+設定解除後の同じ管理ファイルへの再接続で、非既定 Event と Story、追加と詳細編集の下書きを保持する。\
+別ファイルへの変更は元の入力の保存、破棄、キャンセルを確認し、遅れた旧接続の操作を新しいファイルへ送らない。\
+101ファイルの269テスト、全体検査と両テーマのブラウザー検証が成功し、利用者が行う VS Code 実機確認は27項目である。\
+理由、変更範囲、検査の根拠と具体的な確認手順は[再設定の報告](reconnection-drafts-report.md)を参照する。

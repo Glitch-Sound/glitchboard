@@ -6,6 +6,20 @@ export type LocalBridge = {
   setState?(state: unknown): void;
 };
 
+/** REQ-013: 操作を入力時の管理ファイルへ結び付ける。 */
+export function connectionBridge(
+  bridge: LocalBridge | undefined,
+  connectionId?: string,
+): LocalBridge | undefined {
+  if (!bridge || !connectionId) return bridge;
+  return {
+    postMessage(message) {
+      if (typeof message === "object" && message !== null)
+        bridge.postMessage({ ...message, connectionId });
+    },
+  };
+}
+
 const targetFields: Record<string, string> = {
   updateTask: "taskId",
   setTaskDone: "taskId",

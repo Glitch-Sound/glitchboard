@@ -33,6 +33,7 @@ export type EventDetailsHandle = {
   requestLeave(
     action: () => void,
     target: { eventId: string | null; storyId?: string | null },
+    onCancel?: () => void,
   ): void;
 };
 type Props = {
@@ -126,7 +127,12 @@ export function EventDetails({
   const storyTarget = useRef<string | null>(null);
   const taskBusy = useRef(false);
   const storyBusy = useRef(false);
-  type Pending = { action: () => void; task: boolean; story: boolean };
+  type Pending = {
+    action: () => void;
+    task: boolean;
+    story: boolean;
+    cancel?: () => void;
+  };
   const [pending, setPending] = useState<Pending | null>(null);
   const pendingRef = useRef<Pending | null>(null);
   const [draftError, setDraftError] = useState<string | null>(null);
@@ -258,8 +264,15 @@ export function EventDetails({
       setSavingStory(false);
     }
   };
-  const requestLeave: EventDetailsHandle["requestLeave"] = (action, target) => {
-    if (pendingRef.current) return;
+  const requestLeave: EventDetailsHandle["requestLeave"] = (
+    action,
+    target,
+    onCancel,
+  ) => {
+    if (pendingRef.current) {
+      onCancel?.();
+      return;
+    }
     const eventMoves = target.eventId !== event.id;
     const taskMoves =
       eventMoves ||
@@ -267,6 +280,7 @@ export function EventDetails({
         storyId;
     if ((taskMoves && taskBusy.current) || (eventMoves && storyBusy.current)) {
       setDraftError("追加中です。完了後にもう一度操作してください。");
+      onCancel?.();
       return;
     }
     const task = taskMoves && addingTask && taskName.length > 0;
@@ -277,7 +291,7 @@ export function EventDetails({
       action();
     };
     if (task || story) {
-      const next = { action: commit, task, story };
+      const next = { action: commit, task, story, cancel: onCancel };
       pendingRef.current = next;
       setPending(next);
       setDraftError(null);
@@ -286,9 +300,11 @@ export function EventDetails({
   useImperativeHandle(ref, () => ({ requestLeave }));
   const cancelLeave = () => {
     if (taskBusy.current || storyBusy.current) return;
+    const cancel = pendingRef.current?.cancel;
     pendingRef.current = null;
     setPending(null);
     setDraftError(null);
+    cancel?.();
   };
   useEffect(() => {
     if (!pending) return;

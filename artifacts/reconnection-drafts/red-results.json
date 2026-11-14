@@ -1,0 +1,28 @@
+{
+  "baseline": "8ff75f2",
+  "test": "tests/vscode-extension-shell/reconnection-drafts.test.tsx",
+  "reproductionTests": 15,
+  "failed": 14,
+  "passed": 1,
+  "alreadyPassing": "設定解除中の通常保存拒否",
+  "failedTests": [
+    "REQ-013-S05 同一ファイルの反復再設定は非既定 Event/Story と両下書きを保持する",
+    "REQ-013-S06 detail の取消は接続と未保存入力を変更しない",
+    "REQ-013-S06 inline の取消は接続と未保存入力を変更しない",
+    "REQ-013-S07 元の詳細と Task を保存した後で別管理ファイルへ切り替える",
+    "REQ-013-S08 保存失敗は元の下書きと設定を保持し、再試行は1回だけ保存する",
+    "REQ-013-S08 保存失敗後もキャンセルでき、再選択時に入力が残る",
+    "REQ-013-S09 同じ参照と UUID の別データへ破棄して進むと選択と入力を引き継がない",
+    "REQ-013-S10 設定画面の別ファイル指定をキャンセルすると設定と監視を戻す",
+    "REQ-013-S11 Project 追加の名前と色は切替取消と保存失敗でも保持する",
+    "REQ-013-S06 新規作成の取消では候補ファイルを作成しない",
+    "REQ-013-S06 確認中のパネル閉鎖は設定を変えず応答待ちを解放する",
+    "REQ-013-S11 Project 追加失敗後のキャンセルは名前と色を残す",
+    "REQ-013-S08 詳細保存の失敗と取消は Task の下書きも保持する",
+    "REQ-013-S09 切替後に届いた元の接続の操作を新しいファイルへ配送しない"
+  ],
+  "additionalReadOnlyTests": {
+    "total": 2,
+    "failedBeforeFix": 2
+  }
+}
