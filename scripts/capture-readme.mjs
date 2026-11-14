@@ -71,6 +71,23 @@ try {
  assert.equal(appearance.fontSize,"13px");
  await expect(board.locator(".operation-error")).toHaveCount(0);
  await expect(events.locator(".operation-error")).toHaveCount(0);
+ // README の5枚はダークに揃えたまま、実 VS Code の両テーマでも選択とフォーカスを確認する。
+ const selectionArtifacts=resolve("artifacts/selection-surfaces");await mkdir(selectionArtifacts,{recursive:true});
+ const native=[];
+ for(const theme of ["Default Dark Modern","Default Light Modern"]){
+  await writeFile(settingsPath,JSON.stringify({...settings,"workbench.colorTheme":theme,"glitchboard.manageFile":join(root,"glitchboard-demo/manage.yaml")}));
+  await expect.poll(()=>board.locator("body").getAttribute("data-vscode-theme-name")).toBe(theme.replace("Default ",""));
+  const selected=board.locator(".story-choice.selected"),unselected=board.locator(".story-choice:not(.selected)").first();
+  const readStyle=locator=>locator.evaluate(node=>{const s=getComputedStyle(node);return {background:s.backgroundColor,outline:s.outlineStyle};});
+  const story=await readStyle(selected);assert.equal(story.background,(await readStyle(unselected)).background);assert.equal(story.outline,"none");
+  const summary=await readStyle(board.locator(".event-summary.selected")),event=await readStyle(events.locator(".event-row.selected")),task=await readStyle(board.locator(".task-line.selected"));
+  for(const row of [summary,event,task])assert.equal(row.outline,"none");
+  const taskName=board.getByRole("button",{name:"入力フォームを確認する",exact:true});await taskName.focus();await taskName.press("Tab");await page.keyboard.press("Shift+Tab");await expect(taskName).toBeFocused();
+  const focus=await readStyle(taskName);assert.notEqual(focus.outline,"none");
+  await page.screenshot({path:join(selectionArtifacts,`native-${theme.includes("Dark")?"dark":"light"}.png`),clip:overview,scale:"css"});
+  native.push({theme,story,summary,event,task,keyboardFocus:focus});
+ }
+ await writeFile(join(selectionArtifacts,"native-results.json"),JSON.stringify({hostVersion:await app.evaluate(({app})=>app.getVersion()),source:"実 VS Code Extension Development Host",results:native},null,2)+"\n");
  await writeFile(join(artifacts,"capture-results.json"),JSON.stringify({capturedAt:new Date().toISOString(),sampleDate:today,source:"実 VS Code Extension Development Host",hostVersion:await app.evaluate(({app})=>app.getVersion()),sample:"examples/readme-guide/manage.yaml",sampleDateBasis:"撮影した Mac のローカル日付",theme:settings["workbench.colorTheme"],zoomLevel:0,appearance,captures,profileIsolated:true,userDataTouched:false,sampleContainsPrivateData:false},null,2)+"\n");
  console.log(JSON.stringify({appearance,captures},null,2));
 } finally {if(app)await app.close();await rm(root,{recursive:true,force:true});}

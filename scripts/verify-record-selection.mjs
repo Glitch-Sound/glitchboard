@@ -7,13 +7,13 @@ import { chromium, expect } from "@playwright/test";
 import { build } from "vite";
 import { parse } from "../packages/extension/node_modules/yaml/dist/index.js";
 const phase = process.env.SELECTION_PHASE ?? "after";
-const artifacts = resolve("artifacts/record-selection"); await mkdir(artifacts, { recursive: true });
+const artifacts = resolve("artifacts/selection-surfaces"); await mkdir(artifacts, { recursive: true });
 const runtime = await mkdtemp(resolve(tmpdir(), "gb-selection-runtime-"));
 await build({ configFile: false, logLevel: "error", ssr: { noExternal: true }, build: { ssr: resolve("packages/extension/src/session.ts"), outDir: runtime, rollupOptions: { output: { entryFileNames: "session.mjs" } } } });
 const { BoardSession } = await import(pathToFileURL(resolve(runtime, "session.mjs")).href);
 const browser = await chromium.launch({ headless: true }), results = [], failures = [];
 const id = n => `00000000-0000-4000-8000-${String(n).padStart(12, "0")}`;
-const style = locator => locator.evaluate(node => { const s = getComputedStyle(node); return { color: s.color, background: s.backgroundColor, outline: s.outline, border: s.border, cursor: s.cursor, decoration: s.textDecorationLine }; });
+const style = locator => locator.evaluate(node => { const s = getComputedStyle(node); return { color: s.color, background: s.backgroundColor, outline: s.outline, outlineStyle: s.outlineStyle, outlineWidth: s.outlineWidth, border: s.border, cursor: s.cursor, decoration: s.textDecorationLine }; });
 try {
  for (const theme of ["dark", "light"]) {
   const root = await mkdtemp(resolve(tmpdir(), "gb-selection-")), pages = [], unsubs = [], errors = [], requests = [], samples = {}, captures = [], story = {};
@@ -48,6 +48,7 @@ try {
    await page.goto("http://record-selection.test/"); return page;
   }
   const verify = (condition, message) => { if (!condition) failures.push({ theme, message }); };
+  const noSelectionFrame = async (locator, label) => { const s = await style(locator); verify(s.outlineStyle === "none", `${label}: 選択した行に枠を出さない`); return s; };
   const capture = async (page, name) => { captures.push(name); await page.screenshot({ path: resolve(artifacts, `${phase}-${theme}-${name}.png`) }); };
   try {
    board = await open("board"); const sidebar = await open("events");
@@ -56,16 +57,28 @@ try {
    const eventRow = name => sidebar.locator(".event-row").filter({ has: sidebar.getByRole("button", { name: `${name}を選択`, exact: true }) });
    const task = name => board.locator(".task-line").filter({ has: board.getByRole("button", { name, exact: true }) });
    const group = name => board.locator(".story-choice").filter({ has: board.locator(".story-name").getByText(name, { exact: true }) });
-   const focus = async locator => { await locator.focus(); await locator.press("Tab"); await locator.page().keyboard.press("Shift+Tab"); await expect(locator).toBeFocused(); const s = await style(locator); verify(s.outline !== "none" && !s.outline.startsWith("0px"), "キーボードのフォーカス枠"); };
+   const focus = async locator => { await locator.focus(); await locator.press("Tab"); await locator.page().keyboard.press("Shift+Tab"); await expect(locator).toBeFocused(); const s = await style(locator); verify(s.outlineStyle !== "none" && Number.parseFloat(s.outlineWidth) > 0, "キーボードのフォーカス枠"); };
    await expect(board.getByRole("region", { name: "Event詳細" })).toContainText("公開準備");
-   // REQ-030-S02 REQ-035-S01: Story の既存表示を変更前後で比較する。
+   // REQ-030-S02 REQ-035-S01: 仮想 Taks と通常 Story の背景、選択枠、詳細とキーボードを分ける。
    story.directSelected = { row: await style(group("Taks")), button: await style(group("Taks").locator(".story-select")) };
    story.optionalUnselected = { row: await style(group("実装")), detail: await style(group("実装").locator(".detail-button")) };
    await group("実装").locator(".story-select").hover(); story.optionalHover = await style(group("実装").locator(".story-select"));
    await focus(group("実装").locator(".story-select")); story.optionalFocus = await style(group("実装").locator(".story-select"));
    await group("実装").locator(".story-select").press("Enter"); await expect(board.getByRole("button", { name: "Storyの作業", exact: true })).toBeVisible();
    story.optionalSelected = { row: await style(group("実装")), detail: await style(group("実装").locator(".detail-button")) };
-   await capture(board, "story-reference"); await group("Taks").locator(".story-select").click();
+   await noSelectionFrame(group("実装"), "通常 Story");
+   verify(story.optionalSelected.row.background === story.optionalUnselected.row.background, "通常 Story は選択しても背景を変えない");
+   verify(story.directSelected.row.background === story.optionalUnselected.row.background && story.directSelected.row.outlineStyle === "none", "Taks も背景と選択枠を変えない");
+   verify(story.optionalSelected.detail.color === selectedInk, "Story の選択詳細を強調する");
+   const storyNameBox = await group("実装").locator(".story-name").boundingBox(), progressBox = await group("実装").locator("progress").boundingBox();
+   verify(progressBox.y + progressBox.height / 2 > storyNameBox.y + storyNameBox.height / 2, "Story の進捗バーを名前より下へ配置する");
+   await capture(board, "story-reference");
+   await board.getByRole("heading", { name: "GlitchBoard", exact: true }).click();
+   await noSelectionFrame(group("実装").locator(".story-select"), "フォーカスを外した選択 Story のボタン");
+   await capture(board, "story-selected");
+   await focus(group("Taks").locator(".record-hitbox")); await capture(board, "story-hitbox-focus");
+   await group("Taks").locator(".record-hitbox").press("Enter");
+   await expect(board.getByRole("button", { name: "通常の作業", exact: true })).toBeVisible();
    // REQ-035-S02: Project の名前、余白、左線と選択詳細。
    samples.projectUnselected = await style(project("検証プロジェクト").locator(".detail-button"));
    await project("検証プロジェクト").getByRole("button", { name: "検証プロジェクト", exact: true }).hover();
@@ -91,20 +104,34 @@ try {
    await sidebar.getByRole("heading", { name: "EVENT", exact: true }).hover();
    await sidebar.getByRole("button", { name: "抽出条件", exact: true }).focus();
    samples.eventSelected = await style(eventRow("公開準備"));
-   verify(samples.eventSelected.background === story.directSelected.row.background && samples.eventSelected.background !== samples.sidebarUnselected.background, "ホバーとフォーカスが外れても Story と同じ選択背景を保持する");
+   verify(samples.eventSelected.background !== samples.sidebarUnselected.background, "ホバーとフォーカスが外れても Event の選択背景を保持する");
+   await noSelectionFrame(eventRow("公開準備"), "左の Event");
+   samples.eventSummarySelected = await noSelectionFrame(board.locator(".event-summary"), "Event 要約");
+   await focus(board.locator(".event-summary > .record-hitbox")); await capture(board, "event-hitbox-focus");
    verify((await style(eventRow("公開準備").locator(".detail-button"))).color === selectedInk, "補足がある選択 Event も詳細を強調");
    verify((await style(sidebar.locator(".event-row-name").getByText("公開準備", { exact: true }))).color === (theme === "dark" ? "rgb(244, 135, 113)" : "rgb(199, 46, 15)"), "選択しても危険色を保持");
    verify((await style(board.locator(".event-summary .detail-button"))).color === selectedInk, "要約の Event の詳細を強調");
    const marker = board.locator(".marker-wrap").filter({ has: board.getByRole("button", { name: "2件のEvent", exact: true }) });
    verify(await marker.evaluate(node => node.classList.contains("selected")), "選択 Event を含む同日マーカーを強調");
+   samples.markerSelected = await noSelectionFrame(marker, "Event マーカー");
    await marker.getByRole("button", { name: "2件のEvent", exact: true }).click();
    const option = board.locator(".marker-list > div").filter({ has: board.getByRole("option", { name: "公開準備", exact: true }) });
+   samples.markerOptionSelected = await noSelectionFrame(option, "同日 Event の行");
+   await focus(option.getByRole("option", { name: "公開準備", exact: true }));
    verify((await style(option.locator(".detail-button"))).color === selectedInk, "同日一覧の選択詳細を強調"); await capture(board, "event-same-day");
    await board.getByRole("option", { name: "公開準備", exact: true }).click();
    // REQ-035-S04: 通常と完了の下線、選択詳細と独立操作。
    const normalName = task("通常の作業").getByRole("button", { name: "通常の作業", exact: true });
    await normalName.hover(); verify((await style(normalName)).decoration === "none", "Task のホバー下線を出さない"); await capture(board, "task-unselected-hover");
    await focus(normalName); await capture(board, "task-focus"); await normalName.press("Enter");
+   samples.taskSelected = await noSelectionFrame(task("通常の作業"), "Task の行");
+   await focus(task("通常の作業").locator(".record-hitbox")); await capture(board, "task-hitbox-focus");
+   await task("通常の作業").locator(".record-hitbox").press("Enter");
+   await noSelectionFrame(task("通常の作業"), "Task の余白をキーボードで選択した行");
+   await task("通常の作業").click({ position: { x: 3, y: 3 } });
+   await noSelectionFrame(task("通常の作業"), "Task の余白をクリックした行");
+   await board.getByRole("heading", { name: "GlitchBoard", exact: true }).click();
+   await noSelectionFrame(task("通常の作業").locator(".record-hitbox"), "フォーカスを外した選択 Task の余白ボタン");
    verify((await style(task("通常の作業").locator(".detail-button"))).color === selectedInk, "選択 Task の詳細を強調");
    const completedName = task("完了の作業").getByRole("button", { name: "完了の作業", exact: true }); await completedName.hover(); verify((await style(completedName)).decoration === "line-through", "完了 Task の取り消し線を保持"); await capture(board, "task-selected");
    await task("通常の作業").getByRole("button", { name: "通常の作業の詳細", exact: true }).click(); await expect(board.locator(".detail-target")).toHaveText("TASK : 通常の作業");
@@ -148,7 +175,11 @@ try {
    assert.deepEqual(parse(await readFile(b, "utf8")), other);
    assert.deepEqual(parse(await readFile(resolve(root, "C.yaml"), "utf8")), { id: id(1), name: "空のProject", color: "#44aa77", events: [] });
    await capture(board, "empty-project"); await capture(sidebar, "events-cleared");
-   if (phase === "after") { const baseline = JSON.parse(await readFile(resolve(artifacts, "before-results.json"), "utf8")); assert.deepEqual(story, baseline.results.find(r => r.theme === theme).story, "Story の選択、未選択、ホバー、フォーカスの表現を変更しない"); }
+   if (phase === "after") {
+    const baseline = JSON.parse(await readFile(resolve(artifacts, "before-results.json"), "utf8")).results.find(r => r.theme === theme);
+    for (const key of ["eventSelected", "eventSummarySelected", "markerSelected", "markerOptionSelected", "taskSelected"]) assert.equal(samples[key].background, baseline.samples[key].background, `${key}: 変更前の選択背景を維持する`);
+    assert.equal(story.optionalSelected.detail.color, baseline.story.optionalSelected.detail.color, "Story の詳細の強調を維持する");
+   }
    assert.deepEqual(errors, []); results.push({ theme, samples, story, captures, errors, guardedSelection: true });
    console.log(`${theme}: selection states, keyboard, independent operations and edit guards verified`);
   } finally { unsubs.forEach(unsubscribe => unsubscribe()); await Promise.all(pages.map(page => page.close())); await rm(root, { recursive: true, force: true }); }

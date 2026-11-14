@@ -1,0 +1,27 @@
+{
+  "vsix": "/tmp/glitchboard-selection-surfaces-zyxbdk1u/glitchboard-0.2.0.vsix",
+  "files": 20,
+  "bytes": 523644,
+  "sha256": "f136727cec2e9ba2ef47649e19964af6ef781a57e61e906871d5bd50e736b020",
+  "readmeMatches": true,
+  "localAssets": [
+    "media/readme/event-add.png",
+    "media/readme/overview.png",
+    "media/readme/setup.png",
+    "media/readme/task-points.png",
+    "media/readme/tasks.png"
+  ],
+  "screenshotsByteExact": true,
+  "screenshotSha256": {
+    "media/readme/event-add.png": "80ace3432784ef1c2a1a07ef6288c407f02182652c9b57a3b091c91fa1fee0b2",
+    "media/readme/overview.png": "f857781fea266b6a3d4c19600f75b17fb17081551d4e1172311fd40a4808811f",
+    "media/readme/setup.png": "7d5d7bdcd91fabddc4c6e44b9366f4210d909900524cf55094e52cfe53ef8878",
+    "media/readme/task-points.png": "1c98f283ee27d625924a38d84fd6acc8f5ea63b8ab62c1f542a262bb70603fc4",
+    "media/readme/tasks.png": "76aef19f254a184cae828cbc3ad414bfb15ab577667831e039df62918b5df5a2"
+  },
+  "sampleFiles": 4,
+  "oldValidationArtifactsExcluded": true,
+  "published": false,
+  "licenseWarning": "LICENSE ファイルは既存状態で存在しない。公開せずローカル検証用の作成を継続した。",
+  "noteEditInstructionsMatch": true
+}

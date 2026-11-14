@@ -1,0 +1,37 @@
+{
+  "command": "npm run check",
+  "exitCode": 0,
+  "testFiles": 107,
+  "tests": 298,
+  "specifications": 7,
+  "localDocumentReferences": 33,
+  "imageReferences": 10,
+  "negativeChecks": 4,
+  "builtFilesMatchVsix": [
+    "extension/dist/extension.js",
+    "extension/dist/webview/assets/style-D-l9oYLj.js",
+    "extension/dist/webview/board.js",
+    "extension/dist/webview/events.js",
+    "extension/dist/webview/style.css"
+  ],
+  "manualProductChecksRemaining": 39,
+  "uiSuitesRerun": true,
+  "reason": "新 UI の両テーマと選択枠、フォーカス、編集保護を実ビルドで再検証した",
+  "noteEditInstructionsMatch": true,
+  "uiSuites": 9,
+  "themes": [
+    "dark",
+    "light"
+  ],
+  "selectionCaptures": 38,
+  "redFailuresDetected": 16,
+  "focusFailuresDetected": 16,
+  "nativeVsCode": "1.146.0",
+  "nativeThemes": [
+    "Default Dark Modern",
+    "Default Light Modern"
+  ],
+  "readmeCaptures": 5,
+  "archive": "openspec/changes/archive/2026-11-14-simplify-selection-surfaces",
+  "published": false
+}

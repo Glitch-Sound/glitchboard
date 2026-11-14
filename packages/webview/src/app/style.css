@@ -1402,15 +1402,7 @@ main {
   border-bottom: 0;
 }
 .story-choice.selected {
-  background: color-mix(
-    in srgb,
-    var(--vscode-list-activeSelectionBackground) 35%,
-    transparent
-  );
   color: var(--vscode-list-activeSelectionForeground);
-  outline: 1px solid
-    color-mix(in srgb, var(--vscode-focusBorder) 40%, transparent);
-  outline-offset: -1px;
 }
 .story-select {
   display: grid;
@@ -1511,9 +1503,6 @@ main {
     var(--vscode-list-activeSelectionBackground) 35%,
     transparent
   );
-  outline: 1px solid
-    color-mix(in srgb, var(--vscode-focusBorder) 40%, transparent);
-  outline-offset: -1px;
 }
 .task-line .task-name {
   min-width: 0;
@@ -2067,7 +2056,7 @@ main {
 .task-line.selected {
   background: var(--vscode-list-inactiveSelectionBackground);
 }
-/* REQ-035: 確定した Event を Story と同じ選択背景と枠で示す。 */
+/* REQ-035: Event は背景で選択を示し、フォーカス枠は操作ボタンへ残す。 */
 .event-row.selected,
 .event-summary.selected,
 .marker-wrap.selected,
@@ -2077,9 +2066,6 @@ main {
     var(--vscode-list-activeSelectionBackground) 35%,
     transparent
   );
-  outline: 1px solid
-    color-mix(in srgb, var(--vscode-focusBorder) 40%, transparent);
-  outline-offset: -1px;
 }
 .unsaved-backdrop {
   position: fixed;

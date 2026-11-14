@@ -1,0 +1,442 @@
+{
+  "verifiedAt": "2026-11-14T15:57:14.565Z",
+  "browser": "156.0.8078.4",
+  "results": [
+    {
+      "theme": "dark",
+      "samples": {
+        "projectUnselected": {
+          "color": "rgb(163, 163, 163)",
+          "background": "rgba(0, 0, 0, 0)",
+          "outline": "rgb(163, 163, 163) none 3px",
+          "outlineStyle": "none",
+          "border": "1px solid rgb(69, 69, 69)",
+          "cursor": "pointer",
+          "decoration": "none"
+        },
+        "projectSelected": {
+          "color": "rgb(255, 255, 255)",
+          "background": "rgba(0, 0, 0, 0)",
+          "outline": "rgb(255, 255, 255) none 3px",
+          "outlineStyle": "none",
+          "border": "1px solid rgb(69, 69, 69)",
+          "cursor": "pointer",
+          "decoration": "none"
+        },
+        "sidebarSelected": {
+          "color": "rgb(212, 212, 212)",
+          "background": "color(srgb 0.14902 0.309804 0.470588 / 0.35)",
+          "outline": "color(srgb 0 0.498039 0.831373 / 0.4) solid 1px",
+          "outlineStyle": "solid",
+          "border": "",
+          "cursor": "auto",
+          "decoration": "none"
+        },
+        "sidebarUnselected": {
+          "color": "rgb(244, 135, 113)",
+          "background": "rgba(0, 0, 0, 0)",
+          "outline": "rgb(244, 135, 113) none 3px",
+          "outlineStyle": "none",
+          "border": "",
+          "cursor": "auto",
+          "decoration": "none"
+        },
+        "eventSelected": {
+          "color": "rgb(244, 135, 113)",
+          "background": "color(srgb 0.14902 0.309804 0.470588 / 0.35)",
+          "outline": "color(srgb 0 0.498039 0.831373 / 0.4) solid 1px",
+          "outlineStyle": "solid",
+          "border": "",
+          "cursor": "auto",
+          "decoration": "none"
+        },
+        "eventSummarySelected": {
+          "color": "rgb(212, 212, 212)",
+          "background": "color(srgb 0.14902 0.309804 0.470588 / 0.35)",
+          "outline": "color(srgb 0 0.498039 0.831373 / 0.4) solid 1px",
+          "outlineStyle": "solid",
+          "border": "0px solid rgb(212, 212, 212)",
+          "cursor": "auto",
+          "decoration": "none"
+        },
+        "markerSelected": {
+          "color": "rgb(212, 212, 212)",
+          "background": "color(srgb 0.14902 0.309804 0.470588 / 0.35)",
+          "outline": "color(srgb 0 0.498039 0.831373 / 0.4) solid 1px",
+          "outlineStyle": "solid",
+          "border": "0px solid rgb(212, 212, 212)",
+          "cursor": "auto",
+          "decoration": "none"
+        },
+        "markerOptionSelected": {
+          "color": "rgb(212, 212, 212)",
+          "background": "color(srgb 0.14902 0.309804 0.470588 / 0.35)",
+          "outline": "color(srgb 0 0.498039 0.831373 / 0.4) solid 1px",
+          "outlineStyle": "solid",
+          "border": "0px solid rgb(212, 212, 212)",
+          "cursor": "auto",
+          "decoration": "none"
+        },
+        "taskSelected": {
+          "color": "rgb(212, 212, 212)",
+          "background": "rgb(48, 52, 64)",
+          "outline": "color(srgb 0 0.498039 0.831373 / 0.4) solid 1px",
+          "outlineStyle": "solid",
+          "border": "",
+          "cursor": "auto",
+          "decoration": "none"
+        }
+      },
+      "story": {
+        "directSelected": {
+          "row": {
+            "color": "rgb(255, 255, 255)",
+            "background": "color(srgb 0.14902 0.309804 0.470588 / 0.35)",
+            "outline": "color(srgb 0 0.498039 0.831373 / 0.4) solid 1px",
+            "outlineStyle": "solid",
+            "border": "",
+            "cursor": "auto",
+            "decoration": "none"
+          },
+          "button": {
+            "color": "rgb(255, 255, 255)",
+            "background": "rgba(0, 0, 0, 0)",
+            "outline": "rgb(255, 255, 255) none 3px",
+            "outlineStyle": "none",
+            "border": "0px none rgb(255, 255, 255)",
+            "cursor": "pointer",
+            "decoration": "none"
+          }
+        },
+        "optionalUnselected": {
+          "row": {
+            "color": "rgb(212, 212, 212)",
+            "background": "rgba(0, 0, 0, 0)",
+            "outline": "rgb(212, 212, 212) none 3px",
+            "outlineStyle": "none",
+            "border": "",
+            "cursor": "auto",
+            "decoration": "none"
+          },
+          "detail": {
+            "color": "rgb(163, 163, 163)",
+            "background": "rgba(0, 0, 0, 0)",
+            "outline": "rgb(163, 163, 163) none 3px",
+            "outlineStyle": "none",
+            "border": "1px solid rgb(69, 69, 69)",
+            "cursor": "pointer",
+            "decoration": "none"
+          }
+        },
+        "optionalHover": {
+          "color": "rgb(212, 212, 212)",
+          "background": "rgba(0, 0, 0, 0)",
+          "outline": "rgb(212, 212, 212) none 3px",
+          "outlineStyle": "none",
+          "border": "0px none rgb(212, 212, 212)",
+          "cursor": "pointer",
+          "decoration": "none"
+        },
+        "optionalFocus": {
+          "color": "rgb(212, 212, 212)",
+          "background": "rgba(0, 0, 0, 0)",
+          "outline": "rgb(0, 127, 212) solid 2px",
+          "outlineStyle": "solid",
+          "border": "0px none rgb(212, 212, 212)",
+          "cursor": "pointer",
+          "decoration": "none"
+        },
+        "optionalSelected": {
+          "row": {
+            "color": "rgb(255, 255, 255)",
+            "background": "color(srgb 0.14902 0.309804 0.470588 / 0.35)",
+            "outline": "color(srgb 0 0.498039 0.831373 / 0.4) solid 1px",
+            "outlineStyle": "solid",
+            "border": "",
+            "cursor": "auto",
+            "decoration": "none"
+          },
+          "detail": {
+            "color": "rgb(255, 255, 255)",
+            "background": "rgba(0, 0, 0, 0)",
+            "outline": "rgb(255, 255, 255) none 3px",
+            "outlineStyle": "none",
+            "border": "1px solid rgb(69, 69, 69)",
+            "cursor": "pointer",
+            "decoration": "none"
+          }
+        }
+      },
+      "captures": [
+        "story-reference",
+        "project-unselected-hover",
+        "project-focus",
+        "project-selected",
+        "events-selected",
+        "event-unselected-hover",
+        "event-focus",
+        "event-same-day",
+        "task-unselected-hover",
+        "task-focus",
+        "task-selected",
+        "pending-change",
+        "events-after-save",
+        "empty-project",
+        "events-cleared"
+      ],
+      "errors": [],
+      "guardedSelection": true
+    },
+    {
+      "theme": "light",
+      "samples": {
+        "projectUnselected": {
+          "color": "rgb(97, 97, 97)",
+          "background": "rgba(0, 0, 0, 0)",
+          "outline": "rgb(97, 97, 97) none 3px",
+          "outlineStyle": "none",
+          "border": "1px solid rgb(204, 204, 204)",
+          "cursor": "pointer",
+          "decoration": "none"
+        },
+        "projectSelected": {
+          "color": "rgb(17, 17, 17)",
+          "background": "rgba(0, 0, 0, 0)",
+          "outline": "rgb(17, 17, 17) none 3px",
+          "outlineStyle": "none",
+          "border": "1px solid rgb(204, 204, 204)",
+          "cursor": "pointer",
+          "decoration": "none"
+        },
+        "sidebarSelected": {
+          "color": "rgb(51, 51, 51)",
+          "background": "color(srgb 0.8 0.898039 1 / 0.35)",
+          "outline": "color(srgb 0 0.498039 0.831373 / 0.4) solid 1px",
+          "outlineStyle": "solid",
+          "border": "",
+          "cursor": "auto",
+          "decoration": "none"
+        },
+        "sidebarUnselected": {
+          "color": "rgb(199, 46, 15)",
+          "background": "rgba(0, 0, 0, 0)",
+          "outline": "rgb(199, 46, 15) none 3px",
+          "outlineStyle": "none",
+          "border": "",
+          "cursor": "auto",
+          "decoration": "none"
+        },
+        "eventSelected": {
+          "color": "rgb(199, 46, 15)",
+          "background": "color(srgb 0.8 0.898039 1 / 0.35)",
+          "outline": "color(srgb 0 0.498039 0.831373 / 0.4) solid 1px",
+          "outlineStyle": "solid",
+          "border": "",
+          "cursor": "auto",
+          "decoration": "none"
+        },
+        "eventSummarySelected": {
+          "color": "rgb(51, 51, 51)",
+          "background": "color(srgb 0.8 0.898039 1 / 0.35)",
+          "outline": "color(srgb 0 0.498039 0.831373 / 0.4) solid 1px",
+          "outlineStyle": "solid",
+          "border": "0px solid rgb(51, 51, 51)",
+          "cursor": "auto",
+          "decoration": "none"
+        },
+        "markerSelected": {
+          "color": "rgb(51, 51, 51)",
+          "background": "color(srgb 0.8 0.898039 1 / 0.35)",
+          "outline": "color(srgb 0 0.498039 0.831373 / 0.4) solid 1px",
+          "outlineStyle": "solid",
+          "border": "0px solid rgb(51, 51, 51)",
+          "cursor": "auto",
+          "decoration": "none"
+        },
+        "markerOptionSelected": {
+          "color": "rgb(51, 51, 51)",
+          "background": "color(srgb 0.8 0.898039 1 / 0.35)",
+          "outline": "color(srgb 0 0.498039 0.831373 / 0.4) solid 1px",
+          "outlineStyle": "solid",
+          "border": "0px solid rgb(51, 51, 51)",
+          "cursor": "auto",
+          "decoration": "none"
+        },
+        "taskSelected": {
+          "color": "rgb(51, 51, 51)",
+          "background": "rgb(228, 230, 241)",
+          "outline": "color(srgb 0 0.498039 0.831373 / 0.4) solid 1px",
+          "outlineStyle": "solid",
+          "border": "",
+          "cursor": "auto",
+          "decoration": "none"
+        }
+      },
+      "story": {
+        "directSelected": {
+          "row": {
+            "color": "rgb(17, 17, 17)",
+            "background": "color(srgb 0.8 0.898039 1 / 0.35)",
+            "outline": "color(srgb 0 0.498039 0.831373 / 0.4) solid 1px",
+            "outlineStyle": "solid",
+            "border": "",
+            "cursor": "auto",
+            "decoration": "none"
+          },
+          "button": {
+            "color": "rgb(17, 17, 17)",
+            "background": "rgba(0, 0, 0, 0)",
+            "outline": "rgb(17, 17, 17) none 3px",
+            "outlineStyle": "none",
+            "border": "0px none rgb(17, 17, 17)",
+            "cursor": "pointer",
+            "decoration": "none"
+          }
+        },
+        "optionalUnselected": {
+          "row": {
+            "color": "rgb(51, 51, 51)",
+            "background": "rgba(0, 0, 0, 0)",
+            "outline": "rgb(51, 51, 51) none 3px",
+            "outlineStyle": "none",
+            "border": "",
+            "cursor": "auto",
+            "decoration": "none"
+          },
+          "detail": {
+            "color": "rgb(97, 97, 97)",
+            "background": "rgba(0, 0, 0, 0)",
+            "outline": "rgb(97, 97, 97) none 3px",
+            "outlineStyle": "none",
+            "border": "1px solid rgb(204, 204, 204)",
+            "cursor": "pointer",
+            "decoration": "none"
+          }
+        },
+        "optionalHover": {
+          "color": "rgb(51, 51, 51)",
+          "background": "rgba(0, 0, 0, 0)",
+          "outline": "rgb(51, 51, 51) none 3px",
+          "outlineStyle": "none",
+          "border": "0px none rgb(51, 51, 51)",
+          "cursor": "pointer",
+          "decoration": "none"
+        },
+        "optionalFocus": {
+          "color": "rgb(51, 51, 51)",
+          "background": "rgba(0, 0, 0, 0)",
+          "outline": "rgb(0, 127, 212) solid 2px",
+          "outlineStyle": "solid",
+          "border": "0px none rgb(51, 51, 51)",
+          "cursor": "pointer",
+          "decoration": "none"
+        },
+        "optionalSelected": {
+          "row": {
+            "color": "rgb(17, 17, 17)",
+            "background": "color(srgb 0.8 0.898039 1 / 0.35)",
+            "outline": "color(srgb 0 0.498039 0.831373 / 0.4) solid 1px",
+            "outlineStyle": "solid",
+            "border": "",
+            "cursor": "auto",
+            "decoration": "none"
+          },
+          "detail": {
+            "color": "rgb(17, 17, 17)",
+            "background": "rgba(0, 0, 0, 0)",
+            "outline": "rgb(17, 17, 17) none 3px",
+            "outlineStyle": "none",
+            "border": "1px solid rgb(204, 204, 204)",
+            "cursor": "pointer",
+            "decoration": "none"
+          }
+        }
+      },
+      "captures": [
+        "story-reference",
+        "project-unselected-hover",
+        "project-focus",
+        "project-selected",
+        "events-selected",
+        "event-unselected-hover",
+        "event-focus",
+        "event-same-day",
+        "task-unselected-hover",
+        "task-focus",
+        "task-selected",
+        "pending-change",
+        "events-after-save",
+        "empty-project",
+        "events-cleared"
+      ],
+      "errors": [],
+      "guardedSelection": true
+    }
+  ],
+  "failures": [
+    {
+      "theme": "dark",
+      "message": "通常 Story: 選択した行に枠を出さない"
+    },
+    {
+      "theme": "dark",
+      "message": "通常 Story は選択しても背景を変えない"
+    },
+    {
+      "theme": "dark",
+      "message": "Taks も背景と選択枠を変えない"
+    },
+    {
+      "theme": "dark",
+      "message": "左の Event: 選択した行に枠を出さない"
+    },
+    {
+      "theme": "dark",
+      "message": "Event 要約: 選択した行に枠を出さない"
+    },
+    {
+      "theme": "dark",
+      "message": "Event マーカー: 選択した行に枠を出さない"
+    },
+    {
+      "theme": "dark",
+      "message": "同日 Event の行: 選択した行に枠を出さない"
+    },
+    {
+      "theme": "dark",
+      "message": "Task の行: 選択した行に枠を出さない"
+    },
+    {
+      "theme": "light",
+      "message": "通常 Story: 選択した行に枠を出さない"
+    },
+    {
+      "theme": "light",
+      "message": "通常 Story は選択しても背景を変えない"
+    },
+    {
+      "theme": "light",
+      "message": "Taks も背景と選択枠を変えない"
+    },
+    {
+      "theme": "light",
+      "message": "左の Event: 選択した行に枠を出さない"
+    },
+    {
+      "theme": "light",
+      "message": "Event 要約: 選択した行に枠を出さない"
+    },
+    {
+      "theme": "light",
+      "message": "Event マーカー: 選択した行に枠を出さない"
+    },
+    {
+      "theme": "light",
+      "message": "同日 Event の行: 選択した行に枠を出さない"
+    },
+    {
+      "theme": "light",
+      "message": "Task の行: 選択した行に枠を出さない"
+    }
+  ]
+}

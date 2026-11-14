@@ -186,7 +186,9 @@ Project の色と selected 行の背景にポイントの可読性を依存さ�
 ## レコードの選択表現
 
 DetailButton の任意の selected で、選択時は Story と同じテーマの選択前景を使い、未選択時は補足の青と灰色を維持する。\
-Story へ新しい指定を渡さず、既存の操作と算出スタイルを維持する。\
+Story へ新しい指定を渡さず、既存の操作と詳細ボタンの強調を維持する。\
+Event の4表示箇所と Task は選択背景を維持して選択 outline を付けず、Story の selected は背景と outline を付けない。\
+Task の focus-within に行 outline を付けず、ボタンと record-hitbox の focus-visible で実際のキーボード操作対象を示す。\
 左の EventList は scopedEventSelection を受け、クリック直後の局所状態を持たず、既存の未保存確認後に確定した状態を描画する。\
 タイムラインの同日マーカーは選択 Event を含む場合、同日一覧は対象行、下部の要約は表示 Event を強調する。\
 Project の詳細の選択条件は左線と一致させ、名前セルのポインターと内側のキーボードフォーカス枠を使う。\

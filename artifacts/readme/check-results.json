@@ -15,7 +15,8 @@
     "extension/dist/webview/style.css"
   ],
   "manualProductChecksRemaining": 39,
-  "uiSuitesRerun": false,
-  "reason": "文書と撮影用ツールの変更であり、製品の実装を変更していない",
-  "noteEditInstructionsMatch": true
+  "uiSuitesRerun": true,
+  "reason": "新 UI の両テーマと選択枠、フォーカス、編集保護を実ビルドで再検証した",
+  "noteEditInstructionsMatch": true,
+  "uiSuites": 9
 }

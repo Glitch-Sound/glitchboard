@@ -1,0 +1,71 @@
+{
+  "fault": "ボタンの focus-visible を outline:none へ差し替える",
+  "exitCode": 1,
+  "failures": [
+    {
+      "theme": "dark",
+      "message": "キーボードのフォーカス枠"
+    },
+    {
+      "theme": "dark",
+      "message": "キーボードのフォーカス枠"
+    },
+    {
+      "theme": "dark",
+      "message": "キーボードのフォーカス枠"
+    },
+    {
+      "theme": "dark",
+      "message": "キーボードのフォーカス枠"
+    },
+    {
+      "theme": "dark",
+      "message": "キーボードのフォーカス枠"
+    },
+    {
+      "theme": "dark",
+      "message": "キーボードのフォーカス枠"
+    },
+    {
+      "theme": "dark",
+      "message": "キーボードのフォーカス枠"
+    },
+    {
+      "theme": "dark",
+      "message": "キーボードのフォーカス枠"
+    },
+    {
+      "theme": "light",
+      "message": "キーボードのフォーカス枠"
+    },
+    {
+      "theme": "light",
+      "message": "キーボードのフォーカス枠"
+    },
+    {
+      "theme": "light",
+      "message": "キーボードのフォーカス枠"
+    },
+    {
+      "theme": "light",
+      "message": "キーボードのフォーカス枠"
+    },
+    {
+      "theme": "light",
+      "message": "キーボードのフォーカス枠"
+    },
+    {
+      "theme": "light",
+      "message": "キーボードのフォーカス枠"
+    },
+    {
+      "theme": "light",
+      "message": "キーボードのフォーカス枠"
+    },
+    {
+      "theme": "light",
+      "message": "キーボードのフォーカス枠"
+    }
+  ],
+  "rejected": true
+}

@@ -56,6 +56,7 @@ npm run check
 別の場所なら `VSCODE_EXECUTABLE` で指定する。\
 一時のユーザーデータと拡張機能フォルダだけを使い、利用者の設定と管理データには触れない。\
 Default Dark Modern、倍率0、同じフォント設定で撮影し、CSS ピクセル単位の切り出しだけを行い、画像の拡縮や画面の描き直しはしない。\
+README の5枚を保存した後、実 VS Code をライトテーマへ切り替えて選択表示とキーボードフォーカスも検査し、結果を artifacts/selection-surfaces に残す。\
 README 上の表示幅だけは全画像を元画像の85%へ揃える。\
 サンプルの日付は撮影日に合わせて更新し、写真の条件と範囲を `artifacts/readme/capture-results.json` に残す。\
 画像そのものと README の表示も開き、文字の可読性、余白と説明との一致を確認する。

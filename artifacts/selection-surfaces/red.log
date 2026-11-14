@@ -1,0 +1,104 @@
+dark: selection states, keyboard, independent operations and edit guards verified
+light: selection states, keyboard, independent operations and edit guards verified
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: 16 selection presentation checks failed
++ actual - expected
+
++ [
++   {
++     message: '通常 Story: 選択した行に枠を出さない',
++     theme: 'dark'
++   },
++   {
++     message: '通常 Story は選択しても背景を変えない',
++     theme: 'dark'
++   },
++   {
++     message: 'Taks も背景と選択枠を変えない',
++     theme: 'dark'
++   },
++   {
++     message: '左の Event: 選択した行に枠を出さない',
++     theme: 'dark'
++   },
++   {
++     message: 'Event 要約: 選択した行に枠を出さない',
++     theme: 'dark'
++   },
++   {
++     message: 'Event マーカー: 選択した行に枠を出さない',
++     theme: 'dark'
++   },
++   {
++     message: '同日 Event の行: 選択した行に枠を出さない',
++     theme: 'dark'
++   },
++   {
++     message: 'Task の行: 選択した行に枠を出さない',
++     theme: 'dark'
++   },
++   {
++     message: '通常 Story: 選択した行に枠を出さない',
++     theme: 'light'
++   },
++   {
++     message: '通常 Story は選択しても背景を変えない',
++     theme: 'light'
++   },
++   {
++     message: 'Taks も背景と選択枠を変えない',
++     theme: 'light'
++   },
++   {
++     message: '左の Event: 選択した行に枠を出さない',
++     theme: 'light'
++   },
++   {
++     message: 'Event 要約: 選択した行に枠を出さない',
++     theme: 'light'
++   },
++   {
++     message: 'Event マーカー: 選択した行に枠を出さない',
++     theme: 'light'
++   },
++   {
++     message: '同日 Event の行: 選択した行に枠を出さない',
++     theme: 'light'
++   },
++   {
++     message: 'Task の行: 選択した行に枠を出さない',
++     theme: 'light'
++   }
++ ]
+- []
+
+    at file:///Users/glitch/Developer/glitchboard/scripts/verify-record-selection.mjs:172:9 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: [
+    { theme: 'dark', message: '通常 Story: 選択した行に枠を出さない' },
+    { theme: 'dark', message: '通常 Story は選択しても背景を変えない' },
+    { theme: 'dark', message: 'Taks も背景と選択枠を変えない' },
+    { theme: 'dark', message: '左の Event: 選択した行に枠を出さない' },
+    { theme: 'dark', message: 'Event 要約: 選択した行に枠を出さない' },
+    { theme: 'dark', message: 'Event マーカー: 選択した行に枠を出さない' },
+    { theme: 'dark', message: '同日 Event の行: 選択した行に枠を出さない' },
+    { theme: 'dark', message: 'Task の行: 選択した行に枠を出さない' },
+    { theme: 'light', message: '通常 Story: 選択した行に枠を出さない' },
+    { theme: 'light', message: '通常 Story は選択しても背景を変えない' },
+    { theme: 'light', message: 'Taks も背景と選択枠を変えない' },
+    { theme: 'light', message: '左の Event: 選択した行に枠を出さない' },
+    { theme: 'light', message: 'Event 要約: 選択した行に枠を出さない' },
+    { theme: 'light', message: 'Event マーカー: 選択した行に枠を出さない' },
+    { theme: 'light', message: '同日 Event の行: 選択した行に枠を出さない' },
+    { theme: 'light', message: 'Task の行: 選択した行に枠を出さない' }
+  ],
+  expected: [],
+  operator: 'deepStrictEqual',
+  diff: 'simple'
+}
+
+Node.js v24.18.0

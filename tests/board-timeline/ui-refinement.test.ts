@@ -8,6 +8,7 @@ import { EventDetails } from "../../packages/webview/src/widgets/event-details/u
 import { PointSelector } from "../../packages/webview/src/widgets/event-details/ui/PointSelector.js";
 
 describe("Event詳細の視覚情報", () => {
+  // REQ-030-S01: 期限内の予測日と Project 色の進捗を示す。
   it("期限内予測を曜日付きで緑にし、Project色の進捗バーと選択Storyを示す", () => {
     const event = {
       id: "event",
