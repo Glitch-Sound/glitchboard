@@ -3,3 +3,4 @@ vite.config.ts
 tsconfig.json
 node_modules/**
 *.vsix
+artifacts/**

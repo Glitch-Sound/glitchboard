@@ -1,0 +1,7 @@
+settings:
+  workdays_off: [sat, sun]
+  public_holidays: true
+projects:
+  - { file: projects/0001_Webサイト.yaml, load: true }
+  - { file: projects/0002_記事制作.yaml, load: true }
+  - { file: projects/0003_学習メモ.yaml, load: true }

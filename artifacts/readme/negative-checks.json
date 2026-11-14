@@ -1,0 +1,21 @@
+{
+  "baselinePassed": true,
+  "results": [
+    {
+      "fault": "missing image",
+      "rejected": true
+    },
+    {
+      "fault": "different image scale",
+      "rejected": true
+    },
+    {
+      "fault": "stale packaged readme",
+      "rejected": true
+    },
+    {
+      "fault": "missing command",
+      "rejected": true
+    }
+  ]
+}

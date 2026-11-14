@@ -1,0 +1,76 @@
+{
+  "capturedAt": "2026-11-14T15:24:32.635Z",
+  "sampleDate": "2026-11-15",
+  "source": "実 VS Code Extension Development Host",
+  "theme": "Default Dark Modern",
+  "zoomLevel": 0,
+  "appearance": {
+    "fontFamily": "-apple-system, \"system-ui\", sans-serif",
+    "fontSize": "13px",
+    "theme": "Dark Modern",
+    "devicePixelRatio": 2
+  },
+  "captures": [
+    {
+      "name": "setup",
+      "clip": {
+        "x": 61,
+        "y": 80,
+        "width": 273,
+        "height": 205
+      },
+      "scale": "css",
+      "resized": false
+    },
+    {
+      "name": "overview",
+      "clip": {
+        "x": 352,
+        "y": 35,
+        "width": 964,
+        "height": 793
+      },
+      "scale": "css",
+      "resized": false
+    },
+    {
+      "name": "tasks",
+      "clip": {
+        "x": 365,
+        "y": 495,
+        "width": 938,
+        "height": 320
+      },
+      "scale": "css",
+      "resized": false
+    },
+    {
+      "name": "task-points",
+      "clip": {
+        "x": 895,
+        "y": 68,
+        "width": 420,
+        "height": 458
+      },
+      "scale": "css",
+      "resized": false
+    },
+    {
+      "name": "event-add",
+      "clip": {
+        "x": 58,
+        "y": 165,
+        "width": 280,
+        "height": 398
+      },
+      "scale": "css",
+      "resized": false
+    }
+  ],
+  "profileIsolated": true,
+  "userDataTouched": false,
+  "sampleContainsPrivateData": false,
+  "sample": "examples/readme-guide/manage.yaml",
+  "hostVersion": "1.146.0",
+  "sampleDateBasis": "撮影した Mac のローカル日付"
+}

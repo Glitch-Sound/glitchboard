@@ -96,7 +96,7 @@ isDefault と自動 Story は使用しない。\
 
 テスト名か直前コメントにシナリオ ID を記す。\
 純粋計算と永続化は Vitest、操作の流れは React Testing Library、実ビルドは Playwright で確認する。\
-`npm run check` は `check:product` の lint、型検査、FSD 検査、全テスト、ビルドの後に、仕様とトレースを検査して台帳を生成する。\
+`npm run check` は `check:product` の lint、型検査、FSD 検査、全テスト、ビルドに続き、仕様とトレースの検査、台帳の生成、文書の参照、画像と配布用 README の同期の検査を実行する。\
 フックの実行内容も `npm run check` に統一する。
 
 

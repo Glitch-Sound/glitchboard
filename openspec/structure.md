@@ -79,3 +79,11 @@ glitchboard-data/
 指定テンプレートの共通ファイルと ears-bdd を使用する。\
 旧リポジトリのアーカイブと schema は引き継がない。\
 今回の変更記録は changes/、現行要件は specs/、現在の結果は docs/replacement-report.md へ置く。
+
+## 利用者向け文書と配布
+
+ルートの README.md は利用者向けの正本とし、開発手順はルートの DEVELOPMENT.md に分ける。\
+配布用の packages/extension/README.md は docs:prepare で開発案内を除いた利用者向け部分から生成し、相対画像パスを変換する。\
+サンプルの正本は examples/readme-guide、実画面の画像は packages/extension/media/readme に置く。\
+配布用にもサンプルを同期し、過去の検証用 artifacts は VSIX に含めない。\
+撮影条件と公開説明の調査、文書とパッケージの検証結果は artifacts/readme と docs/readme-report.md に記録する。

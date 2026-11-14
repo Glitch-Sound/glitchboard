@@ -1,0 +1,29 @@
+{
+  "checkedAt": "2026-11-14T15:33:42.656686+00:00",
+  "method": "公開 Marketplace HTML の読み取りと公開 GitHub README の確認",
+  "items": [
+    {
+      "id": "Glitch-Sound.glitchflow",
+      "url": "https://marketplace.visualstudio.com/items?itemName=Glitch-Sound.glitchflow",
+      "status": 200,
+      "version": "0.1.3"
+    },
+    {
+      "id": "Glitch-Sound.glitchboard",
+      "url": "https://marketplace.visualstudio.com/items?itemName=Glitch-Sound.glitchboard",
+      "status": 200,
+      "version": "0.1.5"
+    },
+    {
+      "id": "Glitch-Sound.glitchboard-ex",
+      "url": "https://marketplace.visualstudio.com/items?itemName=Glitch-Sound.glitchboard-ex",
+      "status": 404
+    }
+  ],
+  "repositoryReferences": [
+    "https://github.com/Glitch-Sound/glitchflow",
+    "https://github.com/Glitch-Sound/glitchboard-ex"
+  ],
+  "currentReplacementVersion": "0.2.0",
+  "currentReplacementPublished": false
+}

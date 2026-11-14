@@ -1,0 +1,19 @@
+{
+  "vsix": "/tmp/glitchboard-readme-package.ZgAnvL/glitchboard-0.2.0.vsix",
+  "files": 20,
+  "bytes": 529366,
+  "sha256": "06b330d1ba638cd0ad7e02559ec55df5fa1c350598a04be61115a80c963a691b",
+  "readmeMatches": true,
+  "localAssets": [
+    "media/readme/event-add.png",
+    "media/readme/overview.png",
+    "media/readme/setup.png",
+    "media/readme/task-points.png",
+    "media/readme/tasks.png"
+  ],
+  "screenshotsByteExact": true,
+  "sampleFiles": 4,
+  "oldValidationArtifactsExcluded": true,
+  "published": false,
+  "licenseWarning": "LICENSE ファイルは既存状態で存在しない。公開せずローカル検証用の作成を継続した。"
+}
