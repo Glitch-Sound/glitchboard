@@ -1,0 +1,12 @@
+{
+  "change": "improve-point-readability",
+  "mainSpec": "openspec/specs/board-visualization/spec.md",
+  "modifiedRequirements": [
+    "NREQ-003"
+  ],
+  "purposePreserved": true,
+  "untouchedContentPreserved": true,
+  "deltaMatched": true,
+  "beforeSha256": "c3234eb87e07e6440cf62b0f157c46de099c037a28e3229395d84836f836afbe",
+  "afterSha256": "b1e451066432377eaac3c44bc05deb5831b61df28a6dcd9fd4a0973eecbb339a"
+}

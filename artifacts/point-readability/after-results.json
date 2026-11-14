@@ -1,0 +1,2913 @@
+{
+  "verifiedAt": "2026-11-14T06:27:48.221Z",
+  "browser": "156.0.8078.4",
+  "threshold": 4.5,
+  "failures": [],
+  "stateFailures": [],
+  "results": [
+    {
+      "theme": "dark",
+      "samples": [
+        {
+          "context": "list-通常 8pt",
+          "text": "8pt",
+          "foreground": [
+            200,
+            184,
+            164,
+            1
+          ],
+          "background": [
+            38,
+            32,
+            24,
+            1
+          ],
+          "contrast": 8.330569430102189,
+          "opacity": "1",
+          "border": "solid"
+        },
+        {
+          "context": "detail-通常 8pt",
+          "text": "8pt",
+          "foreground": [
+            200,
+            184,
+            164,
+            1
+          ],
+          "background": [
+            38,
+            32,
+            24,
+            1
+          ],
+          "contrast": 8.330569430102189,
+          "opacity": "1",
+          "border": "solid"
+        },
+        {
+          "context": "list-完了 8pt",
+          "text": "8pt",
+          "foreground": [
+            200,
+            184,
+            164,
+            1
+          ],
+          "background": [
+            38,
+            32,
+            24,
+            1
+          ],
+          "contrast": 8.330569430102189,
+          "opacity": "1",
+          "border": "dashed"
+        },
+        {
+          "context": "detail-完了 8pt",
+          "text": "8pt",
+          "foreground": [
+            200,
+            184,
+            164,
+            1
+          ],
+          "background": [
+            38,
+            32,
+            24,
+            1
+          ],
+          "contrast": 8.330569430102189,
+          "opacity": "1",
+          "border": "dashed"
+        },
+        {
+          "context": "list-通常 13pt",
+          "text": "13pt",
+          "foreground": [
+            200,
+            184,
+            164,
+            1
+          ],
+          "background": [
+            38,
+            32,
+            24,
+            1
+          ],
+          "contrast": 8.330569430102189,
+          "opacity": "1",
+          "border": "solid"
+        },
+        {
+          "context": "detail-通常 13pt",
+          "text": "13pt",
+          "foreground": [
+            200,
+            184,
+            164,
+            1
+          ],
+          "background": [
+            38,
+            32,
+            24,
+            1
+          ],
+          "contrast": 8.330569430102189,
+          "opacity": "1",
+          "border": "solid"
+        },
+        {
+          "context": "list-完了 13pt",
+          "text": "13pt",
+          "foreground": [
+            200,
+            184,
+            164,
+            1
+          ],
+          "background": [
+            38,
+            32,
+            24,
+            1
+          ],
+          "contrast": 8.330569430102189,
+          "opacity": "1",
+          "border": "dashed"
+        },
+        {
+          "context": "detail-完了 13pt",
+          "text": "13pt",
+          "foreground": [
+            200,
+            184,
+            164,
+            1
+          ],
+          "background": [
+            38,
+            32,
+            24,
+            1
+          ],
+          "contrast": 8.330569430102189,
+          "opacity": "1",
+          "border": "dashed"
+        },
+        {
+          "context": "list-通常 21pt",
+          "text": "21pt",
+          "foreground": [
+            193,
+            177,
+            205,
+            1
+          ],
+          "background": [
+            35,
+            29,
+            40,
+            1
+          ],
+          "contrast": 8.168324732430762,
+          "opacity": "1",
+          "border": "solid"
+        },
+        {
+          "context": "detail-通常 21pt",
+          "text": "21pt",
+          "foreground": [
+            193,
+            177,
+            205,
+            1
+          ],
+          "background": [
+            35,
+            29,
+            40,
+            1
+          ],
+          "contrast": 8.168324732430762,
+          "opacity": "1",
+          "border": "solid"
+        },
+        {
+          "context": "list-完了 21pt",
+          "text": "21pt",
+          "foreground": [
+            193,
+            177,
+            205,
+            1
+          ],
+          "background": [
+            35,
+            29,
+            40,
+            1
+          ],
+          "contrast": 8.168324732430762,
+          "opacity": "1",
+          "border": "dashed"
+        },
+        {
+          "context": "detail-完了 21pt",
+          "text": "21pt",
+          "foreground": [
+            193,
+            177,
+            205,
+            1
+          ],
+          "background": [
+            35,
+            29,
+            40,
+            1
+          ],
+          "contrast": 8.168324732430762,
+          "opacity": "1",
+          "border": "dashed"
+        },
+        {
+          "context": "list-通常 1pt",
+          "text": "1pt",
+          "foreground": [
+            178,
+            194,
+            223,
+            1
+          ],
+          "background": [
+            29,
+            36,
+            47,
+            1
+          ],
+          "contrast": 8.676357627692488,
+          "opacity": "1",
+          "border": "solid"
+        },
+        {
+          "context": "detail-通常 1pt",
+          "text": "1pt",
+          "foreground": [
+            178,
+            194,
+            223,
+            1
+          ],
+          "background": [
+            29,
+            36,
+            47,
+            1
+          ],
+          "contrast": 8.676357627692488,
+          "opacity": "1",
+          "border": "solid"
+        },
+        {
+          "context": "list-完了 1pt",
+          "text": "1pt",
+          "foreground": [
+            178,
+            194,
+            223,
+            1
+          ],
+          "background": [
+            29,
+            36,
+            47,
+            1
+          ],
+          "contrast": 8.676357627692488,
+          "opacity": "1",
+          "border": "dashed"
+        },
+        {
+          "context": "detail-完了 1pt",
+          "text": "1pt",
+          "foreground": [
+            178,
+            194,
+            223,
+            1
+          ],
+          "background": [
+            29,
+            36,
+            47,
+            1
+          ],
+          "contrast": 8.676357627692488,
+          "opacity": "1",
+          "border": "dashed"
+        },
+        {
+          "context": "list-通常 2pt",
+          "text": "2pt",
+          "foreground": [
+            178,
+            194,
+            223,
+            1
+          ],
+          "background": [
+            29,
+            36,
+            47,
+            1
+          ],
+          "contrast": 8.676357627692488,
+          "opacity": "1",
+          "border": "solid"
+        },
+        {
+          "context": "detail-通常 2pt",
+          "text": "2pt",
+          "foreground": [
+            178,
+            194,
+            223,
+            1
+          ],
+          "background": [
+            29,
+            36,
+            47,
+            1
+          ],
+          "contrast": 8.676357627692488,
+          "opacity": "1",
+          "border": "solid"
+        },
+        {
+          "context": "list-完了 2pt",
+          "text": "2pt",
+          "foreground": [
+            178,
+            194,
+            223,
+            1
+          ],
+          "background": [
+            29,
+            36,
+            47,
+            1
+          ],
+          "contrast": 8.676357627692488,
+          "opacity": "1",
+          "border": "dashed"
+        },
+        {
+          "context": "detail-完了 2pt",
+          "text": "2pt",
+          "foreground": [
+            178,
+            194,
+            223,
+            1
+          ],
+          "background": [
+            29,
+            36,
+            47,
+            1
+          ],
+          "contrast": 8.676357627692488,
+          "opacity": "1",
+          "border": "dashed"
+        },
+        {
+          "context": "list-通常 3pt",
+          "text": "3pt",
+          "foreground": [
+            173,
+            197,
+            182,
+            1
+          ],
+          "background": [
+            27,
+            37,
+            31,
+            1
+          ],
+          "contrast": 8.594062186506285,
+          "opacity": "1",
+          "border": "solid"
+        },
+        {
+          "context": "detail-通常 3pt",
+          "text": "3pt",
+          "foreground": [
+            173,
+            197,
+            182,
+            1
+          ],
+          "background": [
+            27,
+            37,
+            31,
+            1
+          ],
+          "contrast": 8.594062186506285,
+          "opacity": "1",
+          "border": "solid"
+        },
+        {
+          "context": "list-完了 3pt",
+          "text": "3pt",
+          "foreground": [
+            173,
+            197,
+            182,
+            1
+          ],
+          "background": [
+            27,
+            37,
+            31,
+            1
+          ],
+          "contrast": 8.594062186506285,
+          "opacity": "1",
+          "border": "dashed"
+        },
+        {
+          "context": "detail-完了 3pt",
+          "text": "3pt",
+          "foreground": [
+            173,
+            197,
+            182,
+            1
+          ],
+          "background": [
+            27,
+            37,
+            31,
+            1
+          ],
+          "contrast": 8.594062186506285,
+          "opacity": "1",
+          "border": "dashed"
+        },
+        {
+          "context": "list-通常 5pt",
+          "text": "5pt",
+          "foreground": [
+            173,
+            197,
+            182,
+            1
+          ],
+          "background": [
+            27,
+            37,
+            31,
+            1
+          ],
+          "contrast": 8.594062186506285,
+          "opacity": "1",
+          "border": "solid"
+        },
+        {
+          "context": "detail-通常 5pt",
+          "text": "5pt",
+          "foreground": [
+            173,
+            197,
+            182,
+            1
+          ],
+          "background": [
+            27,
+            37,
+            31,
+            1
+          ],
+          "contrast": 8.594062186506285,
+          "opacity": "1",
+          "border": "solid"
+        },
+        {
+          "context": "list-完了 5pt",
+          "text": "5pt",
+          "foreground": [
+            173,
+            197,
+            182,
+            1
+          ],
+          "background": [
+            27,
+            37,
+            31,
+            1
+          ],
+          "contrast": 8.594062186506285,
+          "opacity": "1",
+          "border": "dashed"
+        },
+        {
+          "context": "detail-完了 5pt",
+          "text": "5pt",
+          "foreground": [
+            173,
+            197,
+            182,
+            1
+          ],
+          "background": [
+            27,
+            37,
+            31,
+            1
+          ],
+          "contrast": 8.594062186506285,
+          "opacity": "1",
+          "border": "dashed"
+        },
+        {
+          "context": "list-通常 未見積",
+          "text": "未見積",
+          "foreground": [
+            200,
+            200,
+            200,
+            1
+          ],
+          "background": [
+            38,
+            38,
+            38,
+            1
+          ],
+          "contrast": 9.045244811129699,
+          "opacity": "1",
+          "border": "solid"
+        },
+        {
+          "context": "detail-通常 未見積",
+          "text": "未見積",
+          "foreground": [
+            200,
+            200,
+            200,
+            1
+          ],
+          "background": [
+            38,
+            38,
+            38,
+            1
+          ],
+          "contrast": 9.045244811129699,
+          "opacity": "1",
+          "border": "solid"
+        },
+        {
+          "context": "list-完了 未見積",
+          "text": "未見積",
+          "foreground": [
+            200,
+            200,
+            200,
+            1
+          ],
+          "background": [
+            38,
+            38,
+            38,
+            1
+          ],
+          "contrast": 9.045244811129699,
+          "opacity": "1",
+          "border": "dashed"
+        },
+        {
+          "context": "detail-完了 未見積",
+          "text": "未見積",
+          "foreground": [
+            200,
+            200,
+            200,
+            1
+          ],
+          "background": [
+            38,
+            38,
+            38,
+            1
+          ],
+          "contrast": 9.045244811129699,
+          "opacity": "1",
+          "border": "dashed"
+        },
+        {
+          "context": "list-selected-focused",
+          "text": "8pt",
+          "foreground": [
+            200,
+            184,
+            164,
+            1
+          ],
+          "background": [
+            38,
+            32,
+            24,
+            1
+          ],
+          "contrast": 8.330569430102189,
+          "opacity": "1",
+          "border": "solid"
+        },
+        {
+          "context": "menu-current",
+          "text": "8pt",
+          "foreground": [
+            200,
+            184,
+            164,
+            1
+          ],
+          "background": [
+            24,
+            24,
+            24,
+            1
+          ],
+          "contrast": 9.172493297824634,
+          "opacity": "1",
+          "border": "solid"
+        },
+        {
+          "context": "menu-1",
+          "text": "1",
+          "foreground": [
+            178,
+            194,
+            223,
+            1
+          ],
+          "background": [
+            29,
+            36,
+            47,
+            1
+          ],
+          "contrast": 8.676357627692488,
+          "opacity": "1",
+          "border": "solid"
+        },
+        {
+          "context": "menu-2",
+          "text": "2",
+          "foreground": [
+            178,
+            194,
+            223,
+            1
+          ],
+          "background": [
+            29,
+            36,
+            47,
+            1
+          ],
+          "contrast": 8.676357627692488,
+          "opacity": "1",
+          "border": "solid"
+        },
+        {
+          "context": "menu-3",
+          "text": "3",
+          "foreground": [
+            173,
+            197,
+            182,
+            1
+          ],
+          "background": [
+            27,
+            37,
+            31,
+            1
+          ],
+          "contrast": 8.594062186506285,
+          "opacity": "1",
+          "border": "solid"
+        },
+        {
+          "context": "menu-5",
+          "text": "5",
+          "foreground": [
+            173,
+            197,
+            182,
+            1
+          ],
+          "background": [
+            27,
+            37,
+            31,
+            1
+          ],
+          "contrast": 8.594062186506285,
+          "opacity": "1",
+          "border": "solid"
+        },
+        {
+          "context": "menu-8",
+          "text": "8",
+          "foreground": [
+            200,
+            184,
+            164,
+            1
+          ],
+          "background": [
+            38,
+            32,
+            24,
+            1
+          ],
+          "contrast": 8.330569430102189,
+          "opacity": "1",
+          "border": "solid"
+        },
+        {
+          "context": "menu-13",
+          "text": "13",
+          "foreground": [
+            200,
+            184,
+            164,
+            1
+          ],
+          "background": [
+            38,
+            32,
+            24,
+            1
+          ],
+          "contrast": 8.330569430102189,
+          "opacity": "1",
+          "border": "solid"
+        },
+        {
+          "context": "menu-21",
+          "text": "21",
+          "foreground": [
+            193,
+            177,
+            205,
+            1
+          ],
+          "background": [
+            35,
+            29,
+            40,
+            1
+          ],
+          "contrast": 8.168324732430762,
+          "opacity": "1",
+          "border": "solid"
+        },
+        {
+          "context": "menu-未見積",
+          "text": "未見積",
+          "foreground": [
+            163,
+            163,
+            163,
+            1
+          ],
+          "background": [
+            41.141176470588235,
+            41.141176470588235,
+            41.141176470588235,
+            1
+          ],
+          "contrast": 5.756447884754369,
+          "opacity": "1",
+          "border": "solid"
+        },
+        {
+          "context": "project-#ffffff-false",
+          "text": "8pt",
+          "foreground": [
+            200,
+            184,
+            164,
+            1
+          ],
+          "background": [
+            38,
+            32,
+            24,
+            1
+          ],
+          "contrast": 8.330569430102189,
+          "opacity": "1",
+          "border": "solid"
+        },
+        {
+          "context": "project-#ffffff-true",
+          "text": "8pt",
+          "foreground": [
+            200,
+            184,
+            164,
+            1
+          ],
+          "background": [
+            38,
+            32,
+            24,
+            1
+          ],
+          "contrast": 8.330569430102189,
+          "opacity": "1",
+          "border": "dashed"
+        },
+        {
+          "context": "project-#000000-false",
+          "text": "8pt",
+          "foreground": [
+            200,
+            184,
+            164,
+            1
+          ],
+          "background": [
+            38,
+            32,
+            24,
+            1
+          ],
+          "contrast": 8.330569430102189,
+          "opacity": "1",
+          "border": "solid"
+        },
+        {
+          "context": "project-#000000-true",
+          "text": "8pt",
+          "foreground": [
+            200,
+            184,
+            164,
+            1
+          ],
+          "background": [
+            38,
+            32,
+            24,
+            1
+          ],
+          "contrast": 8.330569430102189,
+          "opacity": "1",
+          "border": "dashed"
+        },
+        {
+          "context": "chart-#ffffff-false-1pt",
+          "text": "1pt",
+          "foreground": [
+            223,
+            223,
+            223,
+            1
+          ],
+          "background": [
+            47,
+            47,
+            47,
+            1
+          ],
+          "contrast": 10.046540839644429,
+          "opacity": "1",
+          "border": "solid"
+        },
+        {
+          "context": "chart-#ffffff-true-1pt",
+          "text": "1pt",
+          "foreground": [
+            223,
+            223,
+            223,
+            1
+          ],
+          "background": [
+            47,
+            47,
+            47,
+            1
+          ],
+          "contrast": 10.046540839644429,
+          "opacity": "1",
+          "border": "dashed"
+        },
+        {
+          "context": "chart-#ffffff-false-3pt",
+          "text": "3pt",
+          "foreground": [
+            223,
+            223,
+            223,
+            1
+          ],
+          "background": [
+            47,
+            47,
+            47,
+            1
+          ],
+          "contrast": 10.046540839644429,
+          "opacity": "1",
+          "border": "solid"
+        },
+        {
+          "context": "chart-#ffffff-true-3pt",
+          "text": "3pt",
+          "foreground": [
+            223,
+            223,
+            223,
+            1
+          ],
+          "background": [
+            47,
+            47,
+            47,
+            1
+          ],
+          "contrast": 10.046540839644429,
+          "opacity": "1",
+          "border": "dashed"
+        },
+        {
+          "context": "chart-#ffffff-false-8pt",
+          "text": "8pt",
+          "foreground": [
+            223,
+            223,
+            223,
+            1
+          ],
+          "background": [
+            47,
+            47,
+            47,
+            1
+          ],
+          "contrast": 10.046540839644429,
+          "opacity": "1",
+          "border": "solid"
+        },
+        {
+          "context": "chart-#ffffff-true-8pt",
+          "text": "8pt",
+          "foreground": [
+            223,
+            223,
+            223,
+            1
+          ],
+          "background": [
+            47,
+            47,
+            47,
+            1
+          ],
+          "contrast": 10.046540839644429,
+          "opacity": "1",
+          "border": "dashed"
+        },
+        {
+          "context": "chart-#ffffff-false-21pt",
+          "text": "21pt",
+          "foreground": [
+            223,
+            223,
+            223,
+            1
+          ],
+          "background": [
+            47,
+            47,
+            47,
+            1
+          ],
+          "contrast": 10.046540839644429,
+          "opacity": "1",
+          "border": "solid"
+        },
+        {
+          "context": "chart-#ffffff-true-21pt",
+          "text": "21pt",
+          "foreground": [
+            223,
+            223,
+            223,
+            1
+          ],
+          "background": [
+            47,
+            47,
+            47,
+            1
+          ],
+          "contrast": 10.046540839644429,
+          "opacity": "1",
+          "border": "dashed"
+        },
+        {
+          "context": "chart-#ffffff-false-未見積",
+          "text": "未見積",
+          "foreground": [
+            200,
+            200,
+            200,
+            1
+          ],
+          "background": [
+            38,
+            38,
+            38,
+            1
+          ],
+          "contrast": 9.045244811129699,
+          "opacity": "1",
+          "border": "solid"
+        },
+        {
+          "context": "chart-#ffffff-true-未見積",
+          "text": "未見積",
+          "foreground": [
+            200,
+            200,
+            200,
+            1
+          ],
+          "background": [
+            38,
+            38,
+            38,
+            1
+          ],
+          "contrast": 9.045244811129699,
+          "opacity": "1",
+          "border": "dashed"
+        },
+        {
+          "context": "chart-#000000-false-1pt",
+          "text": "1pt",
+          "foreground": [
+            159,
+            159,
+            159,
+            1
+          ],
+          "background": [
+            22,
+            22,
+            22,
+            1
+          ],
+          "contrast": 6.836991139990387,
+          "opacity": "1",
+          "border": "solid"
+        },
+        {
+          "context": "chart-#000000-true-1pt",
+          "text": "1pt",
+          "foreground": [
+            159,
+            159,
+            159,
+            1
+          ],
+          "background": [
+            22,
+            22,
+            22,
+            1
+          ],
+          "contrast": 6.836991139990387,
+          "opacity": "1",
+          "border": "dashed"
+        },
+        {
+          "context": "chart-#000000-false-3pt",
+          "text": "3pt",
+          "foreground": [
+            159,
+            159,
+            159,
+            1
+          ],
+          "background": [
+            22,
+            22,
+            22,
+            1
+          ],
+          "contrast": 6.836991139990387,
+          "opacity": "1",
+          "border": "solid"
+        },
+        {
+          "context": "chart-#000000-true-3pt",
+          "text": "3pt",
+          "foreground": [
+            159,
+            159,
+            159,
+            1
+          ],
+          "background": [
+            22,
+            22,
+            22,
+            1
+          ],
+          "contrast": 6.836991139990387,
+          "opacity": "1",
+          "border": "dashed"
+        },
+        {
+          "context": "chart-#000000-false-8pt",
+          "text": "8pt",
+          "foreground": [
+            159,
+            159,
+            159,
+            1
+          ],
+          "background": [
+            22,
+            22,
+            22,
+            1
+          ],
+          "contrast": 6.836991139990387,
+          "opacity": "1",
+          "border": "solid"
+        },
+        {
+          "context": "chart-#000000-true-8pt",
+          "text": "8pt",
+          "foreground": [
+            159,
+            159,
+            159,
+            1
+          ],
+          "background": [
+            22,
+            22,
+            22,
+            1
+          ],
+          "contrast": 6.836991139990387,
+          "opacity": "1",
+          "border": "dashed"
+        },
+        {
+          "context": "chart-#000000-false-21pt",
+          "text": "21pt",
+          "foreground": [
+            159,
+            159,
+            159,
+            1
+          ],
+          "background": [
+            22,
+            22,
+            22,
+            1
+          ],
+          "contrast": 6.836991139990387,
+          "opacity": "1",
+          "border": "solid"
+        },
+        {
+          "context": "chart-#000000-true-21pt",
+          "text": "21pt",
+          "foreground": [
+            159,
+            159,
+            159,
+            1
+          ],
+          "background": [
+            22,
+            22,
+            22,
+            1
+          ],
+          "contrast": 6.836991139990387,
+          "opacity": "1",
+          "border": "dashed"
+        },
+        {
+          "context": "chart-#000000-false-未見積",
+          "text": "未見積",
+          "foreground": [
+            200,
+            200,
+            200,
+            1
+          ],
+          "background": [
+            38,
+            38,
+            38,
+            1
+          ],
+          "contrast": 9.045244811129699,
+          "opacity": "1",
+          "border": "solid"
+        },
+        {
+          "context": "chart-#000000-true-未見積",
+          "text": "未見積",
+          "foreground": [
+            200,
+            200,
+            200,
+            1
+          ],
+          "background": [
+            38,
+            38,
+            38,
+            1
+          ],
+          "contrast": 9.045244811129699,
+          "opacity": "1",
+          "border": "dashed"
+        },
+        {
+          "context": "chart-#808080-false-1pt",
+          "text": "1pt",
+          "foreground": [
+            191,
+            191,
+            191,
+            1
+          ],
+          "background": [
+            34,
+            34,
+            34,
+            1
+          ],
+          "contrast": 8.651933981231174,
+          "opacity": "1",
+          "border": "solid"
+        },
+        {
+          "context": "chart-#808080-true-1pt",
+          "text": "1pt",
+          "foreground": [
+            191,
+            191,
+            191,
+            1
+          ],
+          "background": [
+            34,
+            34,
+            34,
+            1
+          ],
+          "contrast": 8.651933981231174,
+          "opacity": "1",
+          "border": "dashed"
+        },
+        {
+          "context": "chart-#808080-false-3pt",
+          "text": "3pt",
+          "foreground": [
+            191,
+            191,
+            191,
+            1
+          ],
+          "background": [
+            34,
+            34,
+            34,
+            1
+          ],
+          "contrast": 8.651933981231174,
+          "opacity": "1",
+          "border": "solid"
+        },
+        {
+          "context": "chart-#808080-true-3pt",
+          "text": "3pt",
+          "foreground": [
+            191,
+            191,
+            191,
+            1
+          ],
+          "background": [
+            34,
+            34,
+            34,
+            1
+          ],
+          "contrast": 8.651933981231174,
+          "opacity": "1",
+          "border": "dashed"
+        },
+        {
+          "context": "chart-#808080-false-8pt",
+          "text": "8pt",
+          "foreground": [
+            191,
+            191,
+            191,
+            1
+          ],
+          "background": [
+            34,
+            34,
+            34,
+            1
+          ],
+          "contrast": 8.651933981231174,
+          "opacity": "1",
+          "border": "solid"
+        },
+        {
+          "context": "chart-#808080-true-8pt",
+          "text": "8pt",
+          "foreground": [
+            191,
+            191,
+            191,
+            1
+          ],
+          "background": [
+            34,
+            34,
+            34,
+            1
+          ],
+          "contrast": 8.651933981231174,
+          "opacity": "1",
+          "border": "dashed"
+        },
+        {
+          "context": "chart-#808080-false-21pt",
+          "text": "21pt",
+          "foreground": [
+            191,
+            191,
+            191,
+            1
+          ],
+          "background": [
+            34,
+            34,
+            34,
+            1
+          ],
+          "contrast": 8.651933981231174,
+          "opacity": "1",
+          "border": "solid"
+        },
+        {
+          "context": "chart-#808080-true-21pt",
+          "text": "21pt",
+          "foreground": [
+            191,
+            191,
+            191,
+            1
+          ],
+          "background": [
+            34,
+            34,
+            34,
+            1
+          ],
+          "contrast": 8.651933981231174,
+          "opacity": "1",
+          "border": "dashed"
+        },
+        {
+          "context": "chart-#808080-false-未見積",
+          "text": "未見積",
+          "foreground": [
+            200,
+            200,
+            200,
+            1
+          ],
+          "background": [
+            38,
+            38,
+            38,
+            1
+          ],
+          "contrast": 9.045244811129699,
+          "opacity": "1",
+          "border": "solid"
+        },
+        {
+          "context": "chart-#808080-true-未見積",
+          "text": "未見積",
+          "foreground": [
+            200,
+            200,
+            200,
+            1
+          ],
+          "background": [
+            38,
+            38,
+            38,
+            1
+          ],
+          "contrast": 9.045244811129699,
+          "opacity": "1",
+          "border": "dashed"
+        }
+      ],
+      "minimum": 5.756447884754369,
+      "errors": [],
+      "uncheckAndEdit": true
+    },
+    {
+      "theme": "light",
+      "samples": [
+        {
+          "context": "list-通常 8pt",
+          "text": "8pt",
+          "foreground": [
+            80,
+            64,
+            43,
+            1
+          ],
+          "background": [
+            246,
+            240,
+            231,
+            1
+          ],
+          "contrast": 8.787836620098213,
+          "opacity": "1",
+          "border": "solid"
+        },
+        {
+          "context": "detail-通常 8pt",
+          "text": "8pt",
+          "foreground": [
+            80,
+            64,
+            43,
+            1
+          ],
+          "background": [
+            246,
+            240,
+            231,
+            1
+          ],
+          "contrast": 8.787836620098213,
+          "opacity": "1",
+          "border": "solid"
+        },
+        {
+          "context": "list-完了 8pt",
+          "text": "8pt",
+          "foreground": [
+            80,
+            64,
+            43,
+            1
+          ],
+          "background": [
+            246,
+            240,
+            231,
+            1
+          ],
+          "contrast": 8.787836620098213,
+          "opacity": "1",
+          "border": "dashed"
+        },
+        {
+          "context": "detail-完了 8pt",
+          "text": "8pt",
+          "foreground": [
+            80,
+            64,
+            43,
+            1
+          ],
+          "background": [
+            246,
+            240,
+            231,
+            1
+          ],
+          "contrast": 8.787836620098213,
+          "opacity": "1",
+          "border": "dashed"
+        },
+        {
+          "context": "list-通常 13pt",
+          "text": "13pt",
+          "foreground": [
+            80,
+            64,
+            43,
+            1
+          ],
+          "background": [
+            246,
+            240,
+            231,
+            1
+          ],
+          "contrast": 8.787836620098213,
+          "opacity": "1",
+          "border": "solid"
+        },
+        {
+          "context": "detail-通常 13pt",
+          "text": "13pt",
+          "foreground": [
+            80,
+            64,
+            43,
+            1
+          ],
+          "background": [
+            246,
+            240,
+            231,
+            1
+          ],
+          "contrast": 8.787836620098213,
+          "opacity": "1",
+          "border": "solid"
+        },
+        {
+          "context": "list-完了 13pt",
+          "text": "13pt",
+          "foreground": [
+            80,
+            64,
+            43,
+            1
+          ],
+          "background": [
+            246,
+            240,
+            231,
+            1
+          ],
+          "contrast": 8.787836620098213,
+          "opacity": "1",
+          "border": "dashed"
+        },
+        {
+          "context": "detail-完了 13pt",
+          "text": "13pt",
+          "foreground": [
+            80,
+            64,
+            43,
+            1
+          ],
+          "background": [
+            246,
+            240,
+            231,
+            1
+          ],
+          "contrast": 8.787836620098213,
+          "opacity": "1",
+          "border": "dashed"
+        },
+        {
+          "context": "list-通常 21pt",
+          "text": "21pt",
+          "foreground": [
+            72,
+            56,
+            84,
+            1
+          ],
+          "background": [
+            243,
+            237,
+            248,
+            1
+          ],
+          "contrast": 9.282846699592485,
+          "opacity": "1",
+          "border": "solid"
+        },
+        {
+          "context": "detail-通常 21pt",
+          "text": "21pt",
+          "foreground": [
+            72,
+            56,
+            84,
+            1
+          ],
+          "background": [
+            243,
+            237,
+            248,
+            1
+          ],
+          "contrast": 9.282846699592485,
+          "opacity": "1",
+          "border": "solid"
+        },
+        {
+          "context": "list-完了 21pt",
+          "text": "21pt",
+          "foreground": [
+            72,
+            56,
+            84,
+            1
+          ],
+          "background": [
+            243,
+            237,
+            248,
+            1
+          ],
+          "contrast": 9.282846699592485,
+          "opacity": "1",
+          "border": "dashed"
+        },
+        {
+          "context": "detail-完了 21pt",
+          "text": "21pt",
+          "foreground": [
+            72,
+            56,
+            84,
+            1
+          ],
+          "background": [
+            243,
+            237,
+            248,
+            1
+          ],
+          "contrast": 9.282846699592485,
+          "opacity": "1",
+          "border": "dashed"
+        },
+        {
+          "context": "list-通常 1pt",
+          "text": "1pt",
+          "foreground": [
+            57,
+            73,
+            102,
+            1
+          ],
+          "background": [
+            237,
+            244,
+            255,
+            1
+          ],
+          "contrast": 8.187322460832076,
+          "opacity": "1",
+          "border": "solid"
+        },
+        {
+          "context": "detail-通常 1pt",
+          "text": "1pt",
+          "foreground": [
+            57,
+            73,
+            102,
+            1
+          ],
+          "background": [
+            237,
+            244,
+            255,
+            1
+          ],
+          "contrast": 8.187322460832076,
+          "opacity": "1",
+          "border": "solid"
+        },
+        {
+          "context": "list-完了 1pt",
+          "text": "1pt",
+          "foreground": [
+            57,
+            73,
+            102,
+            1
+          ],
+          "background": [
+            237,
+            244,
+            255,
+            1
+          ],
+          "contrast": 8.187322460832076,
+          "opacity": "1",
+          "border": "dashed"
+        },
+        {
+          "context": "detail-完了 1pt",
+          "text": "1pt",
+          "foreground": [
+            57,
+            73,
+            102,
+            1
+          ],
+          "background": [
+            237,
+            244,
+            255,
+            1
+          ],
+          "contrast": 8.187322460832076,
+          "opacity": "1",
+          "border": "dashed"
+        },
+        {
+          "context": "list-通常 2pt",
+          "text": "2pt",
+          "foreground": [
+            57,
+            73,
+            102,
+            1
+          ],
+          "background": [
+            237,
+            244,
+            255,
+            1
+          ],
+          "contrast": 8.187322460832076,
+          "opacity": "1",
+          "border": "solid"
+        },
+        {
+          "context": "detail-通常 2pt",
+          "text": "2pt",
+          "foreground": [
+            57,
+            73,
+            102,
+            1
+          ],
+          "background": [
+            237,
+            244,
+            255,
+            1
+          ],
+          "contrast": 8.187322460832076,
+          "opacity": "1",
+          "border": "solid"
+        },
+        {
+          "context": "list-完了 2pt",
+          "text": "2pt",
+          "foreground": [
+            57,
+            73,
+            102,
+            1
+          ],
+          "background": [
+            237,
+            244,
+            255,
+            1
+          ],
+          "contrast": 8.187322460832076,
+          "opacity": "1",
+          "border": "dashed"
+        },
+        {
+          "context": "detail-完了 2pt",
+          "text": "2pt",
+          "foreground": [
+            57,
+            73,
+            102,
+            1
+          ],
+          "background": [
+            237,
+            244,
+            255,
+            1
+          ],
+          "contrast": 8.187322460832076,
+          "opacity": "1",
+          "border": "dashed"
+        },
+        {
+          "context": "list-通常 3pt",
+          "text": "3pt",
+          "foreground": [
+            53,
+            77,
+            61,
+            1
+          ],
+          "background": [
+            235,
+            245,
+            239,
+            1
+          ],
+          "contrast": 8.261937476714543,
+          "opacity": "1",
+          "border": "solid"
+        },
+        {
+          "context": "detail-通常 3pt",
+          "text": "3pt",
+          "foreground": [
+            53,
+            77,
+            61,
+            1
+          ],
+          "background": [
+            235,
+            245,
+            239,
+            1
+          ],
+          "contrast": 8.261937476714543,
+          "opacity": "1",
+          "border": "solid"
+        },
+        {
+          "context": "list-完了 3pt",
+          "text": "3pt",
+          "foreground": [
+            53,
+            77,
+            61,
+            1
+          ],
+          "background": [
+            235,
+            245,
+            239,
+            1
+          ],
+          "contrast": 8.261937476714543,
+          "opacity": "1",
+          "border": "dashed"
+        },
+        {
+          "context": "detail-完了 3pt",
+          "text": "3pt",
+          "foreground": [
+            53,
+            77,
+            61,
+            1
+          ],
+          "background": [
+            235,
+            245,
+            239,
+            1
+          ],
+          "contrast": 8.261937476714543,
+          "opacity": "1",
+          "border": "dashed"
+        },
+        {
+          "context": "list-通常 5pt",
+          "text": "5pt",
+          "foreground": [
+            53,
+            77,
+            61,
+            1
+          ],
+          "background": [
+            235,
+            245,
+            239,
+            1
+          ],
+          "contrast": 8.261937476714543,
+          "opacity": "1",
+          "border": "solid"
+        },
+        {
+          "context": "detail-通常 5pt",
+          "text": "5pt",
+          "foreground": [
+            53,
+            77,
+            61,
+            1
+          ],
+          "background": [
+            235,
+            245,
+            239,
+            1
+          ],
+          "contrast": 8.261937476714543,
+          "opacity": "1",
+          "border": "solid"
+        },
+        {
+          "context": "list-完了 5pt",
+          "text": "5pt",
+          "foreground": [
+            53,
+            77,
+            61,
+            1
+          ],
+          "background": [
+            235,
+            245,
+            239,
+            1
+          ],
+          "contrast": 8.261937476714543,
+          "opacity": "1",
+          "border": "dashed"
+        },
+        {
+          "context": "detail-完了 5pt",
+          "text": "5pt",
+          "foreground": [
+            53,
+            77,
+            61,
+            1
+          ],
+          "background": [
+            235,
+            245,
+            239,
+            1
+          ],
+          "contrast": 8.261937476714543,
+          "opacity": "1",
+          "border": "dashed"
+        },
+        {
+          "context": "list-通常 未見積",
+          "text": "未見積",
+          "foreground": [
+            62,
+            62,
+            62,
+            1
+          ],
+          "background": [
+            239,
+            239,
+            239,
+            1
+          ],
+          "contrast": 9.301622136955128,
+          "opacity": "1",
+          "border": "solid"
+        },
+        {
+          "context": "detail-通常 未見積",
+          "text": "未見積",
+          "foreground": [
+            62,
+            62,
+            62,
+            1
+          ],
+          "background": [
+            239,
+            239,
+            239,
+            1
+          ],
+          "contrast": 9.301622136955128,
+          "opacity": "1",
+          "border": "solid"
+        },
+        {
+          "context": "list-完了 未見積",
+          "text": "未見積",
+          "foreground": [
+            62,
+            62,
+            62,
+            1
+          ],
+          "background": [
+            239,
+            239,
+            239,
+            1
+          ],
+          "contrast": 9.301622136955128,
+          "opacity": "1",
+          "border": "dashed"
+        },
+        {
+          "context": "detail-完了 未見積",
+          "text": "未見積",
+          "foreground": [
+            62,
+            62,
+            62,
+            1
+          ],
+          "background": [
+            239,
+            239,
+            239,
+            1
+          ],
+          "contrast": 9.301622136955128,
+          "opacity": "1",
+          "border": "dashed"
+        },
+        {
+          "context": "list-selected-focused",
+          "text": "8pt",
+          "foreground": [
+            80,
+            64,
+            43,
+            1
+          ],
+          "background": [
+            246,
+            240,
+            231,
+            1
+          ],
+          "contrast": 8.787836620098213,
+          "opacity": "1",
+          "border": "solid"
+        },
+        {
+          "context": "menu-current",
+          "text": "8pt",
+          "foreground": [
+            80,
+            64,
+            43,
+            1
+          ],
+          "background": [
+            255,
+            255,
+            255,
+            1
+          ],
+          "contrast": 9.955736653490472,
+          "opacity": "1",
+          "border": "solid"
+        },
+        {
+          "context": "menu-1",
+          "text": "1",
+          "foreground": [
+            57,
+            73,
+            102,
+            1
+          ],
+          "background": [
+            237,
+            244,
+            255,
+            1
+          ],
+          "contrast": 8.187322460832076,
+          "opacity": "1",
+          "border": "solid"
+        },
+        {
+          "context": "menu-2",
+          "text": "2",
+          "foreground": [
+            57,
+            73,
+            102,
+            1
+          ],
+          "background": [
+            237,
+            244,
+            255,
+            1
+          ],
+          "contrast": 8.187322460832076,
+          "opacity": "1",
+          "border": "solid"
+        },
+        {
+          "context": "menu-3",
+          "text": "3",
+          "foreground": [
+            53,
+            77,
+            61,
+            1
+          ],
+          "background": [
+            235,
+            245,
+            239,
+            1
+          ],
+          "contrast": 8.261937476714543,
+          "opacity": "1",
+          "border": "solid"
+        },
+        {
+          "context": "menu-5",
+          "text": "5",
+          "foreground": [
+            53,
+            77,
+            61,
+            1
+          ],
+          "background": [
+            235,
+            245,
+            239,
+            1
+          ],
+          "contrast": 8.261937476714543,
+          "opacity": "1",
+          "border": "solid"
+        },
+        {
+          "context": "menu-8",
+          "text": "8",
+          "foreground": [
+            80,
+            64,
+            43,
+            1
+          ],
+          "background": [
+            246,
+            240,
+            231,
+            1
+          ],
+          "contrast": 8.787836620098213,
+          "opacity": "1",
+          "border": "solid"
+        },
+        {
+          "context": "menu-13",
+          "text": "13",
+          "foreground": [
+            80,
+            64,
+            43,
+            1
+          ],
+          "background": [
+            246,
+            240,
+            231,
+            1
+          ],
+          "contrast": 8.787836620098213,
+          "opacity": "1",
+          "border": "solid"
+        },
+        {
+          "context": "menu-21",
+          "text": "21",
+          "foreground": [
+            72,
+            56,
+            84,
+            1
+          ],
+          "background": [
+            243,
+            237,
+            248,
+            1
+          ],
+          "contrast": 9.282846699592485,
+          "opacity": "1",
+          "border": "solid"
+        },
+        {
+          "context": "menu-未見積",
+          "text": "未見積",
+          "foreground": [
+            97,
+            97,
+            97,
+            1
+          ],
+          "background": [
+            236.03529411764706,
+            236.03529411764706,
+            236.03529411764706,
+            1
+          ],
+          "contrast": 5.244139790578202,
+          "opacity": "1",
+          "border": "solid"
+        },
+        {
+          "context": "project-#ffffff-false",
+          "text": "8pt",
+          "foreground": [
+            80,
+            64,
+            43,
+            1
+          ],
+          "background": [
+            246,
+            240,
+            231,
+            1
+          ],
+          "contrast": 8.787836620098213,
+          "opacity": "1",
+          "border": "solid"
+        },
+        {
+          "context": "project-#ffffff-true",
+          "text": "8pt",
+          "foreground": [
+            80,
+            64,
+            43,
+            1
+          ],
+          "background": [
+            246,
+            240,
+            231,
+            1
+          ],
+          "contrast": 8.787836620098213,
+          "opacity": "1",
+          "border": "dashed"
+        },
+        {
+          "context": "project-#000000-false",
+          "text": "8pt",
+          "foreground": [
+            80,
+            64,
+            43,
+            1
+          ],
+          "background": [
+            246,
+            240,
+            231,
+            1
+          ],
+          "contrast": 8.787836620098213,
+          "opacity": "1",
+          "border": "solid"
+        },
+        {
+          "context": "project-#000000-true",
+          "text": "8pt",
+          "foreground": [
+            80,
+            64,
+            43,
+            1
+          ],
+          "background": [
+            246,
+            240,
+            231,
+            1
+          ],
+          "contrast": 8.787836620098213,
+          "opacity": "1",
+          "border": "dashed"
+        },
+        {
+          "context": "chart-#ffffff-false-1pt",
+          "text": "1pt",
+          "foreground": [
+            102,
+            102,
+            102,
+            1
+          ],
+          "background": [
+            255,
+            255,
+            255,
+            1
+          ],
+          "contrast": 5.74183648145415,
+          "opacity": "1",
+          "border": "solid"
+        },
+        {
+          "context": "chart-#ffffff-true-1pt",
+          "text": "1pt",
+          "foreground": [
+            102,
+            102,
+            102,
+            1
+          ],
+          "background": [
+            255,
+            255,
+            255,
+            1
+          ],
+          "contrast": 5.74183648145415,
+          "opacity": "1",
+          "border": "dashed"
+        },
+        {
+          "context": "chart-#ffffff-false-3pt",
+          "text": "3pt",
+          "foreground": [
+            102,
+            102,
+            102,
+            1
+          ],
+          "background": [
+            255,
+            255,
+            255,
+            1
+          ],
+          "contrast": 5.74183648145415,
+          "opacity": "1",
+          "border": "solid"
+        },
+        {
+          "context": "chart-#ffffff-true-3pt",
+          "text": "3pt",
+          "foreground": [
+            102,
+            102,
+            102,
+            1
+          ],
+          "background": [
+            255,
+            255,
+            255,
+            1
+          ],
+          "contrast": 5.74183648145415,
+          "opacity": "1",
+          "border": "dashed"
+        },
+        {
+          "context": "chart-#ffffff-false-8pt",
+          "text": "8pt",
+          "foreground": [
+            102,
+            102,
+            102,
+            1
+          ],
+          "background": [
+            255,
+            255,
+            255,
+            1
+          ],
+          "contrast": 5.74183648145415,
+          "opacity": "1",
+          "border": "solid"
+        },
+        {
+          "context": "chart-#ffffff-true-8pt",
+          "text": "8pt",
+          "foreground": [
+            102,
+            102,
+            102,
+            1
+          ],
+          "background": [
+            255,
+            255,
+            255,
+            1
+          ],
+          "contrast": 5.74183648145415,
+          "opacity": "1",
+          "border": "dashed"
+        },
+        {
+          "context": "chart-#ffffff-false-21pt",
+          "text": "21pt",
+          "foreground": [
+            102,
+            102,
+            102,
+            1
+          ],
+          "background": [
+            255,
+            255,
+            255,
+            1
+          ],
+          "contrast": 5.74183648145415,
+          "opacity": "1",
+          "border": "solid"
+        },
+        {
+          "context": "chart-#ffffff-true-21pt",
+          "text": "21pt",
+          "foreground": [
+            102,
+            102,
+            102,
+            1
+          ],
+          "background": [
+            255,
+            255,
+            255,
+            1
+          ],
+          "contrast": 5.74183648145415,
+          "opacity": "1",
+          "border": "dashed"
+        },
+        {
+          "context": "chart-#ffffff-false-未見積",
+          "text": "未見積",
+          "foreground": [
+            62,
+            62,
+            62,
+            1
+          ],
+          "background": [
+            239,
+            239,
+            239,
+            1
+          ],
+          "contrast": 9.301622136955128,
+          "opacity": "1",
+          "border": "solid"
+        },
+        {
+          "context": "chart-#ffffff-true-未見積",
+          "text": "未見積",
+          "foreground": [
+            62,
+            62,
+            62,
+            1
+          ],
+          "background": [
+            239,
+            239,
+            239,
+            1
+          ],
+          "contrast": 9.301622136955128,
+          "opacity": "1",
+          "border": "dashed"
+        },
+        {
+          "context": "chart-#000000-false-1pt",
+          "text": "1pt",
+          "foreground": [
+            38,
+            38,
+            38,
+            1
+          ],
+          "background": [
+            230,
+            230,
+            230,
+            1
+          ],
+          "contrast": 12.125530592059377,
+          "opacity": "1",
+          "border": "solid"
+        },
+        {
+          "context": "chart-#000000-true-1pt",
+          "text": "1pt",
+          "foreground": [
+            38,
+            38,
+            38,
+            1
+          ],
+          "background": [
+            230,
+            230,
+            230,
+            1
+          ],
+          "contrast": 12.125530592059377,
+          "opacity": "1",
+          "border": "dashed"
+        },
+        {
+          "context": "chart-#000000-false-3pt",
+          "text": "3pt",
+          "foreground": [
+            38,
+            38,
+            38,
+            1
+          ],
+          "background": [
+            230,
+            230,
+            230,
+            1
+          ],
+          "contrast": 12.125530592059377,
+          "opacity": "1",
+          "border": "solid"
+        },
+        {
+          "context": "chart-#000000-true-3pt",
+          "text": "3pt",
+          "foreground": [
+            38,
+            38,
+            38,
+            1
+          ],
+          "background": [
+            230,
+            230,
+            230,
+            1
+          ],
+          "contrast": 12.125530592059377,
+          "opacity": "1",
+          "border": "dashed"
+        },
+        {
+          "context": "chart-#000000-false-8pt",
+          "text": "8pt",
+          "foreground": [
+            38,
+            38,
+            38,
+            1
+          ],
+          "background": [
+            230,
+            230,
+            230,
+            1
+          ],
+          "contrast": 12.125530592059377,
+          "opacity": "1",
+          "border": "solid"
+        },
+        {
+          "context": "chart-#000000-true-8pt",
+          "text": "8pt",
+          "foreground": [
+            38,
+            38,
+            38,
+            1
+          ],
+          "background": [
+            230,
+            230,
+            230,
+            1
+          ],
+          "contrast": 12.125530592059377,
+          "opacity": "1",
+          "border": "dashed"
+        },
+        {
+          "context": "chart-#000000-false-21pt",
+          "text": "21pt",
+          "foreground": [
+            38,
+            38,
+            38,
+            1
+          ],
+          "background": [
+            230,
+            230,
+            230,
+            1
+          ],
+          "contrast": 12.125530592059377,
+          "opacity": "1",
+          "border": "solid"
+        },
+        {
+          "context": "chart-#000000-true-21pt",
+          "text": "21pt",
+          "foreground": [
+            38,
+            38,
+            38,
+            1
+          ],
+          "background": [
+            230,
+            230,
+            230,
+            1
+          ],
+          "contrast": 12.125530592059377,
+          "opacity": "1",
+          "border": "dashed"
+        },
+        {
+          "context": "chart-#000000-false-未見積",
+          "text": "未見積",
+          "foreground": [
+            62,
+            62,
+            62,
+            1
+          ],
+          "background": [
+            239,
+            239,
+            239,
+            1
+          ],
+          "contrast": 9.301622136955128,
+          "opacity": "1",
+          "border": "solid"
+        },
+        {
+          "context": "chart-#000000-true-未見積",
+          "text": "未見積",
+          "foreground": [
+            62,
+            62,
+            62,
+            1
+          ],
+          "background": [
+            239,
+            239,
+            239,
+            1
+          ],
+          "contrast": 9.301622136955128,
+          "opacity": "1",
+          "border": "dashed"
+        },
+        {
+          "context": "chart-#808080-false-1pt",
+          "text": "1pt",
+          "foreground": [
+            70,
+            70,
+            70,
+            1
+          ],
+          "background": [
+            242,
+            242,
+            242,
+            1
+          ],
+          "contrast": 8.43106862854823,
+          "opacity": "1",
+          "border": "solid"
+        },
+        {
+          "context": "chart-#808080-true-1pt",
+          "text": "1pt",
+          "foreground": [
+            70,
+            70,
+            70,
+            1
+          ],
+          "background": [
+            242,
+            242,
+            242,
+            1
+          ],
+          "contrast": 8.43106862854823,
+          "opacity": "1",
+          "border": "dashed"
+        },
+        {
+          "context": "chart-#808080-false-3pt",
+          "text": "3pt",
+          "foreground": [
+            70,
+            70,
+            70,
+            1
+          ],
+          "background": [
+            242,
+            242,
+            242,
+            1
+          ],
+          "contrast": 8.43106862854823,
+          "opacity": "1",
+          "border": "solid"
+        },
+        {
+          "context": "chart-#808080-true-3pt",
+          "text": "3pt",
+          "foreground": [
+            70,
+            70,
+            70,
+            1
+          ],
+          "background": [
+            242,
+            242,
+            242,
+            1
+          ],
+          "contrast": 8.43106862854823,
+          "opacity": "1",
+          "border": "dashed"
+        },
+        {
+          "context": "chart-#808080-false-8pt",
+          "text": "8pt",
+          "foreground": [
+            70,
+            70,
+            70,
+            1
+          ],
+          "background": [
+            242,
+            242,
+            242,
+            1
+          ],
+          "contrast": 8.43106862854823,
+          "opacity": "1",
+          "border": "solid"
+        },
+        {
+          "context": "chart-#808080-true-8pt",
+          "text": "8pt",
+          "foreground": [
+            70,
+            70,
+            70,
+            1
+          ],
+          "background": [
+            242,
+            242,
+            242,
+            1
+          ],
+          "contrast": 8.43106862854823,
+          "opacity": "1",
+          "border": "dashed"
+        },
+        {
+          "context": "chart-#808080-false-21pt",
+          "text": "21pt",
+          "foreground": [
+            70,
+            70,
+            70,
+            1
+          ],
+          "background": [
+            242,
+            242,
+            242,
+            1
+          ],
+          "contrast": 8.43106862854823,
+          "opacity": "1",
+          "border": "solid"
+        },
+        {
+          "context": "chart-#808080-true-21pt",
+          "text": "21pt",
+          "foreground": [
+            70,
+            70,
+            70,
+            1
+          ],
+          "background": [
+            242,
+            242,
+            242,
+            1
+          ],
+          "contrast": 8.43106862854823,
+          "opacity": "1",
+          "border": "dashed"
+        },
+        {
+          "context": "chart-#808080-false-未見積",
+          "text": "未見積",
+          "foreground": [
+            62,
+            62,
+            62,
+            1
+          ],
+          "background": [
+            239,
+            239,
+            239,
+            1
+          ],
+          "contrast": 9.301622136955128,
+          "opacity": "1",
+          "border": "solid"
+        },
+        {
+          "context": "chart-#808080-true-未見積",
+          "text": "未見積",
+          "foreground": [
+            62,
+            62,
+            62,
+            1
+          ],
+          "background": [
+            239,
+            239,
+            239,
+            1
+          ],
+          "contrast": 9.301622136955128,
+          "opacity": "1",
+          "border": "dashed"
+        }
+      ],
+      "minimum": 5.244139790578202,
+      "errors": [],
+      "uncheckAndEdit": true
+    }
+  ]
+}

@@ -529,19 +529,39 @@ main {
   border-bottom: 1px solid var(--vscode-panel-border);
 }
 .points-unestimated {
-  color: var(--vscode-descriptionForeground);
+  --point-accent: var(--vscode-descriptionForeground);
 }
 .points-low {
-  color: var(--vscode-charts-blue, #3575bd);
+  --point-accent: var(--vscode-charts-blue, #3575bd);
 }
 .points-medium {
-  color: var(--vscode-charts-green, #357c4c);
+  --point-accent: var(--vscode-charts-green, #357c4c);
 }
 .points-high {
-  color: var(--vscode-charts-orange, #a56513);
+  --point-accent: var(--vscode-charts-orange, #a56513);
 }
 .points-21 {
-  color: var(--vscode-charts-purple, #8648b8);
+  --point-accent: var(--vscode-charts-purple, #8648b8);
+}
+:where(
+  .points-unestimated,
+  .points-low,
+  .points-medium,
+  .points-high,
+  .points-21
+) {
+  /* NREQ-003: 段階色は残し、文字の可読性と行の選択背景を分離する。 */
+  --point-text: color-mix(
+    in srgb,
+    var(--point-accent) 25%,
+    var(--vscode-foreground)
+  );
+  --point-background: color-mix(
+    in srgb,
+    var(--point-accent) 10%,
+    var(--vscode-editor-background)
+  );
+  color: var(--point-text);
 }
 .event-list section {
   border-top: 1px solid var(--vscode-panel-border);
@@ -635,6 +655,10 @@ main {
   border: 1px solid color-mix(in srgb, currentColor 24%, transparent);
   border-radius: 5px;
   cursor: pointer;
+}
+.point-options-values button {
+  background: var(--point-background);
+  border-color: var(--point-text);
 }
 .point-options-values button[aria-pressed="true"] {
   border-color: currentColor;
@@ -1488,11 +1512,13 @@ main {
   text-decoration: line-through;
   color: var(--vscode-descriptionForeground);
 }
-.task-line.completed :where(.point-selector > button, .point-badge) {
-  opacity: 0.5;
-}
 .point-selector > button:disabled {
   cursor: default;
+  opacity: 1;
+  border-style: dashed;
+}
+.task-line.completed :where(.point-badge) {
+  border-style: dashed;
 }
 .task-actions {
   display: inline-flex;
@@ -1505,7 +1531,8 @@ main {
   display: inline-block;
   padding: 3px 5px;
   border-radius: 4px;
-  background: color-mix(in srgb, currentColor 15%, transparent);
+  background: var(--point-background);
+  border: 1px solid var(--point-text);
   font-weight: 700;
   white-space: nowrap;
 }

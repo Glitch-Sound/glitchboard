@@ -1,0 +1,44 @@
+{
+  "verifiedAt": "2026-11-14T06:33:04.545933+00:00",
+  "change": {
+    "name": "improve-point-readability",
+    "tasks": 4,
+    "modifiedRequirements": 1,
+    "scenarios": 4,
+    "newScenarios": 3,
+    "archived": "openspec/changes/archive/2026-11-14-improve-point-readability",
+    "strictValidationBeforeSync": true,
+    "strictTraceBeforeSync": true,
+    "mainSpecMergeVerified": true
+  },
+  "final": {
+    "testFiles": 106,
+    "tests": 296,
+    "lint": true,
+    "typecheck": true,
+    "fsd": true,
+    "build": true,
+    "strictSpecs": 7,
+    "traceCheck": true,
+    "uiScripts": 8,
+    "whitespaceCheck": true
+  },
+  "browser": "156.0.8078.4",
+  "contrast": {
+    "threshold": 4.5,
+    "beforeFailingSamples": 120,
+    "beforeStateFailures": 32,
+    "afterSamples": 152,
+    "afterFailures": 0,
+    "afterStateFailures": 0,
+    "minimumByTheme": {
+      "dark": 5.756447884754369,
+      "light": 5.244139790578202
+    },
+    "screenshotsBefore": 14,
+    "screenshotsAfter": 14
+  },
+  "manualVsCodeChecksPending": 35,
+  "published": false,
+  "pushed": false
+}
