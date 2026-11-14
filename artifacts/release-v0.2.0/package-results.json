@@ -15,8 +15,8 @@
     "directory": "packages/extension"
   },
   "vsix": "/Users/glitch/Developer/glitchboard/artifacts/release-v0.2.0/glitchboard-0.2.0.vsix",
-  "sha256": "0a8c9601d7eb87e5adf12fefbcc5aa7c0d10e4acdc655c7c6e1e6b51dde6d1a3",
-  "bytes": 560517,
+  "sha256": "cdca03ff90c8f034f8312befea3187178a61cdfda1640abebfdb7b532727f27a",
+  "bytes": 560514,
   "files": 21,
   "readmeExact": true,
   "changelogExact": true,
