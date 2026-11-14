@@ -1,4 +1,4 @@
-import { eventPoints, type Project } from "../domain/index.js";
+import { eventPoints, eventTasks, type Project } from "../domain/index.js";
 import { addCalendarDays, isWorkday, type WorkdaySettings } from "./dates.js";
 
 type WorkItem = {
@@ -15,10 +15,7 @@ export function pendingWork(projects: readonly Project[]): WorkItem[] {
     for (const event of project.events) {
       const points = eventPoints(event);
       const remaining = points.total - points.done;
-      if (
-        remaining > 0 ||
-        event.stories.flatMap((story) => story.tasks).length === 0
-      )
+      if (remaining > 0 || eventTasks(event).length === 0)
         work.push({
           projectId: project.id,
           eventId: event.id,

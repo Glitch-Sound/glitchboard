@@ -32,7 +32,6 @@ export const taskSchema = z.object({
 
 export const storySchema = z.object({
   ...common,
-  isDefault: z.literal(true).optional(),
   tasks: z.array(taskSchema),
 });
 
@@ -41,12 +40,8 @@ export const eventTaskGroupName = "EventのTask";
 export const eventSchema = z.object({
   ...common,
   due: isoDate,
-  stories: z
-    .array(storySchema)
-    .refine(
-      (stories) => stories.filter((story) => story.isDefault).length <= 1,
-      "EventのTaskのグループはEventごとに1つにする",
-    ),
+  tasks: z.array(taskSchema).optional(),
+  stories: z.array(storySchema).default([]),
 });
 
 export const projectSchema = z.object({
@@ -60,13 +55,25 @@ export type Story = z.infer<typeof storySchema>;
 export type Event = z.infer<typeof eventSchema>;
 export type Project = z.infer<typeof projectSchema>;
 
+/** Event直下と任意グループのTaskを、すべての表示と計算で同じ対象にする。 */
+export function eventTasks(event: Event): Task[] {
+  return [
+    ...(event.tasks ?? []),
+    ...event.stories.flatMap((story) => story.tasks),
+  ];
+}
+
 /** REQ-001: 未見積Taskの計算上のポイント。 */
 export function effectiveTaskPoints(task: Pick<Task, "points">): number {
   return task.points ?? 3;
 }
 
 export function storyPoints(story: Story): { done: number; total: number } {
-  return story.tasks.reduce(
+  return taskPoints(story.tasks);
+}
+
+function taskPoints(tasks: readonly Task[]): { done: number; total: number } {
+  return tasks.reduce(
     (acc, task) => {
       const points = effectiveTaskPoints(task);
       acc.total += points;
@@ -78,13 +85,5 @@ export function storyPoints(story: Story): { done: number; total: number } {
 }
 
 export function eventPoints(event: Event): { done: number; total: number } {
-  return event.stories.reduce(
-    (acc, story) => {
-      const points = storyPoints(story);
-      acc.done += points.done;
-      acc.total += points.total;
-      return acc;
-    },
-    { done: 0, total: 0 },
-  );
+  return taskPoints(eventTasks(event));
 }

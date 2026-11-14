@@ -4,6 +4,7 @@ import { todayInTokyo } from "../../shared/src/calculation/dates.js";
 import { calculateActualPace } from "../../shared/src/calculation/pace.js";
 import { pendingWork } from "../../shared/src/calculation/prediction.js";
 import { descendantCounts } from "../../shared/src/domain/deletion.js";
+import { eventTasks } from "../../shared/src/domain/index.js";
 import {
   operationSchema,
   type Snapshot,
@@ -134,7 +135,9 @@ export class BoardSession {
             : project.events.some((event) =>
                 operation.kind === "event"
                   ? event.id === operation.id
-                  : event.stories.some((story) =>
+                  : (operation.kind === "task" &&
+                      event.tasks?.some((task) => task.id === operation.id)) ||
+                    event.stories.some((story) =>
                       operation.kind === "story"
                         ? story.id === operation.id
                         : story.tasks.some((task) => task.id === operation.id),
@@ -217,9 +220,7 @@ export class BoardSession {
       }
       const index = loadedProjects.findIndex((project) =>
         project.events.some((event) =>
-          event.stories.some((story) =>
-            story.tasks.some((task) => task.id === operation.taskId),
-          ),
+          eventTasks(event).some((task) => task.id === operation.taskId),
         ),
       );
       const file = loadedFiles[index]?.file;

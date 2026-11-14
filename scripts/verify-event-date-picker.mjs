@@ -6,7 +6,7 @@ import { build } from "vite";
 import { chromium, expect } from "@playwright/test";
 
 // REQ-022-S05..S09 / REQ-027-S03,S04: 実ビルドを操作する。ファイル保存はVS Code側で別途検証する。
-const artifacts = resolve(process.env.GLITCHBOARD_VERIFICATION_ARTIFACTS ?? "artifacts/event-date-picker");
+const artifacts = resolve(process.env.GLITCHBOARD_VERIFICATION_ARTIFACTS ?? "artifacts/replacement/calendar");
 const fixtureDir = resolve(tmpdir(), "glitchboard-date-picker-fixture");
 await mkdir(artifacts, { recursive: true });
 await build({ configFile: resolve("packages/webview/vite.config.ts"), logLevel: "error", build: { outDir: fixtureDir, emptyOutDir: true, rollupOptions: { input: { fixture: resolve("scripts/fixtures/event-date-picker.tsx") } } } });

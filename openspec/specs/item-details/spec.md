@@ -68,8 +68,7 @@ Eventの期限欄では、追加欄と共通のWebview内カレンダーで日�
 ### Requirement: REQ-028 - 補足
 
 WHEN 詳細パネルで補足を保存したとき、GlitchBoardは SHALL `note`の文章と箇条書きをProject YAMLに保存する。\
-詳細パネルにリンク情報を表示せず、編集要求に`links`があれば拒否する。\
-既存のProject YAMLに`links`が残っている場合は、読み込み時に全階層から除去する。
+詳細パネルにリンク入力を表示せず、編集要求に `links` があれば拒否する。
 
 #### Scenario: REQ-028-S03 - 補足の保存
 
@@ -77,11 +76,12 @@ WHEN 詳細パネルで補足を保存したとき、GlitchBoardは SHALL `note`
 - **WHEN** 文章と箇条書きを補足として保存する。
 - **THEN** `note`だけを保存要求に含め、リンク入力を表示しない。
 
-#### Scenario: REQ-028-S04 - 旧リンク情報の除去
 
-- **GIVEN** Project YAMLの各階層に`links`がある。
-- **WHEN** Projectを読み込む。
-- **THEN** 補足とコメントを保持し、全階層の`links`をProject YAMLから除去する。
+#### Scenario: REQ-028-S05 - 直接 Task の補足を読み戻す
+
+- **GIVEN** Event 直下に Task がある。
+- **WHEN** その Task の補足を保存して読み込む。
+- **THEN** 補足は直接 Task に保存され、再読込後も同じ内容となる。
 
 ### Requirement: REQ-035 - 名前から詳細を開く
 

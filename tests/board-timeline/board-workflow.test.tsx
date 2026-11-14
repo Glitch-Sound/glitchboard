@@ -62,6 +62,42 @@ afterEach(() => {
 });
 
 describe("ボードの入口", () => {
+  it("REQ-025-S01 直接Taskと通常Storyの子件数を削除確認へ渡し、取消では送信しない", () => {
+    render(<BoardApp />);
+    const project = structuredClone(projects[1]);
+    const directTasks = [
+      { id: "66666666-6666-4666-8666-666666666666", name: "直接A" },
+      { id: "77777777-7777-4777-8777-777777777777", name: "直接B" },
+    ];
+    emit({
+      ...snapshot,
+      projects: [
+        { ...project, events: [{ ...project.events[0], tasks: directTasks }] },
+      ],
+    });
+    expect(screen.getByRole("button", { name: "直接A" })).toBeTruthy();
+    fireEvent.click(
+      within(screen.getByRole("region", { name: "Event詳細" })).getByRole(
+        "button",
+        { name: "Event 1" },
+      ),
+    );
+    fireEvent.click(
+      within(screen.getByRole("dialog", { name: "詳細パネル" })).getByRole(
+        "button",
+        { name: "削除" },
+      ),
+    );
+    expect(
+      screen.getByRole("dialog", { name: "削除確認" }).textContent,
+    ).toContain("ストーリー 1件、タスク 3件も削除されます。");
+    fireEvent.click(screen.getByRole("button", { name: "キャンセル" }));
+    expect(
+      postMessage.mock.calls
+        .map(([message]) => message)
+        .filter((message) => message.type === "deleteItem"),
+    ).toEqual([]);
+  });
   it("REQ-035-S01 名前からProject、Event、Task詳細へ直接到達し、チェックとStory選択は独立する", () => {
     render(<BoardApp />);
     emit(snapshot);

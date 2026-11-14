@@ -2,22 +2,23 @@
 
 ## Purpose
 
-データモデルと永続化は、個人が複数Projectの作業をVS Codeで管理する際に、管理専用リポジトリのYAMLを安全に読み書きし、4階層のデータを再利用できるようにする。\
+データモデルと永続化は、個人が複数Projectの作業をVS Codeで管理する際に、管理専用リポジトリのYAMLを安全に読み書きし、期限と作業のデータを管理できるようにする。\
 この機能は管理対象の状態と画面の振る舞いを一貫して扱う。
 
 ## Requirements
 
-### Requirement: REQ-001 - 4階層の管理
+### Requirement: REQ-001 - Task を直接持つ管理モデル
 
-WHILE 管理データを扱う間、GlitchBoardは SHALL Project > Event > Story > Task の親子関係を保持する。\
-Projectは`id`、`name`、`color`と`events`配列、Eventは`id`、`name`、`due`と`stories`配列、Storyは`id`、`name`と`tasks`配列、Taskは`id`、`name`と任意の`points`、`doneAt`を持つ。\
-全階層で任意の`note`文字列を許可し、StoryとEventのポイントはTaskから集計する。
+WHILE 管理データを扱う間、GlitchBoard は Project > Event > Task の関係と任意の Event > Story > Task の関係を保持しなければならない(SHALL)。\
+Event 直下の tasks と Story 内の tasks は同じ Task 属性、表示、編集、完了と削除の対象とする。\
+tasks と stories の省略は空として扱い、全 Task を進捗、残作業、必要ペース、期間負荷、実績ペースと完了予測へ反映する。\
+全項目に ID、名前、任意の補足を持ち、Event は期限、Project は色を持つ。
 
 #### Scenario: REQ-001-S01 - 階層を読み込む
 
-- **GIVEN** ProjectにEvent、Story、Taskが各1件ある。
+- **GIVEN** Project に Event が1件あり、Event 直下と任意 Story 内に Task が各1件ある。
 - **WHEN** Projectを読み込む。
-- **THEN** 親子関係と各属性が保持される。
+- **THEN** 直接 Task と Story 内 Task の両方について親子関係と属性を保持する。
 
 #### Scenario: REQ-001-S02 - 未見積と未完了
 
@@ -77,6 +78,12 @@ IF YAMLが無効、参照先が欠落、またはIDが重複するなら、Glitc
 - **WHEN** 別Taskを編集して保存する。
 - **THEN** 対象外のコメントが残る。
 
+#### Scenario: REQ-004-S03 - 直接とグループで重複する ID
+
+- **GIVEN** Event 直下と Story 内の Task が同じ ID を持つ。
+- **WHEN** Project を読み込む。
+- **THEN** 重複 ID のエラーを返し、ファイルを変更しない。
+
 ### Requirement: REQ-005 - 識別子とファイル名
 
 WHEN 項目を追加するとき、GlitchBoardは SHALL Project番号を既存の最大番号に1を加えた4桁で採番し、0000～9999の範囲を超える場合は追加を拒否する。\
@@ -96,3 +103,14 @@ Project名の変更では既存ファイル名を維持する。
 - **GIVEN** 0001_alpha.yamlのProject名がalphaである。
 - **WHEN** 名前をbetaに変更する。
 - **THEN** ファイル名とmanage.yamlの参照は維持される。
+
+### Requirement: REQ-038 - 読込時の非変更
+
+WHEN 管理ファイルと Project を読み込むとき、GlitchBoard は読込だけを理由に内容を移行または書き換えてはならない(SHALL)。\
+無効な入力はエラーとし、利用者が保存操作を行うまでファイルを変更しない。
+
+#### Scenario: REQ-038-S01 - 読込は保存を伴わない
+
+- **GIVEN** 注釈と未使用の属性を含む有効な Project YAML がある。
+- **WHEN** 管理ファイルを繰り返し読み込む。
+- **THEN** ファイルのバイト列は変わらず、画面用には現行の属性だけを読む。

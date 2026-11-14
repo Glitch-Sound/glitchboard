@@ -11,6 +11,7 @@ import {
   effectiveTaskPoints,
   eventPoints,
   eventTaskGroupName,
+  eventTasks,
   storyPoints,
 } from "../../../../../shared/src/domain/index.js";
 import { DeleteControl } from "../../../features/delete-item/index.js";
@@ -46,10 +47,12 @@ function shortDate(date: string): string {
 }
 
 function initialStoryId(event: Event): string | null {
-  const first =
-    event.stories.find((story) => story.tasks.some((task) => !task.doneAt)) ??
-    event.stories[0];
-  return first?.isDefault ? null : (first?.id ?? null);
+  if (event.tasks?.some((task) => !task.doneAt)) return null;
+  const pending = event.stories.find((story) =>
+    story.tasks.some((task) => !task.doneAt),
+  );
+  if (pending) return pending.id;
+  return event.tasks?.length ? null : (event.stories[0]?.id ?? null);
 }
 
 /** REQ-018/REQ-023/REQ-024: 選択Eventの要約とTask操作を表示する。 */
@@ -120,37 +123,24 @@ export function EventDetails({
     setAddingTask(false);
     setTaskName("");
   };
-  const directStory = event.stories.find((item) => item.isDefault);
-  const story =
-    storyId === null
-      ? directStory
-      : event.stories.find((item) => item.id === storyId);
+  const story = event.stories.find((item) => item.id === storyId);
   const direct = storyId === null;
+  const directGroup = {
+    id: `${event.id}-direct`,
+    name: eventTaskGroupName,
+    note: undefined,
+    tasks: event.tasks ?? [],
+  };
+  const selectedTasks = direct ? directGroup.tasks : story?.tasks;
   const canAddTask = direct
     ? Boolean(onAddEventTask)
     : Boolean(onAddTask && story);
-  const groups = [
-    ...(onAddEventTask || directStory
-      ? [
-          {
-            id: `${event.id}-direct`,
-            name: eventTaskGroupName,
-            isDefault: true as const,
-            tasks: directStory?.tasks ?? [],
-          },
-        ]
-      : []),
-    ...event.stories.filter((item) => !item.isDefault),
-  ];
+  const groups = [directGroup, ...event.stories];
   const points = eventPoints(event);
   const remaining = points.total - points.done;
-  const unestimated = event.stories.reduce(
-    (sum, item) =>
-      sum +
-      item.tasks.filter((task) => task.points === undefined && !task.doneAt)
-        .length,
-    0,
-  );
+  const unestimated = eventTasks(event).filter(
+    (task) => task.points === undefined && !task.doneAt,
+  ).length;
   const days = calendarDayDifference(today, event.due);
   return (
     <section
@@ -317,7 +307,8 @@ export function EventDetails({
           </form>
         )}
         {groups.map((item) => {
-          const selected = item.isDefault ? direct : item.id === storyId;
+          const selected =
+            item.id === directGroup.id ? direct : item.id === storyId;
           const progress = storyPoints(item);
           const done = item.tasks.filter((task) => task.doneAt).length;
           return (
@@ -330,7 +321,7 @@ export function EventDetails({
                 type="button"
                 aria-pressed={selected}
                 onClick={() => {
-                  setStoryId(item.isDefault ? null : item.id);
+                  setStoryId(item.id === directGroup.id ? null : item.id);
                   cancelTask();
                 }}
               >
@@ -343,7 +334,7 @@ export function EventDetails({
                   {progress.done}/{progress.total}pt
                 </strong>
               </button>
-              {onDelete && !item.isDefault && (
+              {onDelete && item.id !== directGroup.id && (
                 <DeleteControl
                   kind="story"
                   name={item.name}
@@ -358,7 +349,7 @@ export function EventDetails({
                   }
                 />
               )}
-              {onOpenDetail && !item.isDefault && (
+              {onOpenDetail && item.id !== directGroup.id && (
                 <DetailButton
                   name={item.name}
                   note={item.note}
@@ -436,8 +427,8 @@ export function EventDetails({
             )}
           </form>
         )}
-        {story ? (
-          story.tasks.map((task) => (
+        {selectedTasks?.length ? (
+          selectedTasks.map((task) => (
             <div
               key={task.id}
               className={`task-line${task.doneAt ? " completed" : ""}`}

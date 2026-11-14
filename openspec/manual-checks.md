@@ -5,7 +5,7 @@
 
 ## 安全な起動
 
-既存データを別のディレクトリへコピーし、既存版と競合しない一時プロファイルを使う。\
+旧版と競合しない一時プロファイルを使い、新しい管理ファイルを作成する。\
 次はターミナルでリポジトリのルートから実行する。
 
 ```sh
@@ -15,13 +15,13 @@ review_profile=$(mktemp -d /tmp/glitchboard-review.XXXXXX)
 code --new-window --user-data-dir="$review_profile/user-data" --extensions-dir="$review_profile/extensions" --extensionDevelopmentPath="$PWD/packages/extension" .
 ```
 
-GlitchBoard を開き、コピーした管理ファイルを選ぶ。\
+GlitchBoard を開き、「新しく作る」から空の管理ファイルを作成する。\
 保存したい個人データをリポジトリへコピーしない。
 
 | シナリオID | 確認内容 | 対象環境 | 状態 | 確認日 | 結果とメモ |
 | --- | --- | --- | --- | --- | --- |
 | REQ-033-S01 | 空の Event へ Story を作らず Task を追加し、ウィンドウ再読込後も1件である | Mac、VS Code 安定版 | 未確認 | なし | Task ＋、名前、Enter の順で操作する |
-| REQ-033-S02 | 旧 Story と同名のグループがあっても既存 Task の属性が残る | コピーした旧 YAML | 未確認 | なし | ID、補足、ポイント、完了日とコメントを差分で確認する |
+| REQ-033-S02 | 直接と Story 内へ続けて Task を追加し、保存先が混ざらない | 新規データ | 未確認 | なし | Event.tasks と Story.tasks の配置を確認し、自動 Story が作られないことを確認する |
 | REQ-034-S01 | 2番目の Story 選択中の完了変更と外部ファイル更新で、選択や下書きが戻らない | Mac、VS Code 安定版 | 未確認 | なし | Task 追加欄を開いたまま別 Task の完了を切り替える |
 | REQ-034-S03 | 保存失敗で入力と理由が残り、保存先復旧後に同じ入力を再送できる | コピーした検証データ | 未確認 | なし | 不用意に元データの権限を変えない |
 | REQ-035-S01 | Project、Event、Task の名前から正しい詳細を開き、チェックとポイントは独立する | 両テーマ | 未確認 | なし | Story 名は一覧選択、書類アイコンは詳細となる |

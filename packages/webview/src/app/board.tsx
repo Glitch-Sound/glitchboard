@@ -49,6 +49,16 @@ function detailFor(
     for (const event of project.events) {
       if (kind === "event" && event.id === id)
         return { kind, item: event, hierarchy: [project.name, event.name] };
+      if (kind === "task") {
+        const task = event.tasks?.find((task) => task.id === id);
+        if (task)
+          return {
+            kind,
+            item: task,
+            hierarchy: [project.name, event.name, task.name],
+            parentDue: event.due,
+          };
+      }
       for (const story of event.stories) {
         if (kind === "story" && story.id === id)
           return {

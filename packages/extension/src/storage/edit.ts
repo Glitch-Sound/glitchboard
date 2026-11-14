@@ -8,7 +8,7 @@ import {
   taskSchema,
 } from "../../../shared/src/domain/index.js";
 import type { Operation } from "../../../shared/src/domain/messages.js";
-import { parseProjectYaml } from "./project.js";
+import { parseProjectYaml, taskLocation } from "./project.js";
 
 type Edit = Extract<Operation, { type: "editItem" }>;
 const allowed = {
@@ -33,6 +33,13 @@ export async function editProjectItem(
   const document = parseDocument(source, { uniqueKeys: true });
   let target: (string | number)[] | null = null;
   let item: object | null = null;
+  if (kind === "task") {
+    const location = taskLocation(project, id);
+    if (location) {
+      target = location.path;
+      item = location.task;
+    }
+  }
   if (kind === "project" && project.id === id) {
     target = [];
     item = project;
@@ -46,19 +53,6 @@ export async function editProjectItem(
       if (kind === "story" && story.id === id) {
         target = ["events", eventIndex, "stories", storyIndex];
         item = story;
-      }
-      for (const [taskIndex, task] of story.tasks.entries()) {
-        if (kind === "task" && task.id === id) {
-          target = [
-            "events",
-            eventIndex,
-            "stories",
-            storyIndex,
-            "tasks",
-            taskIndex,
-          ];
-          item = task;
-        }
       }
     }
   }

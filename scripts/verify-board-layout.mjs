@@ -5,7 +5,7 @@ import { resolve } from "node:path";
 import { chromium, expect } from "@playwright/test";
 import { parse } from "../packages/extension/node_modules/yaml/dist/index.js";
 
-const artifacts = resolve(process.env.GLITCHBOARD_VERIFICATION_ARTIFACTS ?? "artifacts/board-layout");
+const artifacts = resolve(process.env.GLITCHBOARD_VERIFICATION_ARTIFACTS ?? "artifacts/replacement/layout");
 await mkdir(artifacts, { recursive: true });
 const example = resolve("examples/readme-demo");
 const manage = parse(await readFile(resolve(example, "manage.yaml"), "utf8"));

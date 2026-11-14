@@ -4,7 +4,6 @@ import { parseDocument } from "yaml";
 import {
   type Event,
   eventSchema,
-  eventTaskGroupName,
   type Story,
   storySchema,
   type Task,
@@ -35,7 +34,13 @@ export async function addEvent(
   name: string,
   due: string,
 ): Promise<Event> {
-  const event = eventSchema.parse({ id: randomUUID(), name, due, stories: [] });
+  const event = eventSchema.parse({
+    id: randomUUID(),
+    name,
+    due,
+    tasks: [],
+    stories: [],
+  });
   await editProject(path, (document) => {
     document.addIn(["events"], event);
   });
@@ -52,7 +57,9 @@ export async function addStory(
   await editProject(path, (document, project) => {
     const index = project.events.findIndex((event) => event.id === eventId);
     if (index < 0) throw new Error(`Eventが見つからない: ${eventId}`);
-    document.addIn(["events", index, "stories"], story);
+    const target = ["events", index, "stories"];
+    if (!document.hasIn(target)) document.setIn(target, []);
+    document.addIn(target, story);
   });
   return story;
 }
@@ -82,7 +89,7 @@ export async function addTask(
   return task;
 }
 
-/** REQ-033: 旧Storyを転用せず、専用グループと最初のTaskを一度の書込で保存する。 */
+/** REQ-033: Eventの直接Taskを保存し、Storyを自動生成しない。 */
 export async function addEventTask(
   path: string,
   eventId: string,
@@ -92,18 +99,9 @@ export async function addEventTask(
   await editProject(path, (document, project) => {
     const index = project.events.findIndex((event) => event.id === eventId);
     if (index < 0) throw new Error(`Eventが見つからない: ${eventId}`);
-    const stories = project.events[index].stories;
-    const storyIndex = stories.findIndex((story) => story.isDefault);
-    if (storyIndex >= 0) {
-      document.addIn(["events", index, "stories", storyIndex, "tasks"], task);
-    } else {
-      document.addIn(["events", index, "stories"], {
-        id: randomUUID(),
-        name: eventTaskGroupName,
-        isDefault: true,
-        tasks: [task],
-      });
-    }
+    const target = ["events", index, "tasks"];
+    if (!document.hasIn(target)) document.setIn(target, []);
+    document.addIn(target, task);
   });
   return task;
 }

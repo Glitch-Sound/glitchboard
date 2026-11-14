@@ -1,5 +1,5 @@
 {
-  "verifiedAt": "2026-11-14T00:19:16.409Z",
+  "verifiedAt": "2026-11-14T00:36:30.495Z",
   "browser": "156.0.8078.4",
   "results": [
     {
@@ -8,7 +8,7 @@
       "realYamlPersistence": true,
       "realWriteFailureRecovery": true,
       "addEventTaskRequests": 5,
-      "legacyPreserved": true,
+      "groupedTasksPreserved": true,
       "pageErrors": []
     },
     {
@@ -17,7 +17,7 @@
       "realYamlPersistence": true,
       "realWriteFailureRecovery": true,
       "addEventTaskRequests": 5,
-      "legacyPreserved": true,
+      "groupedTasksPreserved": true,
       "pageErrors": []
     }
   ]

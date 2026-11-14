@@ -3,7 +3,7 @@ import { readFile, rename, unlink, writeFile } from "node:fs/promises";
 import { parseDocument } from "yaml";
 import type { ItemKind } from "../../../shared/src/domain/deletion.js";
 import { manageSchema } from "../../../shared/src/domain/manage.js";
-import { parseProjectYaml } from "./project.js";
+import { parseProjectYaml, taskLocation } from "./project.js";
 
 async function replace(path: string, content: string): Promise<void> {
   const temp = `${path}.${randomUUID()}.tmp`;
@@ -21,22 +21,12 @@ export async function deleteProjectItem(
   const project = parseProjectYaml(source);
   const document = parseDocument(source, { uniqueKeys: true });
   let target: (string | number)[] | null = null;
+  if (kind === "task") target = taskLocation(project, id)?.path ?? null;
   for (const [eventIndex, event] of project.events.entries()) {
     if (kind === "event" && event.id === id) target = ["events", eventIndex];
     for (const [storyIndex, story] of event.stories.entries()) {
       if (kind === "story" && story.id === id)
         target = ["events", eventIndex, "stories", storyIndex];
-      for (const [taskIndex, task] of story.tasks.entries()) {
-        if (kind === "task" && task.id === id)
-          target = [
-            "events",
-            eventIndex,
-            "stories",
-            storyIndex,
-            "tasks",
-            taskIndex,
-          ];
-      }
     }
   }
   if (!target) throw new Error(`削除対象が見つからない: ${id}`);

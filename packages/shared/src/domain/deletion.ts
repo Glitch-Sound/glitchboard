@@ -1,4 +1,4 @@
-import type { Event, Project, Story } from "./index.js";
+import { type Event, eventTasks, type Project, type Story } from "./index.js";
 
 export type ItemKind = "project" | "event" | "story" | "task";
 export type DescendantCounts = {
@@ -15,7 +15,7 @@ export function eventCounts(event: Event): DescendantCounts {
   return {
     events: 0,
     stories: event.stories.length,
-    tasks: event.stories.reduce((n, story) => n + story.tasks.length, 0),
+    tasks: eventTasks(event).length,
   };
 }
 
@@ -38,6 +38,8 @@ export function descendantCounts(
     if (kind === "project" && project.id === id) return projectCounts(project);
     for (const event of project.events) {
       if (kind === "event" && event.id === id) return eventCounts(event);
+      if (kind === "task" && event.tasks?.some((task) => task.id === id))
+        return empty;
       for (const story of event.stories) {
         if (kind === "story" && story.id === id) return storyCounts(story);
         if (kind === "task" && story.tasks.some((task) => task.id === id))

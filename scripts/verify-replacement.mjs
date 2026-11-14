@@ -20,10 +20,10 @@ try {
   for (const theme of ["dark", "light"]) {
     const dataRoot = await mkdtemp(resolve(tmpdir(), "glitchboard-replacement-data-"));
     const projectId = randomUUID(), eventId = randomUUID();
-    const legacy = { id: randomUUID(), name: "既存のStory", note: "既存の補足", tasks: [{ id: randomUUID(), name: "既存Task", points: 5, doneAt: "2026-11-03", note: "既存Task補足" }] };
-    const project = { id: projectId, name: "個人プロジェクト", color: "#4c8dff", events: [{ id: eventId, name: "小さなリリース", due: "2026-11-20", stories: [] }, { id: randomUUID(), name: "既存Event", due: "2026-11-25", stories: [legacy] }] };
+    const grouped = { id: randomUUID(), name: "別EventのStory", note: "グループ補足", tasks: [{ id: randomUUID(), name: "グループTask", points: 5, doneAt: "2026-11-03", note: "グループTask補足" }] };
+    const project = { id: projectId, name: "個人プロジェクト", color: "#4c8dff", events: [{ id: eventId, name: "小さなリリース", due: "2026-11-20", tasks: [], stories: [] }, { id: randomUUID(), name: "既存Event", due: "2026-11-25", stories: [grouped] }] };
     const path = resolve(dataRoot, "project.yaml");
-    await writeFile(path, `# 既存コメント\n${JSON.stringify(project, null, 2)}\n`);
+    await writeFile(path, `# 検証コメント\n${JSON.stringify(project, null, 2)}\n`);
     await writeFile(resolve(dataRoot, "manage.yaml"), JSON.stringify({ settings: { workdays_off: ["sat", "sun"], public_holidays: true }, projects: [{ file: "project.yaml", load: true }] }));
     const session = new BoardSession(resolve(dataRoot, "manage.yaml"));
     await session.reload(); session.selectEvent(eventId);
@@ -70,9 +70,9 @@ try {
       }
       const savedProject = () => readFile(path, "utf8").then(parse);
       let saved = await savedProject();
-      assert.equal(saved.events[0].stories.length, 1);
-      assert.deepEqual(saved.events[0].stories[0].tasks.map((task) => task.name), ["調査", "実装", "検証"]);
-      assert.deepEqual(saved.events[1].stories, [legacy]);
+      assert.equal(saved.events[0].stories.length, 0);
+      assert.deepEqual(saved.events[0].tasks.map((task) => task.name), ["調査", "実装", "検証"]);
+      assert.deepEqual(saved.events[1].stories, [grouped]);
       // 実ファイルのEACCESから復帰する。UIは入力を残して再送する。
       await tasks.getByRole("button", { name: "Taskを追加", exact: true }).click();
       await tasks.getByRole("textbox").fill("失敗から復帰");
@@ -146,11 +146,11 @@ try {
       await page.reload();
       await expect(tasks.getByRole("button", { name: "調査完了へ", exact: true })).toBeVisible();
       saved = await savedProject();
-      const direct = saved.events[0].stories.find((story) => story.isDefault);
+      const direct = saved.events[0];
       assert.equal(direct.tasks.length, 4);
       assert.deepEqual(direct.tasks[0], { id: direct.tasks[0].id, name: "調査完了へ", points: 8, note: "メモ\n- 確認事項" });
-      assert.deepEqual(saved.events[1].stories, [legacy]);
-      assert.ok((await readFile(path, "utf8")).includes("# 既存コメント"));
+      assert.deepEqual(saved.events[1].stories, [grouped]);
+      assert.ok((await readFile(path, "utf8")).includes("# 検証コメント"));
       assert.equal(requests.filter((request) => request.type === "addEventTask").length, 5); // 成功4件、失敗1件。
       await page.screenshot({ path: resolve(artifacts, `board-${theme}.png`) });
       await tasks.getByRole("button", { name: "調査完了へ", exact: true }).click();
@@ -165,8 +165,26 @@ try {
       saved = await savedProject();
       assert.equal(saved.events.at(-1).name, "ボードから追加");
       await expect(page.getByRole("region", { name: "Event詳細", exact: true }).getByRole("button", { name: "ボードから追加", exact: true })).toBeVisible();
+      // 現行モデルの直接TaskとStoryを含む子件数、取消、個別削除、Event削除。
+      session.selectEvent(eventId);
+      const eventSummary = page.getByRole("region", { name: "Event詳細", exact: true });
+      await eventSummary.getByRole("button", { name: "小さなリリース", exact: true }).click();
+      await detail.getByRole("button", { name: "削除", exact: true }).click();
+      await expect(page.getByRole("dialog", { name: "削除確認", exact: true })).toContainText("ストーリー 1件、タスク 5件も削除されます。");
+      await page.getByRole("button", { name: "キャンセル", exact: true }).click();
+      assert.equal(requests.filter((request) => request.type === "deleteItem").length, 0);
+      await page.keyboard.press("Escape");
+      await tasks.getByRole("button", { name: "実装", exact: true }).click();
+      await detail.getByRole("button", { name: "削除", exact: true }).click();
+      await page.getByRole("button", { name: "削除する", exact: true }).click();
+      await expect(tasks.getByRole("button", { name: "実装", exact: true })).toHaveCount(0);
+      await eventSummary.getByRole("button", { name: "小さなリリース", exact: true }).click();
+      await detail.getByRole("button", { name: "削除", exact: true }).click();
+      await expect(page.getByRole("dialog", { name: "削除確認", exact: true })).toContainText("ストーリー 1件、タスク 4件も削除されます。");
+      await page.getByRole("button", { name: "削除する", exact: true }).click();
+      await expect.poll(async () => (await savedProject()).events.some((event) => event.id === eventId)).toBe(false);
       assert.deepEqual(errors, []);
-      results.push({ theme, passed: true, realYamlPersistence: true, realWriteFailureRecovery: true, addEventTaskRequests: 5, legacyPreserved: true, pageErrors: errors });
+      results.push({ theme, passed: true, realYamlPersistence: true, realWriteFailureRecovery: true, addEventTaskRequests: 5, groupedTasksPreserved: true, pageErrors: errors });
       console.log(`${theme}: repeated operations, cancellation, persistence and recovery passed`);
     } finally {
       unsubscribe(); ready = false;

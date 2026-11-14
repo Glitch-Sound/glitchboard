@@ -10,6 +10,7 @@ import {
   effectiveTaskPoints,
   eventPoints,
   eventSchema,
+  eventTasks,
   storyPoints,
 } from "../../../../../shared/src/domain/index.js";
 import type { Operation } from "../../../../../shared/src/domain/messages.js";
@@ -41,7 +42,7 @@ function metrics(selection: DetailSelection): [string, string, string] {
       return [
         `Event ${selection.item.events.length}件`,
         `Story ${selection.item.events.reduce((n, event) => n + event.stories.length, 0)}件`,
-        `Task ${selection.item.events.reduce((n, event) => n + event.stories.reduce((m, story) => m + story.tasks.length, 0), 0)}件`,
+        `Task ${selection.item.events.reduce((n, event) => n + eventTasks(event).length, 0)}件`,
       ];
     case "event": {
       const points = eventPoints(selection.item);

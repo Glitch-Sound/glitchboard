@@ -4,7 +4,11 @@ import { join } from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
 import { BoardSession } from "../../packages/extension/src/session.js";
 import { parseProjectYaml } from "../../packages/extension/src/storage/project.js";
-import { projectSchema } from "../../packages/shared/src/domain/index.js";
+import {
+  descendantCounts,
+  eventCounts,
+  projectCounts,
+} from "../../packages/shared/src/domain/deletion.js";
 
 const projectId = "11111111-1111-4111-8111-111111111111";
 const eventId = "22222222-2222-4222-8222-222222222222";
@@ -16,8 +20,7 @@ afterEach(async () => {
     roots.splice(0).map((root) => rm(root, { recursive: true, force: true })),
   );
 });
-
-async function fixture(legacy = false) {
+async function fixture(grouped = false) {
   const root = await mkdtemp(join(tmpdir(), "glitchboard-event-task-"));
   roots.push(root);
   const path = join(root, "project.yaml");
@@ -25,25 +28,23 @@ async function fixture(legacy = false) {
     id: projectId,
     name: "Alpha",
     color: "#123456",
-    note: "Project note",
     events: [
       {
         id: eventId,
         name: "Release",
         due: "2026-11-20",
-        stories: legacy
+        tasks: [],
+        stories: grouped
           ? [
               {
                 id: storyId,
-                name: "EventのTask",
-                note: "通常のStory",
+                name: "作業グループ",
                 tasks: [
                   {
                     id: taskId,
-                    name: "旧Task",
+                    name: "グループのTask",
                     points: 5,
-                    doneAt: "2026-11-03",
-                    note: "旧補足",
+                    note: "補足",
                   },
                 ],
               },
@@ -66,22 +67,8 @@ async function fixture(legacy = false) {
   return { path, session, project };
 }
 
-describe("EventのTaskの保存", () => {
-  it("REQ-037-S01 Event作成後はそのEventを選択してTask追加へ進める", async () => {
-    const { session } = await fixture();
-    expect(
-      await session.handleOperation({
-        type: "addEvent",
-        projectId,
-        name: "新しいEvent",
-        due: "2026-11-25",
-      }),
-    ).toEqual({ ok: true });
-    const added = session.snapshot().projects[0].events[1];
-    expect(added.name).toBe("新しいEvent");
-    expect(session.snapshot().selectedEventId).toBe(added.id);
-  });
-  it("REQ-033-S01 空のEventから作成して再読込し、従来の編集と完了操作を使える", async () => {
+describe("Event直下のTaskの保存", () => {
+  it("REQ-033-S01 REQ-028-S05 Storyを作らず直接Taskを保存し、編集、完了と解除を行う", async () => {
     const { path, session } = await fixture();
     expect(
       await session.handleOperation({
@@ -91,16 +78,20 @@ describe("EventのTaskの保存", () => {
       }),
     ).toEqual({ ok: true });
     await session.reload();
-    const project = parseProjectYaml(await readFile(path, "utf8"));
-    expect(project.events[0].stories).toHaveLength(1);
-    expect(project.events[0].stories[0]).toMatchObject({
-      isDefault: true,
-      name: "EventのTask",
-      tasks: [{ name: "調査" }],
-    });
-    const task = project.events[0].stories[0].tasks[0];
-    expect(task).not.toHaveProperty("points");
-    expect(task).not.toHaveProperty("doneAt");
+    let event = parseProjectYaml(await readFile(path, "utf8")).events[0];
+    expect(event.stories).toEqual([]);
+    expect(event.tasks).toHaveLength(1);
+    const task = event.tasks?.[0];
+    if (!task) throw new Error("直接Taskがない");
+    expect(task).toEqual({ id: task.id, name: "調査" });
+    expect(
+      await session.handleOperation({
+        type: "editItem",
+        kind: "task",
+        id: task.id,
+        patch: { name: "調査する", note: "確認" },
+      }),
+    ).toEqual({ ok: true });
     expect(
       await session.handleOperation({
         type: "updateTask",
@@ -122,49 +113,46 @@ describe("EventのTaskの保存", () => {
         done: false,
       }),
     ).toEqual({ ok: true });
-    const saved = parseProjectYaml(await readFile(path, "utf8"));
-    expect(saved.events[0].stories[0].tasks).toEqual([
-      { id: task.id, name: "調査", points: 8 },
+    event = parseProjectYaml(await readFile(path, "utf8")).events[0];
+    expect(event.tasks).toEqual([
+      { id: task.id, name: "調査する", note: "確認", points: 8 },
     ]);
+    expect(event.stories).toEqual([]);
     expect(await readFile(path, "utf8")).toContain("# 保持するコメント");
   });
 
-  it("REQ-033-S02 同名Storyを転用せず、連続要求でも専用StoryとTaskを失わない", async () => {
+  it("REQ-033-S02 直接とグループの追加先を分け、連続保存でTaskを失わない", async () => {
     const { path, session, project } = await fixture(true);
-    const results = await Promise.all(
-      ["追加A", "追加B"].map((name) =>
-        session.handleOperation({ type: "addEventTask", eventId, name }),
+    expect(
+      await Promise.all(
+        ["直接A", "直接B"].map((name) =>
+          session.handleOperation({ type: "addEventTask", eventId, name }),
+        ),
       ),
-    );
-    expect(results).toEqual([{ ok: true }, { ok: true }]);
-    const stories = parseProjectYaml(await readFile(path, "utf8")).events[0]
-      .stories;
-    expect(stories).toHaveLength(2);
-    expect(stories[0]).toEqual(project.events[0].stories[0]);
-    expect(stories[1]).toMatchObject({
-      isDefault: true,
-      tasks: [{ name: "追加A" }, { name: "追加B" }],
-    });
-    expect(new Set(stories[1].tasks.map((task) => task.id)).size).toBe(2);
+    ).toEqual([{ ok: true }, { ok: true }]);
+    let event = parseProjectYaml(await readFile(path, "utf8")).events[0];
+    expect(event.tasks?.map((task) => task.name)).toEqual(["直接A", "直接B"]);
+    expect(event.stories).toEqual(project.events[0].stories);
     expect(
       await session.handleOperation({
         type: "addTask",
         storyId,
-        name: "従来操作",
+        name: "グループへ追加",
       }),
     ).toEqual({ ok: true });
-    expect(
-      parseProjectYaml(
-        await readFile(path, "utf8"),
-      ).events[0].stories[0].tasks.map((task) => task.name),
-    ).toEqual(["旧Task", "従来操作"]);
+    event = parseProjectYaml(await readFile(path, "utf8")).events[0];
+    expect(event.stories[0].tasks.map((task) => task.name)).toEqual([
+      "グループのTask",
+      "グループへ追加",
+    ]);
+    expect(event.tasks?.map((task) => task.name)).toEqual(["直接A", "直接B"]);
   });
 
-  it("REQ-033-S03 空白、不明な追加先、書込失敗で内容を変えず、その後に復帰する", async () => {
+  it("REQ-033-S03 不正な名前と追加先は保存せず、その後の有効な追加を処理する", async () => {
     const { path, session } = await fixture();
     const before = await readFile(path, "utf8");
     for (const operation of [
-      { type: "addEventTask", eventId, name: "   " },
+      { type: "addEventTask", eventId, name: "  " },
       { type: "addEventTask", eventId: storyId, name: "不明" },
     ]) {
       expect(await session.handleOperation(operation)).toMatchObject({
@@ -173,7 +161,6 @@ describe("EventのTaskの保存", () => {
       });
       expect(await readFile(path, "utf8")).toBe(before);
     }
-    // ENOTDIR を使い、root権限でも安定して書込不可を再現する。
     const broken = new BoardSession(join(path, "manage.yaml"));
     expect(
       await broken.handleOperation({
@@ -181,7 +168,7 @@ describe("EventのTaskの保存", () => {
         eventId,
         name: "保存不可",
       }),
-    ).toMatchObject({ ok: false, error: expect.any(String) });
+    ).toMatchObject({ ok: false });
     expect(await readFile(path, "utf8")).toBe(before);
     expect(
       await session.handleOperation({
@@ -192,27 +179,85 @@ describe("EventのTaskの保存", () => {
     ).toEqual({ ok: true });
   });
 
-  it("REQ-033-S03 同じEventの専用Story重複を拒否する", () => {
-    const story = {
-      id: storyId,
-      name: "EventのTask",
-      isDefault: true,
-      tasks: [],
-    };
+  it("REQ-004-S03 直接とStory内で重複したTask IDを拒否する", async () => {
+    const { project } = await fixture(true);
+    expect(() =>
+      parseProjectYaml(
+        JSON.stringify({
+          ...project,
+          events: [
+            { ...project.events[0], tasks: [{ id: taskId, name: "重複" }] },
+          ],
+        }),
+      ),
+    ).toThrow("重複したID");
+  });
+
+  it("REQ-025-S01 直接Taskを子件数へ含め、個別とEvent全体の両方を削除する", async () => {
+    const { path, session } = await fixture(true);
+    for (const name of ["直接A", "直接B"])
+      expect(
+        await session.handleOperation({ type: "addEventTask", eventId, name }),
+      ).toEqual({ ok: true });
+    const project = session.snapshot().projects[0];
+    const event = project.events[0];
+    expect(eventCounts(event)).toEqual({ events: 0, stories: 1, tasks: 3 });
+    expect(projectCounts(project)).toEqual({ events: 1, stories: 1, tasks: 3 });
+    const task = event.tasks?.[0];
+    if (!task) throw new Error("直接Taskがない");
+    expect(descendantCounts([project], "task", task.id)).toEqual({
+      events: 0,
+      stories: 0,
+      tasks: 0,
+    });
     expect(
-      projectSchema.safeParse({
-        id: projectId,
-        name: "Alpha",
-        color: "#123456",
-        events: [
-          {
-            id: eventId,
-            name: "Release",
-            due: "2026-11-20",
-            stories: [story, { ...story, id: taskId }],
-          },
-        ],
-      }).success,
-    ).toBe(false);
+      await session.handleOperation({
+        type: "deleteItem",
+        kind: "task",
+        id: task.id,
+        version: session.snapshot().version,
+        expected: { events: 0, stories: 0, tasks: 0 },
+      }),
+    ).toEqual({ ok: true });
+    expect(
+      session.snapshot().projects[0].events[0].tasks?.map((item) => item.name),
+    ).toEqual(["直接B"]);
+    const before = await readFile(path, "utf8");
+    expect(
+      await session.handleOperation({
+        type: "deleteItem",
+        kind: "event",
+        id: eventId,
+        version: session.snapshot().version,
+        expected: { events: 0, stories: 1, tasks: 1 },
+      }),
+    ).toMatchObject({ ok: false });
+    expect(await readFile(path, "utf8")).toBe(before);
+    expect(
+      await session.handleOperation({
+        type: "deleteItem",
+        kind: "event",
+        id: eventId,
+        version: session.snapshot().version,
+        expected: { events: 0, stories: 1, tasks: 2 },
+      }),
+    ).toEqual({ ok: true });
+    expect(parseProjectYaml(await readFile(path, "utf8")).events).toEqual([]);
+  });
+
+  it("REQ-037-S01 Event作成後はそのEventを選択してTask追加へ進める", async () => {
+    const { session } = await fixture();
+    expect(
+      await session.handleOperation({
+        type: "addEvent",
+        projectId,
+        name: "新しいEvent",
+        due: "2026-11-25",
+      }),
+    ).toEqual({ ok: true });
+    const added = session.snapshot().projects[0].events[1];
+    expect(session.snapshot().selectedEventId).toBe(added.id);
+    expect(added.tasks).toEqual([]);
+    expect(added.stories).toEqual([]);
   });
 });

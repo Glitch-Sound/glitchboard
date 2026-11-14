@@ -1,13 +1,10 @@
 {
-  "verifiedAt": "2026-11-14T00:23:20.940954+00:00",
-  "baseline": {
-    "testFiles": 83,
-    "tests": 152,
-    "passed": true
-  },
+  "verifiedAt": "2026-11-14T00:40:25.827290+00:00",
+  "dataModel": "Project > Event > Task; optional Event > Story > Task",
+  "legacyMigrationAndCompatibility": "out of scope by user instruction",
   "final": {
-    "testFiles": 88,
-    "tests": 172,
+    "testFiles": 89,
+    "tests": 175,
     "lint": true,
     "typecheck": true,
     "fsd": true,
@@ -16,13 +13,13 @@
     "traceCheck": true
   },
   "change": {
-    "name": "simplify-event-workflow",
-    "tasks": 11,
-    "requirements": 7,
-    "scenarios": 24,
+    "name": "native-event-tasks",
+    "tasks": 8,
+    "requirements": 6,
+    "scenarios": 16,
     "strictValidationBeforeSync": true,
     "strictTraceBeforeSync": true,
-    "archived": "openspec/changes/archive/2026-11-14-simplify-event-workflow"
+    "archived": "openspec/changes/archive/2026-11-14-native-event-tasks"
   },
   "browserResults": "browser-results.json",
   "calendarCombinations": 12,

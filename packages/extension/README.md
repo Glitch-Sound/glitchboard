@@ -13,7 +13,7 @@ Project の期限、進捗、作業量を見渡す個人用 VS Code 拡張であ
 
 Story の事前作成は不要である。\
 直接追加した Task は「EventのTask」に入り、Story は必要なときだけ追加できる。\
-既存の Story と Task は引き続き利用できる。
+Story 内の Task も同じ操作で扱える。
 
 ## 操作
 
@@ -34,10 +34,10 @@ Story の事前作成は不要である。\
 ## データ
 
 `glitchboard.manageFile` には管理ファイルの絶対パスを設定できる。\
-保存階層は `Project > Event > Story > Task` を継続し、専用 Story は任意属性 `isDefault: true` で識別する。\
-名前が同じ既存 Story は転用しない。\
-旧版でも専用 Story 内の Task を通常の作業として読める。\
-既存データの初回試用にはコピーを使う。
+基本の保存モデルは `Project > Event > Task` である。\
+必要なときは Event 内に任意の Story を作って Task をまとめられる。\
+直接 Task は Event の tasks に保存し、自動 Story は作らない。\
+旧版の管理ファイルの移行と互換性は対象外とし、新しい管理ファイルから利用する。
 
 VS Code 1.105 以降に対応する。\
-このリプレースはローカル検証段階であり、Marketplace には公開していない。
+Marketplace への公開は行っていない。

@@ -76,6 +76,6 @@ glitchboard-data/
 
 ## 開発成果物
 
-指定テンプレートの共通ファイルと `ears-bdd` を使う。\
-元リポジトリから取り込んだ実装済み change は `changes/archive/` の imported を含む名前で保持する。\
-元の検証記録は履歴であり、本リポジトリでの検証結果は `docs/replacement-report.md` を正とする。
+指定テンプレートの共通ファイルと ears-bdd を使用する。\
+旧リポジトリのアーカイブと schema は引き継がない。\
+今回の変更記録は changes/、現行要件は specs/、現在の結果は docs/replacement-report.md へ置く。

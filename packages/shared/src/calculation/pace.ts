@@ -1,5 +1,6 @@
 import {
   effectiveTaskPoints,
+  eventTasks,
   type Project,
   type Task,
 } from "../domain/index.js";
@@ -20,9 +21,7 @@ export type ActualPace = {
 
 function allTasks(projects: readonly Project[]): Task[] {
   return projects.flatMap((project) =>
-    project.events.flatMap((event) =>
-      event.stories.flatMap((story) => story.tasks),
-    ),
+    project.events.flatMap((event) => eventTasks(event)),
   );
 }
 

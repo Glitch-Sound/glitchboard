@@ -3,7 +3,7 @@ import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { resolve } from "node:path";
 import { chromium } from "@playwright/test";
 
-const artifacts = resolve(process.env.GLITCHBOARD_VERIFICATION_ARTIFACTS ?? "artifacts/manage-setup");
+const artifacts = resolve(process.env.GLITCHBOARD_VERIFICATION_ARTIFACTS ?? "artifacts/replacement/setup");
 await mkdir(artifacts, { recursive: true });
 const browser = await chromium.launch({ headless: true });
 const results = [];

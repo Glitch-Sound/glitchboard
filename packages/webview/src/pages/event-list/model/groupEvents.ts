@@ -3,6 +3,7 @@ import {
   utcDate,
 } from "../../../../../shared/src/calculation/dates.js";
 import type { Event, Project } from "../../../../../shared/src/domain/index.js";
+import { eventTasks } from "../../../../../shared/src/domain/index.js";
 
 export type EventRow = { project: Project; event: Event };
 export type EventGroups = {
@@ -14,7 +15,7 @@ export type EventGroups = {
 export type TargetFilter = "pending" | "all";
 
 function isCompleted(event: Event): boolean {
-  const tasks = event.stories.flatMap((story) => story.tasks);
+  const tasks = eventTasks(event);
   return tasks.length > 0 && tasks.every((task) => Boolean(task.doneAt));
 }
 
