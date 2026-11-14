@@ -1,0 +1,52 @@
+{
+  "hostVersion": "1.146.0",
+  "source": "実 VS Code Extension Development Host",
+  "results": [
+    {
+      "theme": "Default Dark Modern",
+      "story": {
+        "background": "color(srgb 0.0156863 0.223529 0.368627 / 0.35)",
+        "outline": "none"
+      },
+      "summary": {
+        "background": "rgba(0, 0, 0, 0)",
+        "outline": "none"
+      },
+      "event": {
+        "background": "color(srgb 0.0156863 0.223529 0.368627 / 0.35)",
+        "outline": "none"
+      },
+      "task": {
+        "background": "rgb(55, 55, 61)",
+        "outline": "none"
+      },
+      "keyboardFocus": {
+        "background": "rgba(0, 0, 0, 0)",
+        "outline": "solid"
+      }
+    },
+    {
+      "theme": "Default Light Modern",
+      "story": {
+        "background": "color(srgb 0.909804 0.909804 0.909804 / 0.35)",
+        "outline": "none"
+      },
+      "summary": {
+        "background": "rgba(0, 0, 0, 0)",
+        "outline": "none"
+      },
+      "event": {
+        "background": "color(srgb 0.909804 0.909804 0.909804 / 0.35)",
+        "outline": "none"
+      },
+      "task": {
+        "background": "rgb(228, 230, 241)",
+        "outline": "none"
+      },
+      "keyboardFocus": {
+        "background": "rgba(0, 0, 0, 0)",
+        "outline": "solid"
+      }
+    }
+  ]
+}

@@ -2056,9 +2056,9 @@ main {
 .task-line.selected {
   background: var(--vscode-list-inactiveSelectionBackground);
 }
-/* REQ-035: Event は背景で選択を示し、フォーカス枠は操作ボタンへ残す。 */
+/* REQ-030、REQ-035: 一覧と Story は選択背景、Event 要約は詳細の強調で示す。 */
 .event-row.selected,
-.event-summary.selected,
+.story-choice.selected,
 .marker-wrap.selected,
 .marker-list > .selected {
   background: color-mix(

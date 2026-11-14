@@ -1,0 +1,44 @@
+dark: selection states, keyboard, independent operations and edit guards verified
+light: selection states, keyboard, independent operations and edit guards verified
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: 4 selection presentation checks failed
++ actual - expected
+
++ [
++   {
++     message: '通常 Story は他の選択行と同じ明るい背景にする',
++     theme: 'dark'
++   },
++   {
++     message: '下部 Event 要約には選択背景を付けない',
++     theme: 'dark'
++   },
++   {
++     message: '通常 Story は他の選択行と同じ明るい背景にする',
++     theme: 'light'
++   },
++   {
++     message: '下部 Event 要約には選択背景を付けない',
++     theme: 'light'
++   }
++ ]
+- []
+
+    at file:///Users/glitch/Developer/glitchboard/scripts/verify-record-selection.mjs:195:9 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: [
+    { theme: 'dark', message: '通常 Story は他の選択行と同じ明るい背景にする' },
+    { theme: 'dark', message: '下部 Event 要約には選択背景を付けない' },
+    { theme: 'light', message: '通常 Story は他の選択行と同じ明るい背景にする' },
+    { theme: 'light', message: '下部 Event 要約には選択背景を付けない' }
+  ],
+  expected: [],
+  operator: 'deepStrictEqual',
+  diff: 'simple'
+}
+
+Node.js v24.18.0

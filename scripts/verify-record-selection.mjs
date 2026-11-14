@@ -7,7 +7,7 @@ import { chromium, expect } from "@playwright/test";
 import { build } from "vite";
 import { parse } from "../packages/extension/node_modules/yaml/dist/index.js";
 const phase = process.env.SELECTION_PHASE ?? "after";
-const artifacts = resolve("artifacts/selection-surfaces"); await mkdir(artifacts, { recursive: true });
+const artifacts = resolve("artifacts/selection-backgrounds"); await mkdir(artifacts, { recursive: true });
 const runtime = await mkdtemp(resolve(tmpdir(), "gb-selection-runtime-"));
 await build({ configFile: false, logLevel: "error", ssr: { noExternal: true }, build: { ssr: resolve("packages/extension/src/session.ts"), outDir: runtime, rollupOptions: { output: { entryFileNames: "session.mjs" } } } });
 const { BoardSession } = await import(pathToFileURL(resolve(runtime, "session.mjs")).href);
@@ -67,8 +67,8 @@ try {
    await group("実装").locator(".story-select").press("Enter"); await expect(board.getByRole("button", { name: "Storyの作業", exact: true })).toBeVisible();
    story.optionalSelected = { row: await style(group("実装")), detail: await style(group("実装").locator(".detail-button")) };
    await noSelectionFrame(group("実装"), "通常 Story");
-   verify(story.optionalSelected.row.background === story.optionalUnselected.row.background, "通常 Story は選択しても背景を変えない");
-   verify(story.directSelected.row.background === story.optionalUnselected.row.background && story.directSelected.row.outlineStyle === "none", "Taks も背景と選択枠を変えない");
+   verify(story.optionalSelected.row.background !== story.optionalUnselected.row.background && story.optionalSelected.row.background === (await style(eventRow("公開準備"))).background, "通常 Story は他の選択行と同じ明るい背景にする");
+   verify(story.directSelected.row.background === story.optionalSelected.row.background && story.directSelected.row.outlineStyle === "none", "Taks も通常 Story と同じ選択背景にし、選択枠を付けない");
    verify(story.optionalSelected.detail.color === selectedInk, "Story の選択詳細を強調する");
    const storyNameBox = await group("実装").locator(".story-name").boundingBox(), progressBox = await group("実装").locator("progress").boundingBox();
    verify(progressBox.y + progressBox.height / 2 > storyNameBox.y + storyNameBox.height / 2, "Story の進捗バーを名前より下へ配置する");
@@ -80,6 +80,7 @@ try {
    await group("Taks").locator(".record-hitbox").press("Enter");
    await expect(board.getByRole("button", { name: "通常の作業", exact: true })).toBeVisible();
    // REQ-035-S02: Project の名前、余白、左線と選択詳細。
+   samples.projectCellUnselected = await style(project("検証プロジェクト"));
    samples.projectUnselected = await style(project("検証プロジェクト").locator(".detail-button"));
    await project("検証プロジェクト").getByRole("button", { name: "検証プロジェクト", exact: true }).hover();
    verify((await style(project("検証プロジェクト").getByRole("button", { name: "検証プロジェクト", exact: true }))).decoration === "none", "Project 名のホバーに下線を出さない");
@@ -89,6 +90,7 @@ try {
    const projectName = project("検証プロジェクト").getByRole("button", { name: "検証プロジェクト", exact: true }); await focus(projectName); verify(!(await style(project("検証プロジェクト"))).outline.includes("none"), "Project 名のフォーカスを省略表示で切らずセル内側にも示す"); await capture(board, "project-focus");
    await projectName.press("Enter"); await expect(board.getByRole("region", { name: "Event詳細" })).toContainText("別Projectの予定");
    samples.projectSelected = await style(project("検証プロジェクト").locator(".detail-button"));
+   samples.projectCellSelected = await style(project("検証プロジェクト"));
    verify(samples.projectSelected.color === selectedInk, "選択 Project の詳細を選択前景にする");
    verify(await project("検証プロジェクト").evaluate(node => getComputedStyle(node).borderInlineStartColor) === "rgb(208, 130, 40)", "Project の選択左線は設定色");
    verify((await style(project("制作プロジェクト").locator(".detail-button"))).color === "rgb(76, 141, 255)", "未選択 Project の補足色を保持する");
@@ -107,6 +109,7 @@ try {
    verify(samples.eventSelected.background !== samples.sidebarUnselected.background, "ホバーとフォーカスが外れても Event の選択背景を保持する");
    await noSelectionFrame(eventRow("公開準備"), "左の Event");
    samples.eventSummarySelected = await noSelectionFrame(board.locator(".event-summary"), "Event 要約");
+   verify(samples.eventSummarySelected.background === "rgba(0, 0, 0, 0)", "下部 Event 要約には選択背景を付けない");
    await focus(board.locator(".event-summary > .record-hitbox")); await capture(board, "event-hitbox-focus");
    verify((await style(eventRow("公開準備").locator(".detail-button"))).color === selectedInk, "補足がある選択 Event も詳細を強調");
    verify((await style(sidebar.locator(".event-row-name").getByText("公開準備", { exact: true }))).color === (theme === "dark" ? "rgb(244, 135, 113)" : "rgb(199, 46, 15)"), "選択しても危険色を保持");
@@ -122,6 +125,7 @@ try {
    await board.getByRole("option", { name: "公開準備", exact: true }).click();
    // REQ-035-S04: 通常と完了の下線、選択詳細と独立操作。
    const normalName = task("通常の作業").getByRole("button", { name: "通常の作業", exact: true });
+   samples.taskUnselected = await style(task("通常の作業"));
    await normalName.hover(); verify((await style(normalName)).decoration === "none", "Task のホバー下線を出さない"); await capture(board, "task-unselected-hover");
    await focus(normalName); await capture(board, "task-focus"); await normalName.press("Enter");
    samples.taskSelected = await noSelectionFrame(task("通常の作業"), "Task の行");
@@ -133,7 +137,7 @@ try {
    await board.getByRole("heading", { name: "GlitchBoard", exact: true }).click();
    await noSelectionFrame(task("通常の作業").locator(".record-hitbox"), "フォーカスを外した選択 Task の余白ボタン");
    verify((await style(task("通常の作業").locator(".detail-button"))).color === selectedInk, "選択 Task の詳細を強調");
-   const completedName = task("完了の作業").getByRole("button", { name: "完了の作業", exact: true }); await completedName.hover(); verify((await style(completedName)).decoration === "line-through", "完了 Task の取り消し線を保持"); await capture(board, "task-selected");
+   const completedName = task("完了の作業").getByRole("button", { name: "完了の作業", exact: true }); await completedName.hover(); samples.taskCompletedHover = await style(task("完了の作業")); verify((await style(completedName)).decoration === "line-through", "完了 Task の取り消し線を保持"); await capture(board, "task-selected");
    await task("通常の作業").getByRole("button", { name: "通常の作業の詳細", exact: true }).click(); await expect(board.locator(".detail-target")).toHaveText("TASK : 通常の作業");
    await detail.getByRole("button", { name: "詳細を閉じる", exact: true }).click();
    const before = requests.filter(r => r.surface === "board" && r.type === "selectEvent").length;
@@ -177,8 +181,11 @@ try {
    await capture(board, "empty-project"); await capture(sidebar, "events-cleared");
    if (phase === "after") {
     const baseline = JSON.parse(await readFile(resolve(artifacts, "before-results.json"), "utf8")).results.find(r => r.theme === theme);
-    for (const key of ["eventSelected", "eventSummarySelected", "markerSelected", "markerOptionSelected", "taskSelected"]) assert.equal(samples[key].background, baseline.samples[key].background, `${key}: 変更前の選択背景を維持する`);
-    assert.equal(story.optionalSelected.detail.color, baseline.story.optionalSelected.detail.color, "Story の詳細の強調を維持する");
+    for (const key of ["projectCellUnselected", "projectCellSelected", "projectUnselected", "projectSelected", "sidebarSelected", "sidebarUnselected", "eventSelected", "markerSelected", "markerOptionSelected", "taskUnselected", "taskSelected", "taskCompletedHover"]) assert.deepEqual(samples[key], baseline.samples[key], `${key}: 変更前の表示を維持する`);
+    for (const key of ["optionalUnselected", "optionalHover", "optionalFocus"]) assert.deepEqual(story[key], baseline.story[key], `Story ${key}: 未選択、ホバー、フォーカスを維持する`);
+    assert.deepEqual(story.optionalSelected.detail, baseline.story.optionalSelected.detail, "Story の詳細の強調を維持する");
+    const { background: currentBackground, ...currentSummary } = samples.eventSummarySelected, { background: previousBackground, ...previousSummary } = baseline.samples.eventSummarySelected;
+    assert.deepEqual(currentSummary, previousSummary, "Event 要約は背景だけを変更する");
    }
    assert.deepEqual(errors, []); results.push({ theme, samples, story, captures, errors, guardedSelection: true });
    console.log(`${theme}: selection states, keyboard, independent operations and edit guards verified`);
