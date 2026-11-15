@@ -40,6 +40,25 @@ export type Snapshot = z.infer<typeof snapshotMessageSchema>["payload"];
 /** REQ-014: Webviewから受ける編集要求の共有スキーマ。 */
 export const operationSchema = z.discriminatedUnion("type", [
   z.object({
+    type: z.literal("moveStory"),
+    projectFile: z.string().min(1).optional(),
+    targetProjectFile: z.string().min(1).optional(),
+    eventId: z.uuid(),
+    storyId: z.uuid(),
+    targetStoryId: z.uuid(),
+    placement: z.enum(["before", "after"]),
+  }),
+  z.object({
+    type: z.literal("moveTask"),
+    projectFile: z.string().min(1).optional(),
+    targetProjectFile: z.string().min(1).optional(),
+    eventId: z.uuid(),
+    storyId: z.uuid().nullable(),
+    taskId: z.uuid(),
+    targetTaskId: z.uuid(),
+    placement: z.enum(["before", "after"]),
+  }),
+  z.object({
     type: z.literal("updateTask"),
     projectFile: z.string().min(1).optional(),
     taskId: z.uuid(),

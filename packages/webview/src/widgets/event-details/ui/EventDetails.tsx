@@ -26,6 +26,7 @@ import { DeleteControl } from "../../../features/delete-item/index.js";
 import { DetailButton } from "../../../features/detail-button/index.js";
 import { RecordSurface } from "../../../shared/ui/record-surface/index.js";
 import { pointTone } from "../model/pointTone.js";
+import { useReorderList } from "../model/useReorderList.js";
 import { PointSelector } from "./PointSelector.js";
 
 type Points = 1 | 2 | 3 | 5 | 8 | 13 | 21 | null;
@@ -58,6 +59,17 @@ type Props = {
   onAddEventTask?: (
     eventId: string,
     name: string,
+  ) => boolean | Promise<boolean>;
+  onMoveStory?: (
+    id: string,
+    targetId: string,
+    placement: "before" | "after",
+  ) => boolean | Promise<boolean>;
+  onMoveTask?: (
+    storyId: string | null,
+    id: string,
+    targetId: string,
+    placement: "before" | "after",
   ) => boolean | Promise<boolean>;
   onDelete?: (kind: ItemKind, id: string, counts: DescendantCounts) => void;
   onOpenDetail?: (
@@ -100,6 +112,8 @@ export function EventDetails({
   onAddStory,
   onAddTask,
   onAddEventTask,
+  onMoveStory,
+  onMoveTask,
   onDelete,
   onOpenDetail,
 }: Props) {
@@ -190,6 +204,18 @@ export function EventDetails({
     tasks: event.tasks ?? [],
   };
   const selectedTasks = direct ? directGroup.tasks : story?.tasks;
+  const storyOrder = useReorderList(
+    event.id,
+    event.stories.map((item) => item.id),
+    onMoveStory,
+  );
+  const taskOrder = useReorderList(
+    `${event.id}:${storyId ?? "direct"}`,
+    selectedTasks?.map((item) => item.id) ?? [],
+    onMoveTask
+      ? (id, target, placement) => onMoveTask(storyId, id, target, placement)
+      : undefined,
+  );
   const canAddTask = direct
     ? Boolean(onAddEventTask)
     : Boolean(onAddTask && story);
@@ -509,9 +535,19 @@ export function EventDetails({
             <RecordSurface
               key={item.id}
               name={item.name}
-              className={`story-choice ${selected ? "selected" : ""}`}
+              className={`story-choice ${selected ? "selected" : ""}${onMoveStory && item.id !== directGroup.id ? " reorderable" : ""}`}
               onSelect={() => selectGroup(item.id)}
+              rowProps={
+                item.id === directGroup.id
+                  ? undefined
+                  : storyOrder.rowProps(item.id)
+              }
             >
+              {onMoveStory && item.id !== directGroup.id && (
+                <button {...storyOrder.handleProps(item.id, item.name)}>
+                  <span aria-hidden="true">⠿</span>
+                </button>
+              )}
               <button
                 className="story-select"
                 type="button"
@@ -619,9 +655,15 @@ export function EventDetails({
             <RecordSurface
               key={task.id}
               name={task.name}
-              className={`task-line${task.doneAt ? " completed" : ""}${selectedTaskId === task.id ? " selected" : ""}`}
+              className={`task-line${task.doneAt ? " completed" : ""}${selectedTaskId === task.id ? " selected" : ""}${onMoveTask ? " reorderable" : ""}`}
               onSelect={() => onSelectRecord?.("task", task.id)}
+              rowProps={taskOrder.rowProps(task.id)}
             >
+              {onMoveTask && (
+                <button {...taskOrder.handleProps(task.id, task.name)}>
+                  <span aria-hidden="true">⠿</span>
+                </button>
+              )}
               <input
                 type="checkbox"
                 checked={Boolean(task.doneAt)}

@@ -11,10 +11,12 @@
     "build": "npm run docs:prepare && vite build --config packages/webview/vite.config.ts && vite build --config packages/extension/vite.config.ts",
     "lint": "biome check .",
     "check:product": "npm run lint && npm run typecheck && npm run check:fsd && npm test && npm run build",
-    "test:ui": "node scripts/verify-replacement.mjs && node scripts/verify-project-scope.mjs && node scripts/verify-reconnection-drafts.mjs && node scripts/verify-manage-setup.mjs && node scripts/verify-ui-review.mjs && node scripts/verify-point-contrast.mjs && node scripts/verify-record-selection.mjs && node scripts/verify-board-layout.mjs && node scripts/verify-event-date-picker.mjs",
+    "test:ui": "node scripts/verify-replacement.mjs && node scripts/verify-project-scope.mjs && node scripts/verify-reconnection-drafts.mjs && node scripts/verify-manage-setup.mjs && node scripts/verify-ui-review.mjs && node scripts/verify-point-contrast.mjs && node scripts/verify-record-selection.mjs && node scripts/verify-child-reorder.mjs && node scripts/verify-timeline-header.mjs && node scripts/verify-board-layout.mjs && node scripts/verify-event-date-picker.mjs",
+    "test:ui:native-cells": "node scripts/verify-native-project-cells.mjs",
     "docs:prepare": "node scripts/prepare-docs.mjs",
     "check:docs": "node scripts/check-docs.mjs",
-    "docs:capture": "node scripts/capture-readme.mjs"
+    "docs:capture": "node scripts/capture-readme.mjs",
+    "test:ui:native-reorder": "node scripts/verify-native-child-reorder.mjs"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.3.4",

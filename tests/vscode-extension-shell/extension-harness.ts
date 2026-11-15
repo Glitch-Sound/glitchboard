@@ -30,6 +30,7 @@ const host = vi.hoisted(() => ({
   executeCommand: vi.fn(),
   closePanel: null as null | (() => void),
   createPanel: vi.fn(),
+  panels: [] as { html: string }[],
   revealPanel: vi.fn(),
 }));
 
@@ -112,8 +113,10 @@ export function vscodeMock() {
       },
       createWebviewPanel: () => {
         host.createPanel();
+        const view = webview("board");
+        host.panels.push(view);
         return {
-          webview: webview("board"),
+          webview: view,
           reveal: host.revealPanel,
           onDidDispose(callback: () => void) {
             host.closePanel = callback;
@@ -145,6 +148,7 @@ export function resetHost() {
   host.provider = null;
   host.openBoard = null;
   host.receivers = {};
+  host.panels = [];
   host.messages.board = [];
   host.messages.events = [];
   host.watchers = [];

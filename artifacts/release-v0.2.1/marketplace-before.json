@@ -1,0 +1,330 @@
+{
+  "publisher": "Glitch-Sound",
+  "name": "glitchboard",
+  "extensionId": "1f5f7ff2-b364-4729-b6a8-53f56bf480e8",
+  "flags": "validated, public",
+  "versions": [
+    {
+      "version": "0.2.0",
+      "lastUpdated": "2026-11-14T22:38:48.77Z",
+      "assetUri": "https://Glitch-Sound.gallerycdn.vsassets.io/extensions/glitch-sound/glitchboard/0.2.0/1794695553055",
+      "files": [
+        {
+          "assetType": "Microsoft.VisualStudio.Code.Manifest",
+          "source": "https://Glitch-Sound.gallerycdn.vsassets.io/extensions/glitch-sound/glitchboard/0.2.0/1794695553055/Microsoft.VisualStudio.Code.Manifest"
+        },
+        {
+          "assetType": "Microsoft.VisualStudio.Services.Content.Changelog",
+          "source": "https://Glitch-Sound.gallerycdn.vsassets.io/extensions/glitch-sound/glitchboard/0.2.0/1794695553055/Microsoft.VisualStudio.Services.Content.Changelog"
+        },
+        {
+          "assetType": "Microsoft.VisualStudio.Services.Content.Details",
+          "source": "https://Glitch-Sound.gallerycdn.vsassets.io/extensions/glitch-sound/glitchboard/0.2.0/1794695553055/Microsoft.VisualStudio.Services.Content.Details"
+        },
+        {
+          "assetType": "Microsoft.VisualStudio.Services.Icons.Default",
+          "source": "https://Glitch-Sound.gallerycdn.vsassets.io/extensions/glitch-sound/glitchboard/0.2.0/1794695553055/Microsoft.VisualStudio.Services.Icons.Default"
+        },
+        {
+          "assetType": "Microsoft.VisualStudio.Services.Icons.Small",
+          "source": "https://Glitch-Sound.gallerycdn.vsassets.io/extensions/glitch-sound/glitchboard/0.2.0/1794695553055/Microsoft.VisualStudio.Services.Icons.Small"
+        },
+        {
+          "assetType": "Microsoft.VisualStudio.Services.VsixManifest",
+          "source": "https://Glitch-Sound.gallerycdn.vsassets.io/extensions/glitch-sound/glitchboard/0.2.0/1794695553055/Microsoft.VisualStudio.Services.VsixManifest"
+        },
+        {
+          "assetType": "Microsoft.VisualStudio.Services.VSIXPackage",
+          "source": "https://Glitch-Sound.gallerycdn.vsassets.io/extensions/glitch-sound/glitchboard/0.2.0/1794695553055/Microsoft.VisualStudio.Services.VSIXPackage"
+        },
+        {
+          "assetType": "Microsoft.VisualStudio.Services.VsixSignature",
+          "source": "https://Glitch-Sound.gallerycdn.vsassets.io/extensions/glitch-sound/glitchboard/0.2.0/1794695553055/Microsoft.VisualStudio.Services.VsixSignature"
+        }
+      ]
+    },
+    {
+      "version": "0.1.5",
+      "lastUpdated": "2026-11-11T15:36:02.173Z",
+      "assetUri": "https://Glitch-Sound.gallerycdn.vsassets.io/extensions/glitch-sound/glitchboard/0.1.5/1794410952115",
+      "files": [
+        {
+          "assetType": "Microsoft.VisualStudio.Code.Manifest",
+          "source": "https://Glitch-Sound.gallerycdn.vsassets.io/extensions/glitch-sound/glitchboard/0.1.5/1794410952115/Microsoft.VisualStudio.Code.Manifest"
+        },
+        {
+          "assetType": "Microsoft.VisualStudio.Services.Content.Details",
+          "source": "https://Glitch-Sound.gallerycdn.vsassets.io/extensions/glitch-sound/glitchboard/0.1.5/1794410952115/Microsoft.VisualStudio.Services.Content.Details"
+        },
+        {
+          "assetType": "Microsoft.VisualStudio.Services.Icons.Default",
+          "source": "https://Glitch-Sound.gallerycdn.vsassets.io/extensions/glitch-sound/glitchboard/0.1.5/1794410952115/Microsoft.VisualStudio.Services.Icons.Default"
+        },
+        {
+          "assetType": "Microsoft.VisualStudio.Services.Icons.Small",
+          "source": "https://Glitch-Sound.gallerycdn.vsassets.io/extensions/glitch-sound/glitchboard/0.1.5/1794410952115/Microsoft.VisualStudio.Services.Icons.Small"
+        },
+        {
+          "assetType": "Microsoft.VisualStudio.Services.VsixManifest",
+          "source": "https://Glitch-Sound.gallerycdn.vsassets.io/extensions/glitch-sound/glitchboard/0.1.5/1794410952115/Microsoft.VisualStudio.Services.VsixManifest"
+        },
+        {
+          "assetType": "Microsoft.VisualStudio.Services.VSIXPackage",
+          "source": "https://Glitch-Sound.gallerycdn.vsassets.io/extensions/glitch-sound/glitchboard/0.1.5/1794410952115/Microsoft.VisualStudio.Services.VSIXPackage"
+        },
+        {
+          "assetType": "Microsoft.VisualStudio.Services.VsixSignature",
+          "source": "https://Glitch-Sound.gallerycdn.vsassets.io/extensions/glitch-sound/glitchboard/0.1.5/1794410952115/Microsoft.VisualStudio.Services.VsixSignature"
+        }
+      ]
+    },
+    {
+      "version": "0.1.4",
+      "lastUpdated": "2026-11-11T13:37:05.823Z",
+      "assetUri": "https://Glitch-Sound.gallerycdn.vsassets.io/extensions/glitch-sound/glitchboard/0.1.4/1794403690113",
+      "files": [
+        {
+          "assetType": "Microsoft.VisualStudio.Code.Manifest",
+          "source": "https://Glitch-Sound.gallerycdn.vsassets.io/extensions/glitch-sound/glitchboard/0.1.4/1794403690113/Microsoft.VisualStudio.Code.Manifest"
+        },
+        {
+          "assetType": "Microsoft.VisualStudio.Services.Content.Details",
+          "source": "https://Glitch-Sound.gallerycdn.vsassets.io/extensions/glitch-sound/glitchboard/0.1.4/1794403690113/Microsoft.VisualStudio.Services.Content.Details"
+        },
+        {
+          "assetType": "Microsoft.VisualStudio.Services.Icons.Default",
+          "source": "https://Glitch-Sound.gallerycdn.vsassets.io/extensions/glitch-sound/glitchboard/0.1.4/1794403690113/Microsoft.VisualStudio.Services.Icons.Default"
+        },
+        {
+          "assetType": "Microsoft.VisualStudio.Services.Icons.Small",
+          "source": "https://Glitch-Sound.gallerycdn.vsassets.io/extensions/glitch-sound/glitchboard/0.1.4/1794403690113/Microsoft.VisualStudio.Services.Icons.Small"
+        },
+        {
+          "assetType": "Microsoft.VisualStudio.Services.VsixManifest",
+          "source": "https://Glitch-Sound.gallerycdn.vsassets.io/extensions/glitch-sound/glitchboard/0.1.4/1794403690113/Microsoft.VisualStudio.Services.VsixManifest"
+        },
+        {
+          "assetType": "Microsoft.VisualStudio.Services.VSIXPackage",
+          "source": "https://Glitch-Sound.gallerycdn.vsassets.io/extensions/glitch-sound/glitchboard/0.1.4/1794403690113/Microsoft.VisualStudio.Services.VSIXPackage"
+        },
+        {
+          "assetType": "Microsoft.VisualStudio.Services.VsixSignature",
+          "source": "https://Glitch-Sound.gallerycdn.vsassets.io/extensions/glitch-sound/glitchboard/0.1.4/1794403690113/Microsoft.VisualStudio.Services.VsixSignature"
+        }
+      ]
+    },
+    {
+      "version": "0.1.3",
+      "lastUpdated": "2026-11-10T22:22:29.72Z",
+      "assetUri": "https://Glitch-Sound.gallerycdn.vsassets.io/extensions/glitch-sound/glitchboard/0.1.3/1794349008384",
+      "files": [
+        {
+          "assetType": "Microsoft.VisualStudio.Code.Manifest",
+          "source": "https://Glitch-Sound.gallerycdn.vsassets.io/extensions/glitch-sound/glitchboard/0.1.3/1794349008384/Microsoft.VisualStudio.Code.Manifest"
+        },
+        {
+          "assetType": "Microsoft.VisualStudio.Services.Content.Details",
+          "source": "https://Glitch-Sound.gallerycdn.vsassets.io/extensions/glitch-sound/glitchboard/0.1.3/1794349008384/Microsoft.VisualStudio.Services.Content.Details"
+        },
+        {
+          "assetType": "Microsoft.VisualStudio.Services.Icons.Default",
+          "source": "https://Glitch-Sound.gallerycdn.vsassets.io/extensions/glitch-sound/glitchboard/0.1.3/1794349008384/Microsoft.VisualStudio.Services.Icons.Default"
+        },
+        {
+          "assetType": "Microsoft.VisualStudio.Services.Icons.Small",
+          "source": "https://Glitch-Sound.gallerycdn.vsassets.io/extensions/glitch-sound/glitchboard/0.1.3/1794349008384/Microsoft.VisualStudio.Services.Icons.Small"
+        },
+        {
+          "assetType": "Microsoft.VisualStudio.Services.VsixManifest",
+          "source": "https://Glitch-Sound.gallerycdn.vsassets.io/extensions/glitch-sound/glitchboard/0.1.3/1794349008384/Microsoft.VisualStudio.Services.VsixManifest"
+        },
+        {
+          "assetType": "Microsoft.VisualStudio.Services.VSIXPackage",
+          "source": "https://Glitch-Sound.gallerycdn.vsassets.io/extensions/glitch-sound/glitchboard/0.1.3/1794349008384/Microsoft.VisualStudio.Services.VSIXPackage"
+        },
+        {
+          "assetType": "Microsoft.VisualStudio.Services.VsixSignature",
+          "source": "https://Glitch-Sound.gallerycdn.vsassets.io/extensions/glitch-sound/glitchboard/0.1.3/1794349008384/Microsoft.VisualStudio.Services.VsixSignature"
+        }
+      ]
+    },
+    {
+      "version": "0.1.2",
+      "lastUpdated": "2026-11-10T16:45:11.7Z",
+      "assetUri": "https://Glitch-Sound.gallerycdn.vsassets.io/extensions/glitch-sound/glitchboard/0.1.2/1794328608698",
+      "files": [
+        {
+          "assetType": "Microsoft.VisualStudio.Code.Manifest",
+          "source": "https://Glitch-Sound.gallerycdn.vsassets.io/extensions/glitch-sound/glitchboard/0.1.2/1794328608698/Microsoft.VisualStudio.Code.Manifest"
+        },
+        {
+          "assetType": "Microsoft.VisualStudio.Services.Content.Details",
+          "source": "https://Glitch-Sound.gallerycdn.vsassets.io/extensions/glitch-sound/glitchboard/0.1.2/1794328608698/Microsoft.VisualStudio.Services.Content.Details"
+        },
+        {
+          "assetType": "Microsoft.VisualStudio.Services.Icons.Default",
+          "source": "https://Glitch-Sound.gallerycdn.vsassets.io/extensions/glitch-sound/glitchboard/0.1.2/1794328608698/Microsoft.VisualStudio.Services.Icons.Default"
+        },
+        {
+          "assetType": "Microsoft.VisualStudio.Services.Icons.Small",
+          "source": "https://Glitch-Sound.gallerycdn.vsassets.io/extensions/glitch-sound/glitchboard/0.1.2/1794328608698/Microsoft.VisualStudio.Services.Icons.Small"
+        },
+        {
+          "assetType": "Microsoft.VisualStudio.Services.VsixManifest",
+          "source": "https://Glitch-Sound.gallerycdn.vsassets.io/extensions/glitch-sound/glitchboard/0.1.2/1794328608698/Microsoft.VisualStudio.Services.VsixManifest"
+        },
+        {
+          "assetType": "Microsoft.VisualStudio.Services.VSIXPackage",
+          "source": "https://Glitch-Sound.gallerycdn.vsassets.io/extensions/glitch-sound/glitchboard/0.1.2/1794328608698/Microsoft.VisualStudio.Services.VSIXPackage"
+        },
+        {
+          "assetType": "Microsoft.VisualStudio.Services.VsixSignature",
+          "source": "https://Glitch-Sound.gallerycdn.vsassets.io/extensions/glitch-sound/glitchboard/0.1.2/1794328608698/Microsoft.VisualStudio.Services.VsixSignature"
+        }
+      ]
+    },
+    {
+      "version": "0.1.1",
+      "lastUpdated": "2026-11-06T01:02:38.883Z",
+      "assetUri": "https://Glitch-Sound.gallerycdn.vsassets.io/extensions/glitch-sound/glitchboard/0.1.1/1793926552200",
+      "files": [
+        {
+          "assetType": "Microsoft.VisualStudio.Code.Manifest",
+          "source": "https://Glitch-Sound.gallerycdn.vsassets.io/extensions/glitch-sound/glitchboard/0.1.1/1793926552200/Microsoft.VisualStudio.Code.Manifest"
+        },
+        {
+          "assetType": "Microsoft.VisualStudio.Services.Content.Details",
+          "source": "https://Glitch-Sound.gallerycdn.vsassets.io/extensions/glitch-sound/glitchboard/0.1.1/1793926552200/Microsoft.VisualStudio.Services.Content.Details"
+        },
+        {
+          "assetType": "Microsoft.VisualStudio.Services.Icons.Default",
+          "source": "https://Glitch-Sound.gallerycdn.vsassets.io/extensions/glitch-sound/glitchboard/0.1.1/1793926552200/Microsoft.VisualStudio.Services.Icons.Default"
+        },
+        {
+          "assetType": "Microsoft.VisualStudio.Services.Icons.Small",
+          "source": "https://Glitch-Sound.gallerycdn.vsassets.io/extensions/glitch-sound/glitchboard/0.1.1/1793926552200/Microsoft.VisualStudio.Services.Icons.Small"
+        },
+        {
+          "assetType": "Microsoft.VisualStudio.Services.VsixManifest",
+          "source": "https://Glitch-Sound.gallerycdn.vsassets.io/extensions/glitch-sound/glitchboard/0.1.1/1793926552200/Microsoft.VisualStudio.Services.VsixManifest"
+        },
+        {
+          "assetType": "Microsoft.VisualStudio.Services.VSIXPackage",
+          "source": "https://Glitch-Sound.gallerycdn.vsassets.io/extensions/glitch-sound/glitchboard/0.1.1/1793926552200/Microsoft.VisualStudio.Services.VSIXPackage"
+        },
+        {
+          "assetType": "Microsoft.VisualStudio.Services.VsixSignature",
+          "source": "https://Glitch-Sound.gallerycdn.vsassets.io/extensions/glitch-sound/glitchboard/0.1.1/1793926552200/Microsoft.VisualStudio.Services.VsixSignature"
+        }
+      ]
+    },
+    {
+      "version": "0.1.0",
+      "lastUpdated": "2026-11-06T00:46:34.467Z",
+      "assetUri": "https://Glitch-Sound.gallerycdn.vsassets.io/extensions/glitch-sound/glitchboard/0.1.0/1793925585584",
+      "files": [
+        {
+          "assetType": "Microsoft.VisualStudio.Code.Manifest",
+          "source": "https://Glitch-Sound.gallerycdn.vsassets.io/extensions/glitch-sound/glitchboard/0.1.0/1793925585584/Microsoft.VisualStudio.Code.Manifest"
+        },
+        {
+          "assetType": "Microsoft.VisualStudio.Services.Content.Details",
+          "source": "https://Glitch-Sound.gallerycdn.vsassets.io/extensions/glitch-sound/glitchboard/0.1.0/1793925585584/Microsoft.VisualStudio.Services.Content.Details"
+        },
+        {
+          "assetType": "Microsoft.VisualStudio.Services.VsixManifest",
+          "source": "https://Glitch-Sound.gallerycdn.vsassets.io/extensions/glitch-sound/glitchboard/0.1.0/1793925585584/Microsoft.VisualStudio.Services.VsixManifest"
+        },
+        {
+          "assetType": "Microsoft.VisualStudio.Services.VSIXPackage",
+          "source": "https://Glitch-Sound.gallerycdn.vsassets.io/extensions/glitch-sound/glitchboard/0.1.0/1793925585584/Microsoft.VisualStudio.Services.VSIXPackage"
+        },
+        {
+          "assetType": "Microsoft.VisualStudio.Services.VsixSignature",
+          "source": "https://Glitch-Sound.gallerycdn.vsassets.io/extensions/glitch-sound/glitchboard/0.1.0/1793925585584/Microsoft.VisualStudio.Services.VsixSignature"
+        }
+      ]
+    },
+    {
+      "version": "0.0.3",
+      "lastUpdated": "2026-11-04T15:43:28.317Z",
+      "assetUri": "https://Glitch-Sound.gallerycdn.vsassets.io/extensions/glitch-sound/glitchboard/0.0.3/1793806791330",
+      "files": [
+        {
+          "assetType": "Microsoft.VisualStudio.Code.Manifest",
+          "source": "https://Glitch-Sound.gallerycdn.vsassets.io/extensions/glitch-sound/glitchboard/0.0.3/1793806791330/Microsoft.VisualStudio.Code.Manifest"
+        },
+        {
+          "assetType": "Microsoft.VisualStudio.Services.Content.Details",
+          "source": "https://Glitch-Sound.gallerycdn.vsassets.io/extensions/glitch-sound/glitchboard/0.0.3/1793806791330/Microsoft.VisualStudio.Services.Content.Details"
+        },
+        {
+          "assetType": "Microsoft.VisualStudio.Services.VsixManifest",
+          "source": "https://Glitch-Sound.gallerycdn.vsassets.io/extensions/glitch-sound/glitchboard/0.0.3/1793806791330/Microsoft.VisualStudio.Services.VsixManifest"
+        },
+        {
+          "assetType": "Microsoft.VisualStudio.Services.VSIXPackage",
+          "source": "https://Glitch-Sound.gallerycdn.vsassets.io/extensions/glitch-sound/glitchboard/0.0.3/1793806791330/Microsoft.VisualStudio.Services.VSIXPackage"
+        },
+        {
+          "assetType": "Microsoft.VisualStudio.Services.VsixSignature",
+          "source": "https://Glitch-Sound.gallerycdn.vsassets.io/extensions/glitch-sound/glitchboard/0.0.3/1793806791330/Microsoft.VisualStudio.Services.VsixSignature"
+        }
+      ]
+    },
+    {
+      "version": "0.0.2",
+      "lastUpdated": "2026-11-04T15:28:47.71Z",
+      "assetUri": "https://Glitch-Sound.gallerycdn.vsassets.io/extensions/glitch-sound/glitchboard/0.0.2/1793805843352",
+      "files": [
+        {
+          "assetType": "Microsoft.VisualStudio.Code.Manifest",
+          "source": "https://Glitch-Sound.gallerycdn.vsassets.io/extensions/glitch-sound/glitchboard/0.0.2/1793805843352/Microsoft.VisualStudio.Code.Manifest"
+        },
+        {
+          "assetType": "Microsoft.VisualStudio.Services.Content.Details",
+          "source": "https://Glitch-Sound.gallerycdn.vsassets.io/extensions/glitch-sound/glitchboard/0.0.2/1793805843352/Microsoft.VisualStudio.Services.Content.Details"
+        },
+        {
+          "assetType": "Microsoft.VisualStudio.Services.VsixManifest",
+          "source": "https://Glitch-Sound.gallerycdn.vsassets.io/extensions/glitch-sound/glitchboard/0.0.2/1793805843352/Microsoft.VisualStudio.Services.VsixManifest"
+        },
+        {
+          "assetType": "Microsoft.VisualStudio.Services.VSIXPackage",
+          "source": "https://Glitch-Sound.gallerycdn.vsassets.io/extensions/glitch-sound/glitchboard/0.0.2/1793805843352/Microsoft.VisualStudio.Services.VSIXPackage"
+        },
+        {
+          "assetType": "Microsoft.VisualStudio.Services.VsixSignature",
+          "source": "https://Glitch-Sound.gallerycdn.vsassets.io/extensions/glitch-sound/glitchboard/0.0.2/1793805843352/Microsoft.VisualStudio.Services.VsixSignature"
+        }
+      ]
+    },
+    {
+      "version": "0.0.1",
+      "lastUpdated": "2026-11-03T15:02:12.037Z",
+      "assetUri": "https://Glitch-Sound.gallerycdn.vsassets.io/extensions/glitch-sound/glitchboard/0.0.1/1793717814907",
+      "files": [
+        {
+          "assetType": "Microsoft.VisualStudio.Code.Manifest",
+          "source": "https://Glitch-Sound.gallerycdn.vsassets.io/extensions/glitch-sound/glitchboard/0.0.1/1793717814907/Microsoft.VisualStudio.Code.Manifest"
+        },
+        {
+          "assetType": "Microsoft.VisualStudio.Services.Content.Details",
+          "source": "https://Glitch-Sound.gallerycdn.vsassets.io/extensions/glitch-sound/glitchboard/0.0.1/1793717814907/Microsoft.VisualStudio.Services.Content.Details"
+        },
+        {
+          "assetType": "Microsoft.VisualStudio.Services.VsixManifest",
+          "source": "https://Glitch-Sound.gallerycdn.vsassets.io/extensions/glitch-sound/glitchboard/0.0.1/1793717814907/Microsoft.VisualStudio.Services.VsixManifest"
+        },
+        {
+          "assetType": "Microsoft.VisualStudio.Services.VSIXPackage",
+          "source": "https://Glitch-Sound.gallerycdn.vsassets.io/extensions/glitch-sound/glitchboard/0.0.1/1793717814907/Microsoft.VisualStudio.Services.VSIXPackage"
+        },
+        {
+          "assetType": "Microsoft.VisualStudio.Services.VsixSignature",
+          "source": "https://Glitch-Sound.gallerycdn.vsassets.io/extensions/glitch-sound/glitchboard/0.0.1/1793717814907/Microsoft.VisualStudio.Services.VsixSignature"
+        }
+      ]
+    }
+  ]
+}

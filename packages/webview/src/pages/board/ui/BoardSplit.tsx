@@ -11,18 +11,31 @@ const minimumHeight = 80;
 const compactMinimumRatio = 0.4;
 
 /** REQ-031-S01〜S05: 上下の領域を比率で分割し、境界の操作と取消を扱う。 */
-export function BoardSplit({ children }: { children: [ReactNode, ReactNode] }) {
+export function BoardSplit({
+  children,
+  minimumTop = minimumHeight,
+}: {
+  children: [ReactNode, ReactNode];
+  minimumTop?: number;
+}) {
   const [ratio, setRatio] = useState(0.6);
   const [resizing, setResizing] = useState(false);
   const container = useRef<HTMLDivElement>(null);
   const drag = useRef<{ y: number; ratio: number } | null>(null);
-  const clamp = useCallback((value: number) => {
-    const height = (container.current?.clientHeight ?? 0) - separatorHeight;
-    const minimum =
-      height > 0 ? Math.min(compactMinimumRatio, minimumHeight / height) : 0.1;
-    return Math.max(minimum, Math.min(1 - minimum, value));
-  }, []);
+  const clamp = useCallback(
+    (value: number) => {
+      const height = (container.current?.clientHeight ?? 0) - separatorHeight;
+      const minimum =
+        height > 0
+          ? Math.min(compactMinimumRatio, minimumHeight / height)
+          : 0.1;
+      const top = height > 0 ? Math.max(minimum, minimumTop / height) : minimum;
+      return Math.max(Math.min(1 - minimum, top), Math.min(1 - minimum, value));
+    },
+    [minimumTop],
+  );
   useEffect(() => {
+    setRatio((value) => clamp(value));
     if (!container.current || typeof ResizeObserver === "undefined") return;
     const observer = new ResizeObserver(() =>
       setRatio((value) => clamp(value)),
@@ -36,6 +49,10 @@ export function BoardSplit({ children }: { children: [ReactNode, ReactNode] }) {
       className={`board-content${resizing ? " board-resizing" : ""}`}
       style={{
         gridTemplateRows: `minmax(0, ${ratio}fr) ${separatorHeight}px minmax(0, ${1 - ratio}fr)`,
+        minHeight:
+          minimumTop > minimumHeight
+            ? minimumTop + minimumHeight + separatorHeight
+            : undefined,
       }}
     >
       {children[0]}
@@ -80,14 +97,14 @@ export function BoardSplit({ children }: { children: [ReactNode, ReactNode] }) {
           drag.current = null;
           setResizing(false);
         }}
-        onDoubleClick={() => setRatio(0.6)}
+        onDoubleClick={() => setRatio(clamp(0.6))}
         onKeyDown={(event) => {
           if (event.key === "ArrowUp" || event.key === "ArrowDown") {
             event.preventDefault();
             setRatio(clamp(ratio + (event.key === "ArrowUp" ? -0.05 : 0.05)));
           } else if (event.key === "Home") {
             event.preventDefault();
-            setRatio(0.6);
+            setRatio(clamp(0.6));
           }
         }}
       />

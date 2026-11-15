@@ -33,6 +33,7 @@ try {
       unsubs.push(session.subscribe(surface, (snapshot) => { if (ready) void dispatch({ type: "snapshot", payload: snapshot }).catch((error) => errors.push(error.message)); }));
       await page.exposeFunction("extensionMessage", async (message) => {
         requests.push(message);
+        if (message.type === "saveTimelineLayout") { await dispatch({type:"timelineLayoutResult",requestId:message.requestId,ok:true}); return; }
         if (message.type === "ready") { ready = true; await dispatch({ type: "snapshot", payload: session.snapshot() }); return; }
         if (surface === "events" && message.type === "selectEvent") {
           await boardPage.evaluate((message) => window.dispatchEvent(new MessageEvent("message",{data:{type:"navigateRecord",payload:{kind:"event",id:message.eventId,projectFile:message.projectFile,openDetail:message.openDetail ?? false}}})),message);
@@ -96,24 +97,24 @@ try {
       await board.getByRole("button", { name: "Bを並べ替え", exact: true }).focus(); await board.keyboard.press("ArrowUp");
       await expect.poll(async () => parse(await readFile(managePath, "utf8")).projects.map((entry) => entry.file)).toEqual(["B.yaml", "A.yaml"]);
       // REQ-040: キーによる調整と再表示、上下限、全行への適用。
-      const width=board.getByRole("slider",{name:"Project列幅",exact:true}), height=board.getByRole("slider",{name:"Project行高",exact:true});
+      const width=board.getByRole("separator",{name:"Project列幅",exact:true}), height=board.locator(".project-row .timeline-cell-resize-height hr").first();
       await width.focus();await board.keyboard.press("ArrowRight");
-      await height.focus();await board.keyboard.press("ArrowRight");
-      const layout={width:await width.inputValue(),height:await height.inputValue()};
+      await height.focus();await board.keyboard.press("ArrowDown");
+      const layout={width:await width.getAttribute("aria-valuenow"),height:await height.getAttribute("aria-valuenow")};
       const rows=await board.locator(".project-row").evaluateAll(nodes=>nodes.map(n=>n.getBoundingClientRect().height));
       assert.ok(rows.every(value=>Math.abs(value-Number(layout.height)) < 1),JSON.stringify(rows));
-      await board.reload();await expect(width).toHaveValue(layout.width);await expect(height).toHaveValue(layout.height);
+      await board.reload();await expect(width).toHaveAttribute("aria-valuenow",layout.width);await expect(height).toHaveAttribute("aria-valuenow",layout.height);
       await height.focus();await board.keyboard.press("End");
-      assert.equal(await height.inputValue(),await height.getAttribute("max"));
-      const maximumHeight=Number(await height.inputValue());
+      assert.equal(await height.getAttribute("aria-valuenow"),await height.getAttribute("aria-valuemax"));
+      const maximumHeight=Number(await height.getAttribute("aria-valuenow"));
       assert.ok((await board.locator(".project-row").evaluateAll(nodes=>nodes.map(n=>n.getBoundingClientRect().height))).every(value=>Math.abs(value-maximumHeight)<1));
       await height.press("Home");
       await width.focus();await board.keyboard.press("End");
-      assert.equal(await width.inputValue(),await width.getAttribute("max"));
-      const maximumWidth=Number(await width.inputValue());
+      assert.equal(await width.getAttribute("aria-valuenow"),await width.getAttribute("aria-valuemax"));
+      const maximumWidth=Number(await width.getAttribute("aria-valuenow"));
       await board.setViewportSize({width:600,height:900});
-      await expect.poll(async()=>Number(await width.inputValue())).toBeLessThan(maximumWidth);
-      const effectiveWidth=Number(await width.inputValue());
+      await expect.poll(async()=>Number(await width.getAttribute("aria-valuenow"))).toBeLessThan(maximumWidth);
+      const effectiveWidth=Number(await width.getAttribute("aria-valuenow"));
       assert.ok((await board.locator(".project-col").boundingBox()).width <= effectiveWidth+1);
       await board.setViewportSize({width:1440,height:900});
       await width.press("Home");

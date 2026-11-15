@@ -1,5 +1,5 @@
 {
-  "capturedAt": "2026-11-14T16:46:31.211Z",
+  "capturedAt": "2026-11-15T10:48:26.669Z",
   "sampleDate": "2026-11-15",
   "source": "実 VS Code Extension Development Host",
   "hostVersion": "1.146.0",
@@ -11,7 +11,7 @@
     "fontFamily": "-apple-system, \"system-ui\", sans-serif",
     "fontSize": "13px",
     "theme": "Dark Modern",
-    "devicePixelRatio": 2
+    "devicePixelRatio": 1
   },
   "captures": [
     {
@@ -19,7 +19,7 @@
       "clip": {
         "x": 61,
         "y": 80,
-        "width": 273,
+        "width": 274,
         "height": 205
       },
       "scale": "css",
@@ -71,7 +71,7 @@
         "x": 895,
         "y": 68,
         "width": 420,
-        "height": 458
+        "height": 459
       },
       "scale": "css",
       "resized": false
@@ -79,7 +79,7 @@
     {
       "name": "event-add",
       "clip": {
-        "x": 58,
+        "x": 59,
         "y": 165,
         "width": 280,
         "height": 398

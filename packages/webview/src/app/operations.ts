@@ -31,6 +31,8 @@ const targetFields: Record<string, string> = {
   addEventTask: "eventId",
   addTask: "storyId",
   moveProject: "projectId",
+  moveStory: "eventId",
+  moveTask: "eventId",
 };
 
 export function scopedOperation(
@@ -45,6 +47,19 @@ export function scopedOperation(
     [field]: ref.id,
     ...(ref.projectFile ? { projectFile: ref.projectFile } : {}),
   };
+  if (message.type === "moveStory" || message.type === "moveTask") {
+    const fields =
+      message.type === "moveStory"
+        ? ["storyId", "targetStoryId"]
+        : ["storyId", "taskId", "targetTaskId"];
+    for (const key of fields) {
+      if (typeof message[key] !== "string") continue;
+      const item = itemReference(message[key]);
+      result[key] = item.id;
+      if (item.projectFile && item.projectFile !== ref.projectFile)
+        result.targetProjectFile = item.projectFile;
+    }
+  }
   if (
     message.type === "moveProject" &&
     typeof message.targetProjectId === "string"

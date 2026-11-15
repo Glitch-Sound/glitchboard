@@ -1,0 +1,5 @@
+
+> test:ui:native-reorder
+> node scripts/verify-native-child-reorder.mjs
+
+[{"theme":"Default Dark Modern","storyDrag":true,"directTaskDrag":true,"storyTaskDrag":true,"keyboardFocus":true,"cancel":true,"yamlSaved":true,"tabReload":true,"passed":true},{"theme":"Default Light Modern","storyDrag":true,"directTaskDrag":true,"storyTaskDrag":true,"keyboardFocus":true,"cancel":true,"yamlSaved":true,"tabReload":true,"passed":true}]

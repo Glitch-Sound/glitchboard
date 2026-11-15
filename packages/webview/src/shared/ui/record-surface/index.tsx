@@ -1,18 +1,20 @@
-import type { ReactNode } from "react";
+import type { HTMLAttributes, ReactNode } from "react";
 /** 全面の選択ボタンと独立操作を兄弟にし、ボタンの入れ子を作らない。 */
 export function RecordSurface({
   name,
   className,
   onSelect,
   children,
+  rowProps,
 }: {
   name: string;
   className: string;
   onSelect(): void;
   children: ReactNode;
+  rowProps?: HTMLAttributes<HTMLDivElement>;
 }) {
   return (
-    <div className={`record-surface ${className}`}>
+    <div {...rowProps} className={`record-surface ${className}`}>
       <button
         type="button"
         className="record-hitbox"

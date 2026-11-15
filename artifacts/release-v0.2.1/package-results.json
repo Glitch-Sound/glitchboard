@@ -1,0 +1,48 @@
+{
+  "publisher": "Glitch-Sound",
+  "name": "glitchboard",
+  "version": "0.2.1",
+  "sameExtensionAs": "0.2.0",
+  "identity": {
+    "Language": "en-US",
+    "Id": "glitchboard",
+    "Version": "0.2.1",
+    "Publisher": "Glitch-Sound"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Glitch-Sound/glitchboard.git",
+    "directory": "packages/extension"
+  },
+  "vsix": "artifacts/release-v0.2.1/glitchboard-0.2.1.vsix",
+  "sha256": "2b62634f7ca6af0cd05fc1a3512640174949f051a4bac8b1ed87f75d826c2b16",
+  "bytes": 561221,
+  "files": 21,
+  "readmeExact": true,
+  "changelogExact": true,
+  "images": [
+    {
+      "name": "overview.png",
+      "sha256": "fa13730b92cfd2dbc297386d93f8f4ed403ce3cbd1c5d0d76e1d06241d6ae876"
+    },
+    {
+      "name": "event-add.png",
+      "sha256": "bf5b2772aa6cb79fcfbd47f944eee8f61ea4477659155dbdb161afa1cb2378d9"
+    },
+    {
+      "name": "tasks.png",
+      "sha256": "c7df168ca164597867edf82e68c0773e6efb811ee7c9f52be517992caf43ddd2"
+    },
+    {
+      "name": "setup.png",
+      "sha256": "3c567d047eb58c1b9b268bfccaef7bc64d7944f76e70564d392837fe7a1c485b"
+    },
+    {
+      "name": "task-points.png",
+      "sha256": "765ab49e96024924482a0f46f7e922d5ea400c15696ab407a2c41073f9341a1f"
+    }
+  ],
+  "runtimeExact": true,
+  "samplesExact": true,
+  "excludedDevelopmentFiles": true
+}

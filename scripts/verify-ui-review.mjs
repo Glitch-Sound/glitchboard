@@ -33,6 +33,7 @@ for(const theme of ["dark","light"]){
   let ready=false;unsubs.push(session.subscribe(surface,()=>{if(ready)void dispatch(page,snap()).catch(error=>errors.push(error.message));}));
   await page.exposeFunction("extensionMessage",async message=>{
    requests.push({surface,...message});
+   if(message.type==="saveTimelineLayout"){await dispatch(page,{type:"timelineLayoutResult",requestId:message.requestId,ok:true});return;}
    if(message.type==="ready"){ready=true;await dispatch(page,snap());return;}
    if(surface==="events"&&message.type==="selectEvent"){await dispatch(board,{type:"navigateRecord",payload:{kind:"event",id:message.eventId,projectFile:message.projectFile,openDetail:message.openDetail??false}});return;}
    if(message.type==="chooseManage"||message.type==="createManage"){await dispatch(page,{type:"operationResult",requestId:message.requestId,payload:{ok:true}});return;}
@@ -73,10 +74,10 @@ for(const theme of ["dark","light"]){
   // REQ-042: 実追加、色のコード指定、無効値、保存失敗、取消と再読込。
   await board.getByRole("button",{name:"Projectを追加",exact:true}).click();await board.getByRole("textbox",{name:"名前",exact:true}).fill("コードで追加");
   let code=board.getByRole("textbox",{name:"カラーコード",exact:true});await code.fill("#ABC");await board.getByRole("button",{name:"追加",exact:true}).click();assert.equal(requests.filter(r=>r.type==="createProject").length,0);await expect(code).toHaveValue("#ABC");
-  const widthSlider=board.getByRole("slider",{name:"Project列幅",exact:true});await widthSlider.fill(await widthSlider.getAttribute("min"));await expect(widthSlider).toHaveValue(await widthSlider.getAttribute("min"));await capture(board,"project-add-invalid");
+  const widthHandle=board.getByRole("separator",{name:"Project列幅",exact:true}),widthBox=await widthHandle.boundingBox();await board.mouse.move(widthBox.x+widthBox.width/2,widthBox.y+widthBox.height/2);await board.mouse.down();await board.mouse.move(0,widthBox.y+widthBox.height/2,{steps:8});await board.mouse.up();await expect(widthHandle).toHaveAttribute("aria-valuenow",await widthHandle.getAttribute("aria-valuemin"));await capture(board,"project-add-invalid");
   await code.fill(" #AaBbCc ");await code.press("Enter");await expect(board.getByRole("button",{name:"コードで追加の詳細",exact:true})).toBeVisible();
   const created=session.snapshot().projectEntries.find(entry=>entry.name==="コードで追加");assert.ok(created);assert.equal(parse(await readFile(resolve(root,created.file),"utf8")).color,"#aabbcc");
-  await board.getByRole("slider",{name:"Project列幅",exact:true}).fill("260");
+  await widthHandle.press("Home");
   await board.getByRole("button",{name:"個人プロジェクトの詳細",exact:true}).click();const detail=board.getByRole("dialog",{name:"詳細パネル",exact:true});code=detail.getByRole("textbox",{name:"カラーコード",exact:true});
   await code.fill(" #ABCDEF ");assert.equal(parse(await readFile(file,"utf8")).color,"#4c8dff");await code.press("Enter");await expect.poll(async()=>parse(await readFile(file,"utf8")).color).toBe("#abcdef");
   await expect(sidebar.locator(".event-project-marker i").first()).toHaveCSS("background-color","rgb(171, 205, 239)");

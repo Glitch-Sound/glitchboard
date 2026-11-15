@@ -14,10 +14,10 @@
     {
       "src": "packages/extension/media/readme/setup.png",
       "alt": "初回だけ左の EVENT 一覧に表示する管理ファイルの選択と作成",
-      "naturalWidth": 273,
+      "naturalWidth": 274,
       "declaredWidth": 232,
       "displayWidth": 232,
-      "scale": 0.8498168498168498
+      "scale": 0.8467153284671532
     },
     {
       "src": "packages/extension/media/readme/tasks.png",

@@ -1,0 +1,48 @@
+{
+  "hostVersion": "1.146.0",
+  "isolatedProfile": true,
+  "userDataTouched": false,
+  "yamlUnchanged": true,
+  "results": [
+    {
+      "theme": "Default Dark Modern",
+      "source": "実 VS Code Extension Development Host",
+      "width": 364,
+      "height": 68,
+      "tabReopen": true,
+      "extensionRestart": true,
+      "stickyHeader": true,
+      "fixedFooter": true,
+      "minimumOperations": true,
+      "chartHeight": 46,
+      "footerHeight": 57,
+      "labelAppearance": {
+        "text": "8.1pt",
+        "background": "rgba(0, 0, 0, 0)",
+        "border": "0px",
+        "color": "color(srgb 0.836275 0.67451 0.67451)"
+      },
+      "passed": true
+    },
+    {
+      "theme": "Default Light Modern",
+      "source": "実 VS Code Extension Development Host",
+      "width": 364,
+      "height": 68,
+      "tabReopen": true,
+      "extensionRestart": true,
+      "stickyHeader": true,
+      "fixedFooter": true,
+      "minimumOperations": true,
+      "chartHeight": 46,
+      "footerHeight": 57,
+      "labelAppearance": {
+        "text": "8.1pt",
+        "background": "rgba(0, 0, 0, 0)",
+        "border": "0px",
+        "color": "color(srgb 0.398039 0.193137 0.173529)"
+      },
+      "passed": true
+    }
+  ]
+}

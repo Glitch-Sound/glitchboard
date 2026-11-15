@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { createRoot } from "react-dom/client";
 import { calculateDanger } from "../../../shared/src/calculation/danger.js";
 import { calculatePeriodLoad } from "../../../shared/src/calculation/load.js";
@@ -21,6 +21,10 @@ import {
   connectionChangeSettledSchema,
   navigationMessageSchema,
 } from "../../../shared/src/domain/messages.js";
+import {
+  type TimelineLayoutPreference,
+  timelineLayoutResultSchema,
+} from "../../../shared/src/domain/timeline-layout.js";
 import { BoardSplit, displayDays, type Period } from "../pages/board/index.js";
 import { EmptyState } from "../shared/ui/empty-state/index.js";
 import { OperationError } from "../shared/ui/operation-error/index.js";
@@ -44,6 +48,7 @@ import {
   subscribeOperationResults,
 } from "./operations.js";
 import { type Snapshot, subscribeSnapshots } from "./snapshot.js";
+import { readTimelineLayout } from "./timeline-layout.js";
 import { useToday } from "./useToday.js";
 import "./style.css";
 
@@ -119,6 +124,32 @@ export function BoardApp() {
   const [connectionPending, setConnectionPending] = useState(false);
   const connectionPendingId = useRef<number | null>(null);
   const [operationError, setOperationError] = useState<string | null>(null);
+  const [layoutError, setLayoutError] = useState<string | null>(null);
+  const [timelineMinimumHeight, setTimelineMinimumHeight] = useState(0);
+  const layoutRequestId = useRef(0);
+  const persistLayout = useCallback((layout: TimelineLayoutPreference) => {
+    const bridge = localBridge();
+    bridge?.setState?.({ ...bridge.getState?.(), timelineLayout: layout });
+    bridge?.postMessage({
+      type: "saveTimelineLayout",
+      requestId: ++layoutRequestId.current,
+      layout,
+    });
+  }, []);
+  useEffect(() => {
+    const handler = (event: MessageEvent) => {
+      const result = timelineLayoutResultSchema.safeParse(event.data);
+      if (!result.success || result.data.requestId !== layoutRequestId.current)
+        return;
+      setLayoutError(result.data.ok ? null : result.data.error);
+    };
+    window.addEventListener("message", handler);
+    return () => window.removeEventListener("message", handler);
+  }, []);
+  useEffect(() => {
+    const previous = readTimelineLayout(localBridge()?.getState?.());
+    if (previous) persistLayout(previous);
+  }, [persistLayout]);
   const [period, setPeriod] = useState<Period>("week");
   const [selectedEventId, setSelectedEventId] = useState<
     string | null | undefined
@@ -431,8 +462,12 @@ export function BoardApp() {
   const setupOnly = unavailable && projects.length === 0;
   return (
     <main className="board-page">
-      {(operationError ?? (!unconfigured && snapshot?.error)) && (
-        <OperationError message={operationError ?? snapshot?.error ?? ""} />
+      {(operationError ??
+        layoutError ??
+        (!unconfigured && snapshot?.error)) && (
+        <OperationError
+          message={operationError ?? layoutError ?? snapshot?.error ?? ""}
+        />
       )}
       {unavailable && (
         <p
@@ -483,20 +518,18 @@ export function BoardApp() {
               dangerCount={danger.count}
             />
           </header>
-          <BoardSplit>
+          <BoardSplit minimumTop={timelineMinimumHeight}>
             <div className="timeline-panel">
               <Timeline
                 key={snapshot?.connectionId ?? "initial"}
                 ref={timeline}
                 projects={projects}
-                initialLayout={localBridge()?.getState?.()?.timelineLayout}
-                onLayoutChange={(timelineLayout) => {
-                  const bridge = localBridge();
-                  bridge?.setState?.({
-                    ...bridge.getState?.(),
-                    timelineLayout,
-                  });
-                }}
+                initialLayout={readTimelineLayout(
+                  localBridge()?.getState?.(),
+                  document.body.dataset.timelineLayout,
+                )}
+                onMinimumHeightChange={setTimelineMinimumHeight}
+                onLayoutChange={persistLayout}
                 days={days}
                 today={today}
                 period={period}
@@ -575,6 +608,25 @@ export function BoardApp() {
                       type: "addStory",
                       eventId,
                       name,
+                    })
+                  }
+                  onMoveStory={(storyId, targetStoryId, placement) =>
+                    sendOperation(operationsBridge, {
+                      type: "moveStory",
+                      eventId: selectedEvent.id,
+                      storyId,
+                      targetStoryId,
+                      placement,
+                    })
+                  }
+                  onMoveTask={(storyId, taskId, targetTaskId, placement) =>
+                    sendOperation(operationsBridge, {
+                      type: "moveTask",
+                      eventId: selectedEvent.id,
+                      storyId,
+                      taskId,
+                      targetTaskId,
+                      placement,
                     })
                   }
                   onAddTask={(storyId, name) =>

@@ -1,0 +1,13 @@
+{
+  "publisher": "Glitch-Sound",
+  "name": "glitchboard",
+  "version": "0.2.0",
+  "sha256": "cdca03ff90c8f034f8312befea3187178a61cdfda1640abebfdb7b532727f27a",
+  "iconsMatch": true,
+  "icons": {
+    "icon.png": "af2541a27218e1cc5bb67256767d27e507f5e253b8ddf6205792fd6603d62acc",
+    "icon.svg": "ac0f490b782972201405a0cf6f40b385825daacdcf497dc2c030f7cce4232978"
+  },
+  "license": null,
+  "licenseFiles": []
+}

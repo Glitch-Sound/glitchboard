@@ -8,11 +8,19 @@ import {
   operationSchema,
   setupOperationSchema,
 } from "../../shared/src/domain/messages.js";
+import {
+  saveTimelineLayoutSchema,
+  timelineLayoutSchema,
+} from "../../shared/src/domain/timeline-layout.js";
 import { BoardSession } from "./session.js";
 import { registerViews } from "./views.js";
 
 /** REQ-012: VS CodeにEVENT一覧とボードを公開する。 */
 export function activate(context: vscode.ExtensionContext): void {
+  let layoutWrites = Promise.resolve();
+  let savedLayout = timelineLayoutSchema.safeParse(
+    context.globalState?.get("timelineLayout"),
+  ).data;
   let sidebar: vscode.WebviewView | undefined;
   let board: vscode.WebviewPanel | undefined;
   let session: BoardSession | undefined;
@@ -441,6 +449,7 @@ export function activate(context: vscode.ExtensionContext): void {
     },
     openEditor: async () => {
       await prepareBoard();
+      await layoutWrites.catch(() => undefined);
       if (!canOpenBoard()) {
         if (sidebar?.show) sidebar.show(false);
         else await vscode.commands.executeCommand("glitchboard.events.focus");
@@ -466,11 +475,63 @@ export function activate(context: vscode.ExtensionContext): void {
         board.webview,
         context.extensionUri,
         "board",
+        savedLayout,
       );
       if (session) void board.webview.postMessage(snapshotMessage(session));
       else void board.webview.postMessage({ type: "unconfigured" });
       board.webview.onDidReceiveMessage(
         async (message: unknown) => {
+          if (
+            typeof message === "object" &&
+            message !== null &&
+            "type" in message &&
+            message.type === "saveTimelineLayout"
+          ) {
+            const target = board?.webview;
+            const parsed = saveTimelineLayoutSchema.safeParse(message);
+            const requestId =
+              "requestId" in message && typeof message.requestId === "number"
+                ? message.requestId
+                : 0;
+            if (!parsed.success) {
+              await target?.postMessage({
+                type: "timelineLayoutResult",
+                requestId,
+                ok: false,
+                error: "表示設定の形式が不正です",
+              });
+              return;
+            }
+            const task = layoutWrites
+              .catch(() => {})
+              .then(async () => {
+                await context.globalState?.update(
+                  "timelineLayout",
+                  parsed.data.layout,
+                );
+                savedLayout = parsed.data.layout;
+              });
+            layoutWrites = task;
+            try {
+              await task;
+              await target?.postMessage({
+                type: "timelineLayoutResult",
+                requestId,
+                ok: true,
+              });
+            } catch (error) {
+              await target?.postMessage({
+                type: "timelineLayoutResult",
+                requestId,
+                ok: false,
+                error:
+                  error instanceof Error
+                    ? error.message
+                    : "表示設定を保存できませんでした",
+              });
+            }
+            return;
+          }
           const connectionResult =
             connectionChangeResultSchema.safeParse(message);
           if (connectionResult.success) {
@@ -552,6 +613,7 @@ function webviewHtml(
   webview: vscode.Webview,
   extensionUri: vscode.Uri,
   surface: "events" | "board",
+  layout?: { width: number; height: number },
 ): string {
   const nonce = Math.random().toString(36).slice(2);
   const script = webview.asWebviewUri(
@@ -560,5 +622,9 @@ function webviewHtml(
   const style = webview.asWebviewUri(
     vscode.Uri.joinPath(extensionUri, "dist", "webview", "style.css"),
   );
-  return `<!doctype html><html lang="ja"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src ${webview.cspSource} data:; style-src ${webview.cspSource}; script-src 'nonce-${nonce}' ${webview.cspSource};"><link rel="stylesheet" href="${style}"></head><body data-surface="${surface}"><div id="root"></div><script type="module" nonce="${nonce}" src="${script}"></script></body></html>`;
+  const encodedLayout = JSON.stringify(layout ?? null).replaceAll(
+    '"',
+    "&quot;",
+  );
+  return `<!doctype html><html lang="ja"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src ${webview.cspSource} data:; style-src ${webview.cspSource}; script-src 'nonce-${nonce}' ${webview.cspSource};"><link rel="stylesheet" href="${style}"></head><body data-surface="${surface}" data-timeline-layout="${encodedLayout}"><div id="root"></div><script type="module" nonce="${nonce}" src="${script}"></script></body></html>`;
 }

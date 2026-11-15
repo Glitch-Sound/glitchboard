@@ -1,0 +1,150 @@
+[
+  {
+    "theme": "dark",
+    "verifiedAt": "2026-11-15T09:27:51.446Z",
+    "browser": "156.0.8078.4",
+    "scenarios": [
+      "REQ-016-S05",
+      "REQ-016-S06",
+      "REQ-031-S01",
+      "REQ-031-S02",
+      "REQ-031-S03",
+      "REQ-031-S04",
+      "REQ-031-S05",
+      "REQ-032-S01",
+      "REQ-032-S02",
+      "REQ-032-S06",
+      "REQ-040-S01",
+      "REQ-040-S08",
+      "REQ-040-S09",
+      "REQ-040-S10",
+      "REQ-040-S12"
+    ],
+    "initial": {
+      "top": 468,
+      "bottom": 312,
+      "ratio": 0.6
+    },
+    "rowHeights": [
+      56,
+      56,
+      56
+    ],
+    "periodRows": {
+      "three-days": [
+        56,
+        56,
+        56
+      ],
+      "month": [
+        56,
+        56,
+        56
+      ],
+      "week": [
+        56,
+        56,
+        56
+      ]
+    },
+    "expanded": {
+      "top": 588,
+      "bottom": 192,
+      "ratio": 0.7538461538461538
+    },
+    "minimized": {
+      "top": 80,
+      "bottom": 440,
+      "ratio": 0.15384615384615385
+    },
+    "tiny": {
+      "top": 64,
+      "bottom": 96,
+      "ratio": 0.4
+    },
+    "cancelled": {
+      "top": 96,
+      "bottom": 64,
+      "ratio": 0.6
+    },
+    "adjustedWidth": 376,
+    "adjustedHeight": 68,
+    "compactWidth": 296,
+    "reorderOperations": 4,
+    "passed": true
+  },
+  {
+    "theme": "light",
+    "verifiedAt": "2026-11-15T09:27:54.506Z",
+    "browser": "156.0.8078.4",
+    "scenarios": [
+      "REQ-016-S05",
+      "REQ-016-S06",
+      "REQ-031-S01",
+      "REQ-031-S02",
+      "REQ-031-S03",
+      "REQ-031-S04",
+      "REQ-031-S05",
+      "REQ-032-S01",
+      "REQ-032-S02",
+      "REQ-032-S06",
+      "REQ-040-S01",
+      "REQ-040-S08",
+      "REQ-040-S09",
+      "REQ-040-S10",
+      "REQ-040-S12"
+    ],
+    "initial": {
+      "top": 468,
+      "bottom": 312,
+      "ratio": 0.6
+    },
+    "rowHeights": [
+      56,
+      56,
+      56
+    ],
+    "periodRows": {
+      "three-days": [
+        56,
+        56,
+        56
+      ],
+      "month": [
+        56,
+        56,
+        56
+      ],
+      "week": [
+        56,
+        56,
+        56
+      ]
+    },
+    "expanded": {
+      "top": 588,
+      "bottom": 192,
+      "ratio": 0.7538461538461538
+    },
+    "minimized": {
+      "top": 80,
+      "bottom": 440,
+      "ratio": 0.15384615384615385
+    },
+    "tiny": {
+      "top": 64,
+      "bottom": 96,
+      "ratio": 0.4
+    },
+    "cancelled": {
+      "top": 96,
+      "bottom": 64,
+      "ratio": 0.6
+    },
+    "adjustedWidth": 376,
+    "adjustedHeight": 68,
+    "compactWidth": 296,
+    "reorderOperations": 4,
+    "passed": true
+  }
+]

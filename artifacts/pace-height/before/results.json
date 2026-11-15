@@ -1,0 +1,34 @@
+[
+  {
+    "theme": "dark",
+    "vertical": true,
+    "horizontal": true,
+    "focus": true,
+    "counts": [
+      16,
+      1,
+      0
+    ],
+    "fixedFooter": true,
+    "hover": true,
+    "chartHeight": 58,
+    "footerHeight": 69,
+    "passed": true
+  },
+  {
+    "theme": "light",
+    "vertical": true,
+    "horizontal": true,
+    "focus": true,
+    "counts": [
+      16,
+      1,
+      0
+    ],
+    "fixedFooter": true,
+    "hover": true,
+    "chartHeight": 58,
+    "footerHeight": 69,
+    "passed": true
+  }
+]

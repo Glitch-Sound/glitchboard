@@ -1,0 +1,29 @@
+{
+  "hostVersion": "1.146.0",
+  "isolatedProfile": true,
+  "onlyOrderChanged": true,
+  "results": [
+    {
+      "theme": "Default Dark Modern",
+      "storyDrag": true,
+      "directTaskDrag": true,
+      "storyTaskDrag": true,
+      "keyboardFocus": true,
+      "cancel": true,
+      "yamlSaved": true,
+      "tabReload": true,
+      "passed": true
+    },
+    {
+      "theme": "Default Light Modern",
+      "storyDrag": true,
+      "directTaskDrag": true,
+      "storyTaskDrag": true,
+      "keyboardFocus": true,
+      "cancel": true,
+      "yamlSaved": true,
+      "tabReload": true,
+      "passed": true
+    }
+  ]
+}

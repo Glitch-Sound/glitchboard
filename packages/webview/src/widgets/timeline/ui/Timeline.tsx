@@ -20,8 +20,13 @@ import {
   ColorInput,
   hexColorError,
 } from "../../../shared/ui/color-input/index.js";
+import { timelineDimensions } from "../model/dimensions.js";
 
-import { TimelineFrame, type TimelineLayout } from "./TimelineFrame.js";
+import {
+  TimelineFrame,
+  type TimelineLayout,
+  TimelineResizeHandle,
+} from "./TimelineFrame.js";
 
 type Period = "three-days" | "week" | "month";
 export type TimelineHandle = {
@@ -32,6 +37,7 @@ type Props = {
   projects: readonly Project[];
   initialLayout?: Partial<TimelineLayout>;
   onLayoutChange?: (layout: TimelineLayout) => void;
+  onMinimumHeightChange?: (height: number) => void;
   days: readonly string[];
   today: string;
   period: Period;
@@ -176,6 +182,7 @@ export function Timeline({
   projects,
   initialLayout,
   onLayoutChange,
+  onMinimumHeightChange,
   days,
   today,
   period,
@@ -200,6 +207,28 @@ export function Timeline({
   );
   const [savingProject, setSavingProject] = useState(false);
   const projectNameInput = useRef<HTMLInputElement>(null);
+  const heading = useRef<HTMLTableSectionElement>(null);
+  const footer = useRef<HTMLTableSectionElement>(null);
+  useEffect(() => {
+    const node = heading.current;
+    const panel = node?.closest<HTMLElement>(".timeline-panel");
+    if (!node || !panel) return;
+    const update = () => {
+      const headHeight = node.getBoundingClientRect().height;
+      const footHeight = footer.current?.getBoundingClientRect().height ?? 0;
+      panel.style.setProperty("--timeline-heading-height", `${headHeight}px`);
+      panel.style.setProperty("--timeline-footer-height", `${footHeight}px`);
+      onMinimumHeightChange?.(
+        Math.ceil(headHeight + footHeight + timelineDimensions.height.min + 8),
+      );
+    };
+    update();
+    if (typeof ResizeObserver === "undefined") return;
+    const observer = new ResizeObserver(update);
+    observer.observe(node);
+    if (footer.current) observer.observe(footer.current);
+    return () => observer.disconnect();
+  }, [onMinimumHeightChange]);
   const draggedProject = useRef<string | null>(null);
   const [dragging, setDragging] = useState<string | null>(null);
   const [dropTarget, setDropTarget] = useState<{
@@ -323,7 +352,7 @@ export function Timeline({
             <col key={day} />
           ))}
         </colgroup>
-        <thead>
+        <thead ref={heading}>
           <tr className="timeline-row timeline-heading">
             <th scope="col">
               <span className="section-heading">
@@ -353,6 +382,14 @@ export function Timeline({
                   </button>
                 )}
               </span>
+              <span className="project-resize-hint">
+                右端で列幅 / 下端で行高
+              </span>
+              <TimelineResizeHandle
+                axis="width"
+                label="Project列幅"
+                tabIndex={0}
+              />
             </th>
             {days.map((day) => (
               <th
@@ -502,6 +539,16 @@ export function Timeline({
                     />
                   )}
                 </span>
+                <TimelineResizeHandle
+                  axis="width"
+                  label={`${project.name}の列幅`}
+                />
+                <TimelineResizeHandle
+                  axis="height"
+                  label={`${project.name}から全Projectの行高`}
+                  rows={index + 1}
+                  tabIndex={index === 0 ? 0 : -1}
+                />
               </th>
               {columns.map((day) => {
                 const events = project.events.filter(
@@ -663,6 +710,8 @@ export function Timeline({
               <td key={day} className={dayTone(day, today, settings)} />
             ))}
           </tr>
+        </tbody>
+        <tfoot ref={footer} className="timeline-footer">
           <tr className="timeline-row pace-row">
             <th scope="row">
               <span>必要ペース</span>
@@ -677,7 +726,7 @@ export function Timeline({
               />
             </td>
           </tr>
-        </tbody>
+        </tfoot>
       </table>
       {leaving &&
         createPortal(

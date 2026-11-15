@@ -38,8 +38,9 @@ try {
       };
       window.snapshot = payload;
       window.requests = [];
-      window.acquireVsCodeApi = () => ({ postMessage(message) {
+      window.acquireVsCodeApi = () => ({ getState:()=>JSON.parse(sessionStorage.getItem("cell-layout")??"{}"),setState:state=>sessionStorage.setItem("cell-layout",JSON.stringify(state)),postMessage(message) {
         window.requests.push(message);
+        if(message.type === "saveTimelineLayout") { setTimeout(()=>window.dispatchEvent(new MessageEvent("message",{data:{type:"timelineLayoutResult",requestId:message.requestId,ok:true}})),0);return; }
         if (message.type === "moveProject") {
           const from = window.snapshot.projects.findIndex((p) => p.id === message.projectId);
           const [project] = window.snapshot.projects.splice(from, 1);
@@ -65,6 +66,46 @@ try {
     assert.ok(Math.abs(initial.ratio - 0.6) < 0.002, JSON.stringify(initial));
     const rowHeights = await page.locator(".project-row").evaluateAll((rows) => rows.map((row) => row.getBoundingClientRect().height));
     assert.ok(rowHeights.every((h) => h <= timelineDimensions.height.initial + 0.1), JSON.stringify(rowHeights));
+    // REQ-040-S01/S08/S09: 実セル端の操作から共通寸法、入力と状態保存へ接続する。
+    const widthControl=page.getByRole("separator",{name:"Project列幅",exact:true});
+    const heightControl=page.locator(".project-row .timeline-cell-resize-height hr").first();
+    assert.equal(await page.getByRole("slider",{name:"Project列幅",exact:true}).count(),0);
+    assert.equal(await page.getByRole("slider",{name:"Project行高",exact:true}).count(),0);
+    await page.getByRole("button",{name:"Projectを追加",exact:true}).click();
+    const projectDraft=page.locator(".timeline-project-add-form").getByRole("textbox",{name:"名前",exact:true});
+    await projectDraft.fill("入力を保持する名前");
+    const selectedBeforeDimensions=await page.locator(".event-summary").textContent();
+    const rowWidth=page.locator(".project-row .timeline-cell-resize-width hr").nth(1),widthBox=await rowWidth.boundingBox();
+    await page.mouse.move(widthBox.x+widthBox.width/2,widthBox.y+widthBox.height/2);await page.mouse.down();await page.mouse.move(widthBox.x+widthBox.width/2+96,widthBox.y+widthBox.height/2,{steps:8});await page.mouse.up();
+    const adjustedWidth=timelineDimensions.width.initial+96;
+    await expect(widthControl).toHaveAttribute("aria-valuenow",String(adjustedWidth));
+    assert.ok((await page.locator(".project-row > :first-child").evaluateAll(nodes=>nodes.map(node=>node.getBoundingClientRect().width))).every(value=>Math.abs(value-adjustedWidth)<1));
+    const thirdHeight=page.locator(".project-row .timeline-cell-resize-height hr").nth(2),heightBox=await thirdHeight.boundingBox();
+    await page.mouse.move(heightBox.x+heightBox.width/2,heightBox.y+heightBox.height/2);await page.mouse.down();await page.mouse.move(heightBox.x+heightBox.width/2,heightBox.y+heightBox.height/2+36,{steps:8});await page.mouse.up();
+    const adjustedHeight=timelineDimensions.height.initial+12;
+    await expect(heightControl).toHaveAttribute("aria-valuenow",String(adjustedHeight));
+    const movedHeightBox=await thirdHeight.boundingBox();assert.ok(Math.abs(movedHeightBox.y-heightBox.y-36)<2,"つかんだ下端がポインターに追従する");
+    assert.ok((await page.locator(".project-row").evaluateAll(nodes=>nodes.map(node=>node.getBoundingClientRect().height))).every(value=>Math.abs(value-adjustedHeight)<1));
+    await expect(projectDraft).toHaveValue("入力を保持する名前");assert.equal(await page.locator(".event-summary").textContent(),selectedBeforeDimensions);
+    assert.deepEqual(await page.evaluate(()=>window.requests.filter(r=>!["ready","saveTimelineLayout"].includes(r.type))),[]);
+    await page.screenshot({path:`${artifacts}/${theme}-cell-drag.png`});
+    // REQ-040-S10: 実ドラッグの途中で取消し、追加の下書きは残す。
+    const cancelWidthBox=await widthControl.boundingBox();await page.mouse.move(cancelWidthBox.x+cancelWidthBox.width/2,cancelWidthBox.y+cancelWidthBox.height/2);await page.mouse.down();await page.mouse.move(cancelWidthBox.x+40,cancelWidthBox.y+cancelWidthBox.height/2,{steps:4});await page.keyboard.press("Escape");await page.mouse.up();
+    await expect(widthControl).toHaveAttribute("aria-valuenow",String(adjustedWidth));await expect(projectDraft).toHaveValue("入力を保持する名前");
+    await projectDraft.press("Escape");await page.reload();await page.locator(".project-row").first().waitFor();
+    await expect(widthControl).toHaveAttribute("aria-valuenow",String(adjustedWidth));await expect(heightControl).toHaveAttribute("aria-valuenow",String(adjustedHeight));
+    // REQ-040-S12: 表示だけを縮め、保存幅を失わない。
+    await widthControl.press("End");await page.setViewportSize({width:500,height:900});
+    await expect.poll(async()=>Number(await widthControl.getAttribute("aria-valuenow"))).toBeLessThan(timelineDimensions.width.max);
+    const compactWidth=Number(await widthControl.getAttribute("aria-valuenow"));
+    assert.equal(await page.evaluate(()=>JSON.parse(sessionStorage.getItem("cell-layout")).timelineLayout.width),timelineDimensions.width.max);
+    const tableWidth=await page.locator(".timeline").evaluate(node=>node.getBoundingClientRect().width);assert.ok(tableWidth-compactWidth>=timelineDimensions.dateMinimum-2);
+    await expect(page.getByRole("button",{name:"Projectを追加",exact:true})).toBeInViewport();
+    await page.screenshot({path:`${artifacts}/${theme}-cell-compact.png`});
+    await page.setViewportSize({width:1440,height:900});await expect(widthControl).toHaveAttribute("aria-valuenow",String(timelineDimensions.width.max));
+    await widthControl.press("Home");await heightControl.press("Home");await widthControl.focus();
+    await page.screenshot({path:`${artifacts}/${theme}-cell-focus.png`});
+    await page.getByRole("button",{name:"1週間",exact:true}).focus();await page.mouse.move(0,0);
     // REQ-016-S01〜S05: 全期間の行高と既存の詳細操作。
     const periodRows = {};
     for (const [label, period] of [["3日", "three-days"], ["月", "month"], ["1週間", "week"]]) {
@@ -163,7 +204,7 @@ try {
     await separator.focus();
     await page.keyboard.press("Home");
     assert.ok(Math.abs((await heights()).ratio - 0.6) < 0.002);
-    // REQ-031-S03: 上下両端の80px下限と、極小画面の40%下限。
+    // REQ-031-S03/REQ-031-S07: 下部の80pxと固定部分を含む上部の下限。
     const dragBoundary = async (y) => {
       const rect = await separator.boundingBox();
       await page.mouse.move(rect.x + 100, rect.y + 6);
@@ -177,9 +218,13 @@ try {
     await separator.focus(); await page.keyboard.press("Home");
     await dragBoundary(0);
     const tiny = await heights();
-    assert.ok(Math.abs(tiny.ratio - 0.4) < 0.002);
+    const fixedHeight=await page.evaluate(()=>document.querySelector(".timeline-heading th").getBoundingClientRect().height+document.querySelector(".pace-row").getBoundingClientRect().height);
+    assert.ok(tiny.top>=fixedHeight+timelineDimensions.height.min);
+    assert.ok(tiny.bottom>=80-0.1);
+    assert.ok(await page.evaluate(()=>document.documentElement.scrollHeight>window.innerHeight));
     await dragBoundary(280);
-    assert.ok(Math.abs((await heights()).ratio - 0.6) < 0.002);
+    assert.ok((await heights()).top>=fixedHeight+timelineDimensions.height.min);
+    assert.ok((await heights()).bottom>=80-0.1);
     // REQ-031-S02: Pointer Cancelでも移動を終える。
     const cancelBox = await separator.boundingBox();
     await page.mouse.move(cancelBox.x + 100, cancelBox.y + 6);
@@ -195,7 +240,7 @@ try {
       assert.ok(await panel.evaluate((node) => { node.scrollTop = 500; return node.scrollTop; }) > 0);
     }
     assert.deepEqual(errors, []);
-    results.push({ theme, verifiedAt: new Date().toISOString(), browser: browser.version(), scenarios: ["REQ-016-S05", "REQ-016-S06", "REQ-031-S01", "REQ-031-S02", "REQ-031-S03", "REQ-031-S04", "REQ-031-S05", "REQ-032-S01", "REQ-032-S02", "REQ-032-S06"], initial, rowHeights, periodRows, expanded, minimized, tiny, cancelled, reorderOperations: countBeforeEdges, passed: true });
+    results.push({ theme, verifiedAt: new Date().toISOString(), browser: browser.version(), scenarios: ["REQ-016-S05", "REQ-016-S06", "REQ-031-S01", "REQ-031-S02", "REQ-031-S03", "REQ-031-S04", "REQ-031-S05", "REQ-032-S01", "REQ-032-S02", "REQ-032-S06", "REQ-040-S01", "REQ-040-S08", "REQ-040-S09", "REQ-040-S10", "REQ-040-S12"], initial, rowHeights, periodRows, expanded, minimized, tiny, cancelled, adjustedWidth, adjustedHeight, compactWidth, reorderOperations: countBeforeEdges, passed: true });
     await page.close();
   }
   await writeFile(`${artifacts}/results.json`, JSON.stringify(results, null, 2));

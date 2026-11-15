@@ -1,0 +1,22 @@
+[
+  {
+    "theme": "dark",
+    "drag": true,
+    "keyboard": true,
+    "cancel": true,
+    "savedReload": true,
+    "failureRecovery": true,
+    "scope": true,
+    "passed": true
+  },
+  {
+    "theme": "light",
+    "drag": true,
+    "keyboard": true,
+    "cancel": true,
+    "savedReload": true,
+    "failureRecovery": true,
+    "scope": true,
+    "passed": true
+  }
+]

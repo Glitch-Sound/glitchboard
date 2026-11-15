@@ -1,0 +1,33 @@
+
+> test:ui
+> node scripts/verify-replacement.mjs && node scripts/verify-project-scope.mjs && node scripts/verify-reconnection-drafts.mjs && node scripts/verify-manage-setup.mjs && node scripts/verify-ui-review.mjs && node scripts/verify-point-contrast.mjs && node scripts/verify-record-selection.mjs && node scripts/verify-child-reorder.mjs && node scripts/verify-timeline-header.mjs && node scripts/verify-board-layout.mjs && node scripts/verify-event-date-picker.mjs
+
+dark: repeated operations, cancellation, persistence and recovery passed
+light: repeated operations, cancellation, persistence and recovery passed
+dark: duplicate UUID scope passed with real YAML and both surfaces
+light: duplicate UUID scope passed with real YAML and both surfaces
+dark: reconnection input protection passed
+light: reconnection input protection passed
+8 theme/surface/state combinations passed
+dark: hex input, persistence and whole UI walkthrough passed
+light: hex input, persistence and whole UI walkthrough passed
+dark: 76 contrast samples, minimum 5.756:1
+light: 76 contrast samples, minimum 5.244:1
+dark: selection states, keyboard, independent operations and edit guards verified
+light: selection states, keyboard, independent operations and edit guards verified
+[{"theme":"dark","drag":true,"keyboard":true,"cancel":true,"savedReload":true,"failureRecovery":true,"scope":true,"passed":true},{"theme":"light","drag":true,"keyboard":true,"cancel":true,"savedReload":true,"failureRecovery":true,"scope":true,"passed":true}]
+[{"theme":"dark","vertical":true,"horizontal":true,"focus":true,"counts":[16,1,0],"fixedFooter":true,"hover":true,"chartHeight":46,"footerHeight":57,"labelSample":{"text":"336.0pt","backgroundAlpha":0,"border":["0px","0px","0px","0px"],"shadow":"none","contrast":9.54310038693942,"labelBottom":526.28125,"lineTop":531.2758620689655},"normalSample":{"text":"1024.0pt","backgroundAlpha":0,"border":["0px","0px","0px","0px"],"shadow":"none","contrast":11.979134069700603,"labelBottom":499.03125,"lineTop":504.0258620689655},"passed":true},{"theme":"light","vertical":true,"horizontal":true,"focus":true,"counts":[16,1,0],"fixedFooter":true,"hover":true,"chartHeight":46,"footerHeight":57,"labelSample":{"text":"336.0pt","backgroundAlpha":0,"border":["0px","0px","0px","0px"],"shadow":"none","contrast":9.453238252938208,"labelBottom":526.28125,"lineTop":531.2758620689655},"normalSample":{"text":"1024.0pt","backgroundAlpha":0,"border":["0px","0px","0px","0px"],"shadow":"none","contrast":12.63465434445799,"labelBottom":499.03125,"lineTop":504.0258620689655},"passed":true}]
+Both themes passed: 3:2 split, drag/keyboard resizing, compact rows, drag/keyboard reorder, scrolling, viewport resize, minimum heights. /Users/glitch/Developer/glitchboard/artifacts/replacement/layout
+Asia/Tokyo dark events
+Asia/Tokyo dark fixture
+Asia/Tokyo dark board
+Asia/Tokyo light events
+Asia/Tokyo light fixture
+Asia/Tokyo light board
+America/Los_Angeles dark events
+America/Los_Angeles dark fixture
+America/Los_Angeles dark board
+America/Los_Angeles light events
+America/Los_Angeles light fixture
+America/Los_Angeles light board
+12 timezone/theme/surface combinations passed

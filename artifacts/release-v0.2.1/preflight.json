@@ -1,0 +1,26 @@
+{
+  "version": "0.2.1",
+  "extension": "Glitch-Sound.glitchboard",
+  "extensionId": "1f5f7ff2-b364-4729-b6a8-53f56bf480e8",
+  "publishedBefore": "0.2.0",
+  "baseCommit": "5da671244907d735360c98834c19aacee6449467",
+  "remote": "https://github.com/Glitch-Sound/glitchboard.git",
+  "previousTagCommit": "8b676c0f4b2fdf0617c2042bb498370b8d1c96e1",
+  "newTagWasAbsent": true,
+  "gitPushDryRun": true,
+  "publisherOwnerConfirmedInChrome": true,
+  "checks": {
+    "unitTestFiles": 116,
+    "unitTests": 336,
+    "browserSuites": 11,
+    "nativeThemes": [
+      "Dark Modern",
+      "Light Modern"
+    ],
+    "packageFiles": 21,
+    "images": 5
+  },
+  "vsixSha256": "2b62634f7ca6af0cd05fc1a3512640174949f051a4bac8b1ed87f75d826c2b16",
+  "licenseUnchanged": true,
+  "iconsMatchPublished": true
+}

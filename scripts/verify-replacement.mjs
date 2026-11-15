@@ -176,7 +176,7 @@ try {
       // 追加の回帰で使った削除の件数を、以下の元の削除確認とは別に数える。
       const draftDeleteCount=requests.filter(request=>request.type === "deleteItem").length;
       // REQ-031-S06: 端へ調整後の縮小でも上下下限を維持する。
-      const handle = page.getByRole("separator");
+      const handle = page.getByRole("separator", { name: "タイムラインと詳細の高さ", exact: true });
       await handle.focus();
       for (let i = 0; i < 20; i++) await page.keyboard.press("ArrowDown");
       await page.setViewportSize({ width: 1100, height: 640 });

@@ -34,6 +34,7 @@ import {
   setProjectLoaded,
 } from "./storage/manage.js";
 import { updateTask } from "./storage/project.js";
+import { reorderChild } from "./storage/reorder.js";
 
 function projectIndex(
   projects: readonly Project[],
@@ -145,6 +146,21 @@ export class BoardSession {
       const { manage, loadedProjects } = await loadManageFile(this.managePath);
       const loadedFiles = manage.projects.filter((entry) => entry.load);
       const files = loadedFiles.map((entry) => entry.file);
+      if (operation.type === "moveStory" || operation.type === "moveTask") {
+        const index = projectIndex(
+          loadedProjects,
+          files,
+          operation.projectFile,
+          (project) =>
+            project.events.some((event) => event.id === operation.eventId),
+        );
+        const file = files[index];
+        if (operation.targetProjectFile && operation.targetProjectFile !== file)
+          throw new Error("別Projectへ並べ替えることはできない");
+        await reorderChild(resolve(dirname(this.managePath), file), operation);
+        await this.reload();
+        return { ok: true };
+      }
       // REQ-032-S03/S04: 最新の読込対象でIDを解決し、保存後に両画面へ再配信する。
       if (operation.type === "moveProject") {
         const file =
