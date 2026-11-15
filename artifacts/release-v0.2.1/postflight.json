@@ -1,0 +1,25 @@
+{
+  "sourceCommit": "1b3c26e76575118225e340e2c0115c931fe7fb19",
+  "tag": "v0.2.1",
+  "tagMatchesSource": true,
+  "sourcePushed": true,
+  "publicUrlsChecked": 8,
+  "publicUrlsAllBytesMatch": true,
+  "vsixSha256": "2b62634f7ca6af0cd05fc1a3512640174949f051a4bac8b1ed87f75d826c2b16",
+  "browser": "Google Chrome",
+  "publisherOwnerConfirmed": true,
+  "selectedPackage": "glitchboard-0.2.1.vsix",
+  "agentUploadOutcome": "Macのロックにより最終Uploadの完了を確認できない",
+  "lastPublicObservation": {
+    "version": "0.2.0",
+    "checkedAt": "2026-11-15T11:12:47.546801+00:00",
+    "beforeUserUploadReport": true,
+    "representsCurrentPublicationStatus": false
+  },
+  "userReportedUploadCompleted": true,
+  "userUploadReportAt": "2026-11-15T11:13:01.313783+00:00",
+  "workflowStatus": "利用者のアップロード済み報告と終了指示により公開操作を停止した",
+  "postUploadPublicationStatus": "独立した再確認を行っていない",
+  "agentPostUploadVerificationPerformed": false,
+  "publicationWorkResumed": false
+}

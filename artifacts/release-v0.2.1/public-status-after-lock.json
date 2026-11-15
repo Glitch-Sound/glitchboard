@@ -1,0 +1,23 @@
+{
+  "checkedAt": "2026-11-15T11:12:47.546801+00:00",
+  "publisher": "Glitch-Sound",
+  "name": "glitchboard",
+  "extensionId": "1f5f7ff2-b364-4729-b6a8-53f56bf480e8",
+  "versions": [
+    "0.2.0",
+    "0.1.5",
+    "0.1.4",
+    "0.1.3",
+    "0.1.2",
+    "0.1.1",
+    "0.1.0",
+    "0.0.3",
+    "0.0.2",
+    "0.0.1"
+  ],
+  "uiResult": "Macがロックされ、最終Uploadの操作完了を確認できない",
+  "sourceCommit": "1b3c26e76575118225e340e2c0115c931fe7fb19",
+  "tag": "v0.2.1",
+  "observationScope": "利用者のアップロード済み報告前の公開API観測であり、現在の公開状態ではない",
+  "representsCurrentPublicationStatus": false
+}

@@ -1,0 +1,50 @@
+[
+  {
+    "url": "https://raw.githubusercontent.com/Glitch-Sound/glitchboard/v0.2.1/packages/extension/media/readme/overview.png",
+    "status": 200,
+    "sha256": "fa13730b92cfd2dbc297386d93f8f4ed403ce3cbd1c5d0d76e1d06241d6ae876",
+    "matches": true
+  },
+  {
+    "url": "https://raw.githubusercontent.com/Glitch-Sound/glitchboard/v0.2.1/packages/extension/media/readme/event-add.png",
+    "status": 200,
+    "sha256": "bf5b2772aa6cb79fcfbd47f944eee8f61ea4477659155dbdb161afa1cb2378d9",
+    "matches": true
+  },
+  {
+    "url": "https://raw.githubusercontent.com/Glitch-Sound/glitchboard/v0.2.1/packages/extension/media/readme/tasks.png",
+    "status": 200,
+    "sha256": "c7df168ca164597867edf82e68c0773e6efb811ee7c9f52be517992caf43ddd2",
+    "matches": true
+  },
+  {
+    "url": "https://raw.githubusercontent.com/Glitch-Sound/glitchboard/v0.2.1/packages/extension/media/readme/setup.png",
+    "status": 200,
+    "sha256": "3c567d047eb58c1b9b268bfccaef7bc64d7944f76e70564d392837fe7a1c485b",
+    "matches": true
+  },
+  {
+    "url": "https://raw.githubusercontent.com/Glitch-Sound/glitchboard/v0.2.1/packages/extension/media/readme/task-points.png",
+    "status": 200,
+    "sha256": "765ab49e96024924482a0f46f7e922d5ea400c15696ab407a2c41073f9341a1f",
+    "matches": true
+  },
+  {
+    "url": "https://raw.githubusercontent.com/Glitch-Sound/glitchboard/v0.2.1/packages/extension/CHANGELOG.md",
+    "status": 200,
+    "sha256": "12167488805a5e6a7cd7425a8019a1badd5d44a460beba6e7ac36e0610ac0cfa",
+    "matches": true
+  },
+  {
+    "url": "https://raw.githubusercontent.com/Glitch-Sound/glitchboard/v0.2.1/packages/extension/examples/readme-guide/manage.yaml",
+    "status": 200,
+    "sha256": "6336db540f2a981d4a764db126498016aa127c70defd59c994aadabf9ae166d6",
+    "matches": true
+  },
+  {
+    "url": "https://raw.githubusercontent.com/Glitch-Sound/glitchboard/v0.2.1/packages/extension/README.md",
+    "status": 200,
+    "sha256": "1641dc4b4b328edad602841dd9faf483e5cd2def074cedfc15a6deae525977c2",
+    "matches": true
+  }
+]
