@@ -21,10 +21,10 @@
 ## 導入して使い始める
 
 VS Code 1.105 以降が必要である。\
-この README は再設計版 0.2.1 向けである。\
+この README は再設計版 0.2.2 向けである。\
 拡張 ID は旧版と同じ `Glitch-Sound.glitchboard` である。
 
-1. [Marketplace の GlitchBoard](https://marketplace.visualstudio.com/items?itemName=Glitch-Sound.glitchboard)をインストール、または0.2.1へ更新する。
+1. [Marketplace の GlitchBoard](https://marketplace.visualstudio.com/items?itemName=Glitch-Sound.glitchboard)をインストール、または0.2.2へ更新する。
 2. アクティビティバーの GlitchBoard、またはコマンドパレットの `GlitchBoardを開く` を選ぶ。
 3. 初回は左の `新しく作る` で `manage.yaml` の保存先を指定する。\
    既存の本版データがあれば `manage.yamlを選ぶ` を使う。
@@ -57,6 +57,7 @@ Event へ直接追加した Task は、一覧の `Taks` に表示する。\
 | 名前、期限を変える     | 詳細の `編集` から変更して保存する                                                  |
 | 補足を追加、変更する   | 詳細の `+ 補足を追加` または `補足を編集` から入力して保存する                      |
 | Project の色を変える   | Project 詳細のピッカー、または `#RRGGBB` のカラーコードを使う                       |
+| Project を片付ける     | Project 詳細の `編集` で `アーカイブ` を選び、保存する                              |
 | 削除する               | 詳細の `削除` から、子項目を含む件数を確認して確定する                              |
 
 <a href="packages/extension/media/readme/task-points.png"><img src="packages/extension/media/readme/task-points.png" width="357" alt="Task 詳細でポイントのバッジを開き、7段階の数値とスライダーを選べる画面"></a>
@@ -67,6 +68,10 @@ Taks は先頭固定で、その中の Task は並べ替えできる。\
 
 ポイントと完了チェックはその場で保存する。\
 完了済み Task のポイントを変える場合は、チェックを外してから操作する。
+
+アーカイブは PROJECT 一覧の行と期限マーカーだけを非表示にする。\
+EVENT 一覧、関連データ、集計は残り、再起動後も状態を維持する。\
+アーカイブ済み Project を再表示、復元する操作は用意していない。
 
 Event の期限は `YYYY-MM-DD` の入力とカレンダーの両方に対応する。\
 日付を選んでから `追加` または `保存` で確定し、カレンダー内の Esc はカレンダーだけを閉じる。

@@ -101,6 +101,29 @@ button:disabled {
   min-height: 140px;
   resize: vertical;
 }
+.detail-panel .detail-archive-choice {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+.detail-archive-choice :where(input) {
+  width: 16px;
+  min-height: 16px;
+  height: 16px;
+  margin: 0;
+  accent-color: var(--vscode-focusBorder);
+  flex-shrink: 0;
+}
+.detail-archive-field p {
+  margin: 6px 0 0;
+  color: var(--vscode-foreground);
+  font-size: 12px;
+  line-height: 1.6;
+}
+.detail-archive-status {
+  color: var(--vscode-foreground);
+}
 .detail-panel :where(form button) {
   min-height: var(--gb-control-size);
   padding: 5px 10px;

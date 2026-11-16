@@ -27,6 +27,7 @@ code --new-window --extensionDevelopmentPath="$PWD/packages/extension" .
 | `npm run test:ui` | 実ビルドと実保存を接続した両テーマの反復操作、取消、失敗と再接続、レイアウトと並べ替え、上下固定の11本 |
 | `npm run test:ui:native-reorder` | 実 VS Code の Story、Task の並べ替え、保存と再表示を両テーマで検証する |
 | `npm run test:ui:native-cells` | macOS の実 VS Code を隔離して起動し、両テーマのセル端ドラッグ、タブの開き直しと再起動、YAML 保全を確認する |
+| `npm run test:ui:native-archive` | 実 VS Code の両テーマで Project のアーカイブ、取消、再起動、全件非表示後の EVENT 操作を一時データで検証する |
 | `npm run check:docs` | README のリンク、画像、記載コマンドと配布用 README の同期を検査する |
 | `npm run docs:prepare` | ルートの README の利用者向け部分とサンプルを配布用へ同期する |
 | `npm run docs:capture` | 隔離した実 VS Code でサンプルを開き、README の画像を撮影する |
@@ -76,32 +77,32 @@ README 上の指定幅は全画像を元画像の85%へ揃え、本文幅を超�
 npm run check
 cd packages/extension
 npx --no-install vsce ls --no-dependencies
-npx --no-install vsce package --no-dependencies --out /tmp/glitchboard-0.2.1.vsix
+npx --no-install vsce package --no-dependencies --out /tmp/glitchboard-0.2.2.vsix
 ```
 
 VSIX 内の README、画像、サンプルと実行ファイルを確認し、VS Code の `VSIX からインストール...` で利用できる。\
 配布用の画像と原寸リンクは公開タグを参照するため、公開前にタグの画像 URL が取得できることを確認する。\
-拡張 ID は旧版と同じ `Glitch-Sound.glitchboard` であり、0.2.1 は既存拡張の更新として配布する。\
+拡張 ID は旧版と同じ `Glitch-Sound.glitchboard` であり、0.2.2 は既存拡張の更新として配布する。\
 0.1.5 のリポジトリと公開 VSIX には LICENSE ファイルと license 指定がなく、0.2.x でも新しい利用許諾を追加していない。\
 同じアイコンを継続し、ライセンス不在の警告を隠すオプションは使わない。
 
-## 0.2.1 の配信
+## 0.2.2 の配信
 
-[0.2.1の配信記録](docs/release-0.2.1.md)に検査と公開結果を記録する。
+[0.2.2の配信記録](docs/release-0.2.2.md)に検査と公開結果を記録する。
 
 README と CHANGELOG の移行非対応の案内、旧ファイルの保全、VSIX の ID と版、画像、全体検査を先に確認する。\
 新リポジトリの main が現在の履歴の祖先であることを確認し、通常の fast-forward で更新する。\
 既存のタグを移動せず、履歴を書き換えない。
 
 ```sh
-git tag -a v0.2.1 -m 'GlitchBoard v0.2.1'
-git push --atomic glitchboard main refs/tags/v0.2.1
+git tag -a v0.2.2 -m 'GlitchBoard v0.2.2'
+git push --atomic glitchboard main refs/tags/v0.2.2
 ```
 
 検証した VSIX を Marketplace の既存 `Glitch-Sound.glitchboard` へアップロードする。\
 新しい拡張の作成と publisher の変更は行わない。\
 サインインと追加の法的同意が必要な場合は利用者が操作し、秘密情報をチャットへ貼らない。\
-公開後に Marketplace の版、repository、画像と変更履歴を再取得し、0.2.1 が表示されることを確認する。
+公開後に Marketplace の版、repository、画像と変更履歴を再取得し、0.2.2 が表示されることを確認する。
 
 ## OpenSpec とフック
 

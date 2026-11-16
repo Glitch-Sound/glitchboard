@@ -1,0 +1,11 @@
+{
+  "version": "0.2.2",
+  "extension": "Glitch-Sound.glitchboard",
+  "extensionId": "1f5f7ff2-b364-4729-b6a8-53f56bf480e8",
+  "publishedBefore": "0.2.1",
+  "baseCommit": "18a3494eeadcd77ab62b8da0bdb0b5ebf00b979e",
+  "remote": "https://github.com/Glitch-Sound/glitchboard.git",
+  "newTagWasAbsent": true,
+  "publisherOwnerConfirmedInChrome": true,
+  "public": true
+}

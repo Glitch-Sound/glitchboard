@@ -12,7 +12,7 @@ import { parseProjectYaml, taskLocation } from "./project.js";
 
 type Edit = Extract<Operation, { type: "editItem" }>;
 const allowed = {
-  project: ["name", "color", "note"],
+  project: ["name", "color", "note", "archived"],
   event: ["name", "due", "note"],
   story: ["name", "note"],
   task: ["name", "points", "note"],

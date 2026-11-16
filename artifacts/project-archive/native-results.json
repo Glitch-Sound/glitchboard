@@ -1,0 +1,33 @@
+{
+  "hostVersion": "1.146.0",
+  "isolatedProfile": true,
+  "userDataTouched": false,
+  "results": [
+    {
+      "theme": "Default Dark Modern",
+      "passed": true,
+      "archivePersisted": true,
+      "tabReopen": true,
+      "extensionRestart": true,
+      "eventRetained": true,
+      "allArchivedTaskEditable": true,
+      "keyboardFocus": {
+        "outline": "solid",
+        "width": "2px"
+      }
+    },
+    {
+      "theme": "Default Light Modern",
+      "passed": true,
+      "archivePersisted": true,
+      "tabReopen": true,
+      "extensionRestart": true,
+      "eventRetained": true,
+      "allArchivedTaskEditable": true,
+      "keyboardFocus": {
+        "outline": "solid",
+        "width": "2px"
+      }
+    }
+  ]
+}

@@ -48,6 +48,7 @@ export const eventSchema = z.object({
 export const projectSchema = z.object({
   ...common,
   color: projectColorSchema,
+  archived: z.boolean().optional(),
   events: z.array(eventSchema),
 });
 

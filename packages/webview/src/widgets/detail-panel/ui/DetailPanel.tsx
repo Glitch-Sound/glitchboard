@@ -113,6 +113,7 @@ export function DetailPanel({
   const [editingNote, setEditingNote] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [name, setName] = useState(selection.item.name);
+  const [archive, setArchive] = useState(false);
   const [due, setDue] = useState(
     selection.kind === "event" ? selection.item.due : "",
   );
@@ -186,6 +187,7 @@ export function DetailPanel({
     requestLeave(() => {
       cancelEditing();
       setName(selection.item.name);
+      setArchive(false);
       setDue(selection.kind === "event" ? selection.item.due : "");
       setNote(selection.item.note ?? "");
       if (target === "name") setEditing(true);
@@ -236,6 +238,7 @@ export function DetailPanel({
         return false;
       }
       patch.name = name.trim();
+      if (selection.kind === "project" && archive) patch.archived = true;
       if (selection.kind === "event") patch.due = due;
     }
     if (colorDirty) {
@@ -335,6 +338,9 @@ export function DetailPanel({
           );
         })}
       </div>
+      {selection.kind === "project" && selection.item.archived && (
+        <p className="detail-archive-status">アーカイブ済み</p>
+      )}
       {editing && (
         <form
           aria-busy={saving}
@@ -363,6 +369,24 @@ export function DetailPanel({
               onOpenChange={setCalendarOpen}
               error={dueError}
             />
+          )}
+          {selection.kind === "project" && !selection.item.archived && (
+            <div className="detail-archive-field">
+              <label className="detail-archive-choice">
+                <input
+                  type="checkbox"
+                  checked={archive}
+                  disabled={saving}
+                  aria-describedby="project-archive-help"
+                  onChange={(event) => setArchive(event.target.checked)}
+                />
+                アーカイブ
+              </label>
+              <p id="project-archive-help">
+                保存すると PROJECT 一覧から非表示になります。EVENT
+                一覧、関連データと集計は残ります。再表示する操作はありません。
+              </p>
+            </div>
           )}
           <button type="submit" disabled={saving}>
             {saving ? "保存中…" : "保存"}

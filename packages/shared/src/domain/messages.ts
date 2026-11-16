@@ -102,6 +102,7 @@ export const operationSchema = z.discriminatedUnion("type", [
         name: z.string().trim().min(1).optional(),
         due: z.string().optional(),
         color: z.string().optional(),
+        archived: z.literal(true).optional(),
         points: z
           .union([
             z.literal(1),

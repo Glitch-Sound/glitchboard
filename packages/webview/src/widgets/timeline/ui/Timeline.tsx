@@ -199,6 +199,8 @@ export function Timeline({
   onAddProject,
   onMoveProject,
 }: Props) {
+  // REQ-047: 読込対象と計算は維持し、PROJECT 行だけを除外する。
+  const visibleProjects = projects.filter((project) => !project.archived);
   const [open, setOpen] = useState<string | null>(null);
   const [addingProject, setAddingProject] = useState(false);
   const [projectName, setProjectName] = useState("");
@@ -411,7 +413,7 @@ export function Timeline({
           </tr>
         </thead>
         <tbody>
-          {projects.map((project, index) => (
+          {visibleProjects.map((project, index) => (
             <tr
               className="timeline-row project-row"
               key={project.id}
@@ -497,7 +499,7 @@ export function Timeline({
                       if (event.key !== "ArrowUp" && event.key !== "ArrowDown")
                         return;
                       event.preventDefault();
-                      const target = projects[targetIndex];
+                      const target = visibleProjects[targetIndex];
                       if (target)
                         void moveProject(
                           project.id,

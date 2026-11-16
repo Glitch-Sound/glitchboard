@@ -56,7 +56,7 @@ Projectファイルは単独で内容が分かるように、Projectとその配
 
 | 階層 | 必須 | 任意 |
 | --- | --- | --- |
-| Project | `id`, `name`, `color` | `note` |
+| Project | `id`, `name`, `color` | `note`, `archived` |
 | Event | `id`, `name`, `due` | `note` |
 | Story | `id`, `name` | `note` |
 | Task | `id`, `name` | `points`, `doneAt`, `note` |
@@ -66,6 +66,11 @@ Projectファイルは単独で内容が分かるように、Projectとその配
 全階層の`note`は任意の文字列である。\
 IDの採番範囲、YAML内の配列構造、無効なファイルの扱いは、該当するOpenSpec変更で決める。\
 保存時は変更に関係しないコメントを維持し、物理削除した項目はファイルから取り除く。
+
+Project の archived は任意の真偽値で、省略と false は未アーカイブとする。\
+true は PROJECT 一覧の行とマーカーだけを除外し、読込状態、EVENT 一覧と計算対象を変えない。\
+編集通信は true だけを受け付け、Project 以外の指定を拒否する。\
+復元用の UI は設けず、既存の属性省略ファイルを読込時に書き換えない。
 
 ## UI実装
 
