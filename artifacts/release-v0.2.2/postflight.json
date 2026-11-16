@@ -1,0 +1,69 @@
+{
+  "checkedAt": "2026-11-16T11:45:04.850317+00:00",
+  "published": true,
+  "version": "0.2.2",
+  "extension": "Glitch-Sound.glitchboard",
+  "extensionId": "1f5f7ff2-b364-4729-b6a8-53f56bf480e8",
+  "flags": "validated, public",
+  "versionFlags": "validated",
+  "publishedLastUpdated": "2026-11-16T11:42:55.107Z",
+  "releaseCommit": "c418632a2800313c53f7872e65b4f54e509d7292",
+  "tag": "v0.2.2",
+  "chromeUploadConfirmed": true,
+  "chromePublicVersionConfirmed": true,
+  "chromeReadmeConfirmed": true,
+  "assets": [
+    {
+      "assetType": "Microsoft.VisualStudio.Services.VSIXPackage",
+      "url": "https://Glitch-Sound.gallerycdn.vsassets.io/extensions/glitch-sound/glitchboard/0.2.2/1794828995921/Microsoft.VisualStudio.Services.VSIXPackage",
+      "status": 200,
+      "bytes": 561910,
+      "sha256": "378b4e21ab552fa1d87b6b81c53ac6b99e266bfc180c8ed4bb7a07596475116f",
+      "matchesLocal": true
+    },
+    {
+      "assetType": "Microsoft.VisualStudio.Services.Content.Details",
+      "url": "https://Glitch-Sound.gallerycdn.vsassets.io/extensions/glitch-sound/glitchboard/0.2.2/1794828995921/Microsoft.VisualStudio.Services.Content.Details",
+      "status": 200,
+      "bytes": 11333,
+      "sha256": "7822958856ddf15d2d809ca648d5804dab327db62328b8dde6895ff877434162",
+      "matchesLocal": true
+    },
+    {
+      "assetType": "Microsoft.VisualStudio.Services.Content.Changelog",
+      "url": "https://Glitch-Sound.gallerycdn.vsassets.io/extensions/glitch-sound/glitchboard/0.2.2/1794828995921/Microsoft.VisualStudio.Services.Content.Changelog",
+      "status": 200,
+      "bytes": 4244,
+      "sha256": "61c3e6d49774c27a777d4c892f6f304ba47426afe738c6d89b34ba696411008b",
+      "matchesLocal": true
+    },
+    {
+      "assetType": "Microsoft.VisualStudio.Code.Manifest",
+      "url": "https://Glitch-Sound.gallerycdn.vsassets.io/extensions/glitch-sound/glitchboard/0.2.2/1794828995921/Microsoft.VisualStudio.Code.Manifest",
+      "status": 200,
+      "bytes": 1907,
+      "sha256": "436ee68f19b7c8faf49b25746dd197d5395b39883a8431698169de4cb6185f61",
+      "matchesLocal": true
+    },
+    {
+      "assetType": "Microsoft.VisualStudio.Services.Icons.Default",
+      "url": "https://Glitch-Sound.gallerycdn.vsassets.io/extensions/glitch-sound/glitchboard/0.2.2/1794828995921/Microsoft.VisualStudio.Services.Icons.Default",
+      "status": 200,
+      "bytes": 51927,
+      "sha256": "af2541a27218e1cc5bb67256767d27e507f5e253b8ddf6205792fd6603d62acc",
+      "matchesLocal": true
+    }
+  ],
+  "checks": {
+    "unitTestFiles": 119,
+    "unitTests": 348,
+    "browserSuites": 11,
+    "nativeThemes": [
+      "Dark Modern",
+      "Light Modern"
+    ],
+    "packageFiles": 21,
+    "readmeImages": 5,
+    "readmePreviewPassed": true
+  }
+}

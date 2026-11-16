@@ -18,7 +18,7 @@ Project 詳細の編集でアーカイブを保存すると、PROJECT 一覧の�
 関連データ、EVENT 一覧と集計は維持し、再表示と復元の UI は置かない。\
 実装と検証の詳細は [アーカイブの報告](project-archive-report.md)を参照する。
 
-manifest、README、変更履歴と配布用文書を0.2.2へ同期する。\
+manifest、README、変更履歴と配布用文書を0.2.2へ同期した。\
 0.1.xからの移行非対応の案内、旧ファイルの保全、既存のアイコンとライセンス情報は維持する。\
 README の既存5画像は今回の編集欄を写しておらず説明と一致するため変更しない。\
 配布用の画像と原寸リンクは v0.2.2 の公開タグを使う。
@@ -34,7 +34,20 @@ VSIX は21ファイルで、ID と0.2.2、README、変更履歴、5画像、4サ
 配布物は artifacts/release-v0.2.2/glitchboard-0.2.2.vsix に置く。\
 SHA-256 は378b4e21ab552fa1d87b6b81c53ac6b99e266bfc180c8ed4bb7a07596475116fである。
 
-この時点ではコミット、push と公開操作は未実施であり、確定した結果を追記する。
+改修と配信準備を c418632a2800313c53f7872e65b4f54e509d7292 へコミットし、main と新しい v0.2.2 タグを atomic push で反映した。\
+タグは同じコミットを指し、既存の履歴とタグは変更していない。\
+公開タグの5画像、README、変更履歴とサンプルの8 URL はすべて HTTP 200 で、ローカルと完全一致した。
+
+Chrome で既存 GlitchBoard の Update から検証済みの VSIX を選択し、Upload を実行した。\
+管理画面が Verifying 0.2.2 へ遷移し、アップロードの完了を確認した。\
+2026-11-16 11:42:55 UTC に Marketplace の検証が完了し、公式公開 API が validated、public の0.2.2を返すことを確認した。\
+Chrome の公開ページでも Version 0.2.2、アーカイブの説明、新しい repository と公開タグの全体画像を確認した。\
+公開版の VSIX、README、変更履歴、manifest とアイコンを取得し、検証済みのローカル配布物と一致することを確認した。\
+VSIX の SHA-256 も上記と一致した。
+
+README の実ブラウザー描画は、5画像の読込、共通倍率、本文と表の横はみ出しなしを確認した。\
+事後の照合結果は artifacts/release-v0.2.2/postflight.json、公開 URL は public-urls.json、描画結果は readme-preview-results.json に置く。\
+配信記録の後続コミットでは公開タグと VSIX を変更しない。
 
 ## 確認範囲
 
