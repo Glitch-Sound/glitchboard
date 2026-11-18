@@ -1,6 +1,6 @@
 {
-  "capturedAt": "2026-11-15T10:48:26.669Z",
-  "sampleDate": "2026-11-15",
+  "capturedAt": "2026-11-18T06:56:29.154Z",
+  "sampleDate": "2026-11-18",
   "source": "実 VS Code Extension Development Host",
   "hostVersion": "1.146.0",
   "sample": "examples/readme-guide/manage.yaml",
@@ -11,7 +11,7 @@
     "fontFamily": "-apple-system, \"system-ui\", sans-serif",
     "fontSize": "13px",
     "theme": "Dark Modern",
-    "devicePixelRatio": 1
+    "devicePixelRatio": 2
   },
   "captures": [
     {
@@ -71,7 +71,7 @@
         "x": 895,
         "y": 68,
         "width": 420,
-        "height": 459
+        "height": 458
       },
       "scale": "css",
       "resized": false

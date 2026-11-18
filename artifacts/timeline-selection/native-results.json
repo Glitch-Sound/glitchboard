@@ -1,0 +1,29 @@
+{
+  "hostVersion": "1.146.0",
+  "isolatedProfile": true,
+  "userDataTouched": false,
+  "results": [
+    {
+      "theme": "Default Dark Modern",
+      "periods": 3,
+      "dateDetailButtons": 0,
+      "keyboardSelection": true,
+      "projectDetailPreserved": true,
+      "sidebarDetailPreserved": true,
+      "cancelPreservesDraft": true,
+      "saveOriginalTarget": true,
+      "passed": true
+    },
+    {
+      "theme": "Default Light Modern",
+      "periods": 3,
+      "dateDetailButtons": 0,
+      "keyboardSelection": true,
+      "projectDetailPreserved": true,
+      "sidebarDetailPreserved": true,
+      "cancelPreservesDraft": true,
+      "saveOriginalTarget": true,
+      "passed": true
+    }
+  ]
+}

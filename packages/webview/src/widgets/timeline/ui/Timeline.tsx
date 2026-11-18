@@ -598,15 +598,6 @@ export function Timeline({
                         >
                           ◆{events.length > 1 && <sup>{events.length}</sup>}
                         </button>
-                        {events.length === 1 && onOpenDetail && (
-                          <DetailButton
-                            name={events[0].name}
-                            note={events[0].note}
-                            selected={Boolean(selected)}
-                            icon="document"
-                            onOpen={() => onOpenDetail("event", events[0].id)}
-                          />
-                        )}
                         {period === "month" ? (
                           selected && (
                             <span className="marker-label">
@@ -640,17 +631,6 @@ export function Timeline({
                                 >
                                   {event.name}
                                 </button>
-                                {onOpenDetail && (
-                                  <DetailButton
-                                    name={event.name}
-                                    note={event.note}
-                                    selected={event.id === selectedEventId}
-                                    icon="document"
-                                    onOpen={() =>
-                                      onOpenDetail("event", event.id)
-                                    }
-                                  />
-                                )}
                               </div>
                             ))}
                           </div>

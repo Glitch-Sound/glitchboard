@@ -118,16 +118,18 @@ try {
       await page.getByRole("button", { name: "詳細を閉じる", exact: true }).click();
       if(period === "month") {
         // REQ-016-S06: 月の密なセルでも ◆ と詳細を重ねない。
-        const wrap=page.locator(".marker-wrap").filter({has:page.locator(":scope > .detail-button")}).first();
-        const marker=wrap.locator(".event-marker"),detail=wrap.locator(":scope > .detail-button");
-        const before=await wrap.evaluate(node=>{const a=node.querySelector(".event-marker").getBoundingClientRect(),b=node.querySelector(".detail-button").getBoundingClientRect();return {overlap:a.left<b.right&&a.right>b.left&&a.top<b.bottom&&a.bottom>b.top,opacity:getComputedStyle(node.querySelector(".detail-button")).opacity};});
-        assert.equal(before.opacity,"0",JSON.stringify(before));
-        await marker.hover();await expect(detail).toHaveCSS("opacity","1");
-        const hoverBox=await detail.boundingBox();await page.mouse.move(hoverBox.x+hoverBox.width/2,hoverBox.y+hoverBox.height/2,{steps:20});await expect(detail).toHaveCSS("opacity","1");
+        // REQ-016-S06: 日付領域は選択だけを持ち、ホバーとフォーカスでも詳細ボタンを出さない。
+        const wrap=page.locator(".marker-wrap").first();
+        const marker=wrap.locator(".event-marker");
+        await marker.hover();await marker.focus();await page.keyboard.press("Tab");await page.keyboard.press("Shift+Tab");await expect(marker).toBeFocused();
+        await expect(page.locator(".timeline td .detail-button")).toHaveCount(0);
+        assert.notEqual(await marker.evaluate(node=>getComputedStyle(node).outlineStyle),"none");
+        await page.keyboard.press("Enter");
+        if(await page.getByRole("option").count()){
+          const option=page.getByRole("option").first();await option.focus();await page.keyboard.press("Enter");
+        }
+        await expect(page.getByRole("dialog",{name:"詳細パネル",exact:true})).toHaveCount(0);
         await page.screenshot({path:`${artifacts}/${theme}-month-actions.png`});
-        const a=await marker.boundingBox(),b=await detail.boundingBox();assert.ok(a.y>=b.y+b.height || b.y>=a.y+a.height,"月表示の詳細と◆が重なっている");
-        await detail.click();await expect(page.getByRole("dialog",{name:"詳細パネル",exact:true})).toBeVisible();await page.getByRole("button",{name:"詳細を閉じる",exact:true}).click();
-        await marker.focus();await page.keyboard.press("Tab");await expect(detail).toBeFocused();await page.keyboard.press("Enter");await expect(page.getByRole("dialog",{name:"詳細パネル",exact:true})).toBeVisible();await page.getByRole("button",{name:"詳細を閉じる",exact:true}).click();
         await page.getByRole("button",{name:"月",exact:true}).focus();await page.mouse.move(0,0);
       }
       await page.screenshot({ path: `${artifacts}/${theme}-${period}.png` });

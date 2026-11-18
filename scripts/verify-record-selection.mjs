@@ -121,7 +121,7 @@ try {
    const option = board.locator(".marker-list > div").filter({ has: board.getByRole("option", { name: "公開準備", exact: true }) });
    samples.markerOptionSelected = await noSelectionFrame(option, "同日 Event の行");
    await focus(option.getByRole("option", { name: "公開準備", exact: true }));
-   verify((await style(option.locator(".detail-button"))).color === selectedInk, "同日一覧の選択詳細を強調"); await capture(board, "event-same-day");
+   await expect(option.locator(".detail-button")).toHaveCount(0); await capture(board, "event-same-day");
    await board.getByRole("option", { name: "公開準備", exact: true }).click();
    // REQ-035-S04: 通常と完了の下線、選択詳細と独立操作。
    const normalName = task("通常の作業").getByRole("button", { name: "通常の作業", exact: true });

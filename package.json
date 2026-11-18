@@ -17,7 +17,8 @@
     "check:docs": "node scripts/check-docs.mjs",
     "docs:capture": "node scripts/capture-readme.mjs",
     "test:ui:native-reorder": "node scripts/verify-native-child-reorder.mjs",
-    "test:ui:native-archive": "node scripts/verify-native-project-archive.mjs"
+    "test:ui:native-archive": "node scripts/verify-native-project-archive.mjs",
+    "test:ui:native-timeline": "node scripts/verify-native-timeline-selection.mjs"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.3.4",

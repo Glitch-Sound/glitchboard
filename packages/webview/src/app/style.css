@@ -2233,11 +2233,6 @@ main {
   margin: 8px 6px 0 0;
   padding: 7px 10px;
 }
-.marker-wrap > :where(.detail-button) {
-  position: absolute;
-  right: 2px;
-  top: 0;
-}
 .marker-list > div {
   display: flex;
   align-items: center;
@@ -2402,22 +2397,4 @@ main {
 }
 .operation-error > :where(span) {
   min-width: 0;
-}
-
-/* 月の日付セルでは補助操作を上へ出し、期限の ◆ と常時重ねない。 */
-.timeline-month .marker-wrap > .detail-button {
-  right: auto;
-  left: 50%;
-  top: auto;
-  bottom: 100%;
-  transform: translateX(-50%);
-  z-index: 5;
-  opacity: 0;
-  pointer-events: none;
-  background: var(--vscode-editor-background);
-}
-.timeline-month .marker-wrap:hover > .detail-button,
-.timeline-month .marker-wrap:focus-within > .detail-button {
-  opacity: 1;
-  pointer-events: auto;
 }

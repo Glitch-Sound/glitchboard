@@ -21,10 +21,10 @@
 ## 導入して使い始める
 
 VS Code 1.105 以降が必要である。\
-この README は再設計版 0.2.2 向けである。\
+この README は再設計版 0.2.3 向けである。\
 拡張 ID は旧版と同じ `Glitch-Sound.glitchboard` である。
 
-1. [Marketplace の GlitchBoard](https://marketplace.visualstudio.com/items?itemName=Glitch-Sound.glitchboard)をインストール、または0.2.2へ更新する。
+1. [Marketplace の GlitchBoard](https://marketplace.visualstudio.com/items?itemName=Glitch-Sound.glitchboard)をインストール、または0.2.3へ更新する。
 2. アクティビティバーの GlitchBoard、またはコマンドパレットの `GlitchBoardを開く` を選ぶ。
 3. 初回は左の `新しく作る` で `manage.yaml` の保存先を指定する。\
    既存の本版データがあれば `manage.yamlを選ぶ` を使う。
@@ -65,6 +65,10 @@ Event へ直接追加した Task は、一覧の `Taks` に表示する。\
 Story は同じ Event 内、Task は同じ所属内で並べ替える。\
 Taks は先頭固定で、その中の Task は並べ替えできる。\
 並べ替えは保存完了後に反映し、保存失敗では元の順序と下書きを保つ。
+
+日付の ◆ と同日 Event 一覧は選択に使い、詳細ボタンは置かない。\
+Event の詳細は左の EVENT または下部の要約、Project の詳細は PROJECT 名列の書類アイコンから開く。\
+詳細を開いている場合は、選択先へ追従する。
 
 ポイントと完了チェックはその場で保存する。\
 完了済み Task のポイントを変える場合は、チェックを外してから操作する。

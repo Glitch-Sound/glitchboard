@@ -1,0 +1,17 @@
+{
+  "version": "0.2.3",
+  "extension": "Glitch-Sound.glitchboard",
+  "files": 21,
+  "identity": {
+    "Language": "en-US",
+    "Id": "glitchboard",
+    "Version": "0.2.3",
+    "Publisher": "Glitch-Sound"
+  },
+  "sha256": "3eee0c28ced5bf0731ac2cd318da1b30057cc5043d00c7ab1fec716b522c7c7c",
+  "allFilesMatchSource": true,
+  "readmeImages": 5,
+  "samples": 4,
+  "developmentFilesIncluded": false,
+  "licenseUnchanged": true
+}
