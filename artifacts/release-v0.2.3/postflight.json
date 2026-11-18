@@ -1,5 +1,5 @@
 {
-  "checkedAt": "2026-11-18T07:10:37.269392+00:00",
+  "checkedAt": "2026-11-18T14:58:44.795190+00:00",
   "version": "0.2.3",
   "extension": "Glitch-Sound.glitchboard",
   "extensionId": "1f5f7ff2-b364-4729-b6a8-53f56bf480e8",
@@ -7,11 +7,11 @@
   "tag": "v0.2.3",
   "remotePushConfirmed": true,
   "tagUrlsVerified": 8,
-  "uploadAttempted": false,
-  "published": false,
-  "publicVersionObserved": "0.2.2",
-  "state": "awaitingChromeSignIn",
-  "blocker": "Chrome の Marketplace 認証ページが空白で、既存アカウントの選択後も管理画面への接続を確認できない。利用者のサインイン完了待ち。",
+  "uploadAttempted": true,
+  "published": true,
+  "publicVersionObserved": "0.2.3",
+  "state": "published",
+  "blocker": null,
   "vsixSha256": "3eee0c28ced5bf0731ac2cd318da1b30057cc5043d00c7ab1fec716b522c7c7c",
   "checks": {
     "unitTestFiles": 121,
@@ -22,6 +22,93 @@
       "Light Modern"
     ],
     "packageFiles": 21,
-    "readmeImages": 5
-  }
+    "readmeImages": 5,
+    "readmePreviewPassed": true
+  },
+  "flags": "validated, public",
+  "versionFlags": "validated",
+  "publishedLastUpdated": "2026-11-18T14:57:21.94Z",
+  "assets": [
+    {
+      "assetType": "Microsoft.VisualStudio.Services.VSIXPackage",
+      "url": "https://Glitch-Sound.gallerycdn.vsassets.io/extensions/glitch-sound/glitchboard/0.2.3/1795013399953/Microsoft.VisualStudio.Services.VSIXPackage",
+      "status": 200,
+      "bytes": 567065,
+      "sha256": "3eee0c28ced5bf0731ac2cd318da1b30057cc5043d00c7ab1fec716b522c7c7c",
+      "matchesLocal": true
+    },
+    {
+      "assetType": "Microsoft.VisualStudio.Services.Content.Details",
+      "url": "https://Glitch-Sound.gallerycdn.vsassets.io/extensions/glitch-sound/glitchboard/0.2.3/1795013399953/Microsoft.VisualStudio.Services.Content.Details",
+      "status": 200,
+      "bytes": 11621,
+      "sha256": "5e1db573fc41dd609bf185816d258e16e506e11189c7ea038809f3233e7425dd",
+      "matchesLocal": true
+    },
+    {
+      "assetType": "Microsoft.VisualStudio.Services.Content.Changelog",
+      "url": "https://Glitch-Sound.gallerycdn.vsassets.io/extensions/glitch-sound/glitchboard/0.2.3/1795013399953/Microsoft.VisualStudio.Services.Content.Changelog",
+      "status": 200,
+      "bytes": 4596,
+      "sha256": "462d0bddfc6451e50c302f24eeca7fb5c8308e791f756b9471a0ae60c55d2711",
+      "matchesLocal": true
+    },
+    {
+      "assetType": "Microsoft.VisualStudio.Code.Manifest",
+      "url": "https://Glitch-Sound.gallerycdn.vsassets.io/extensions/glitch-sound/glitchboard/0.2.3/1795013399953/Microsoft.VisualStudio.Code.Manifest",
+      "status": 200,
+      "bytes": 1907,
+      "sha256": "69685b59283d74e3023d1417b028e5a6271de324c6105273364b92a2acdb396f",
+      "matchesLocal": true
+    },
+    {
+      "assetType": "Microsoft.VisualStudio.Services.Icons.Default",
+      "url": "https://Glitch-Sound.gallerycdn.vsassets.io/extensions/glitch-sound/glitchboard/0.2.3/1795013399953/Microsoft.VisualStudio.Services.Icons.Default",
+      "status": 200,
+      "bytes": 51927,
+      "sha256": "af2541a27218e1cc5bb67256767d27e507f5e253b8ddf6205792fd6603d62acc",
+      "matchesLocal": true
+    }
+  ],
+  "chromeUploadConfirmed": true,
+  "chromePublicVersionConfirmed": true,
+  "chromeReadmeConfirmed": true,
+  "sourceRepository": "https://github.com/Glitch-Sound/glitchboard.git",
+  "readmeImages": [
+    {
+      "path": "packages/extension/media/readme/overview.png",
+      "url": "https://raw.githubusercontent.com/Glitch-Sound/glitchboard/v0.2.3/packages/extension/media/readme/overview.png",
+      "status": 200,
+      "sha256": "d15fab96c274143b4846be786e0db614d97a1e79203ecd5409c8022e8f73da5c",
+      "matchesLocal": true
+    },
+    {
+      "path": "packages/extension/media/readme/setup.png",
+      "url": "https://raw.githubusercontent.com/Glitch-Sound/glitchboard/v0.2.3/packages/extension/media/readme/setup.png",
+      "status": 200,
+      "sha256": "6b36c65610af56109036231c2051dbed98243a9599a95be15402d0cd22794803",
+      "matchesLocal": true
+    },
+    {
+      "path": "packages/extension/media/readme/tasks.png",
+      "url": "https://raw.githubusercontent.com/Glitch-Sound/glitchboard/v0.2.3/packages/extension/media/readme/tasks.png",
+      "status": 200,
+      "sha256": "bea3ffe26e8c6f09e672a312b69d44e9e9f08fdaaf62477200a4f922e0a84725",
+      "matchesLocal": true
+    },
+    {
+      "path": "packages/extension/media/readme/task-points.png",
+      "url": "https://raw.githubusercontent.com/Glitch-Sound/glitchboard/v0.2.3/packages/extension/media/readme/task-points.png",
+      "status": 200,
+      "sha256": "8f79dad324f86032013d7149d26dd71466efc650314e81079a7911077515c708",
+      "matchesLocal": true
+    },
+    {
+      "path": "packages/extension/media/readme/event-add.png",
+      "url": "https://raw.githubusercontent.com/Glitch-Sound/glitchboard/v0.2.3/packages/extension/media/readme/event-add.png",
+      "status": 200,
+      "sha256": "a1d7a2fcb413a12d67265243681f8c2c436672944918a9ae208c1bd133229957",
+      "matchesLocal": true
+    }
+  ]
 }
