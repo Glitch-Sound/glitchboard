@@ -1,0 +1,27 @@
+{
+  "checkedAt": "2026-11-18T07:10:37.269392+00:00",
+  "version": "0.2.3",
+  "extension": "Glitch-Sound.glitchboard",
+  "extensionId": "1f5f7ff2-b364-4729-b6a8-53f56bf480e8",
+  "releaseCommit": "5a21b8c478f97ade93b2c11d9166472e5772913c",
+  "tag": "v0.2.3",
+  "remotePushConfirmed": true,
+  "tagUrlsVerified": 8,
+  "uploadAttempted": false,
+  "published": false,
+  "publicVersionObserved": "0.2.2",
+  "state": "awaitingChromeSignIn",
+  "blocker": "Chrome の Marketplace 認証ページが空白で、既存アカウントの選択後も管理画面への接続を確認できない。利用者のサインイン完了待ち。",
+  "vsixSha256": "3eee0c28ced5bf0731ac2cd318da1b30057cc5043d00c7ab1fec716b522c7c7c",
+  "checks": {
+    "unitTestFiles": 121,
+    "unitTests": 353,
+    "browserSuites": 11,
+    "nativeThemes": [
+      "Dark Modern",
+      "Light Modern"
+    ],
+    "packageFiles": 21,
+    "readmeImages": 5
+  }
+}

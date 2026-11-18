@@ -1,0 +1,62 @@
+{
+  "version": "0.2.3",
+  "tagCommit": "5a21b8c478f97ade93b2c11d9166472e5772913c",
+  "results": [
+    {
+      "path": "packages/extension/media/readme/overview.png",
+      "url": "https://raw.githubusercontent.com/Glitch-Sound/glitchboard/v0.2.3/packages/extension/media/readme/overview.png",
+      "status": 200,
+      "sha256": "d15fab96c274143b4846be786e0db614d97a1e79203ecd5409c8022e8f73da5c",
+      "matchesLocal": true
+    },
+    {
+      "path": "packages/extension/media/readme/setup.png",
+      "url": "https://raw.githubusercontent.com/Glitch-Sound/glitchboard/v0.2.3/packages/extension/media/readme/setup.png",
+      "status": 200,
+      "sha256": "6b36c65610af56109036231c2051dbed98243a9599a95be15402d0cd22794803",
+      "matchesLocal": true
+    },
+    {
+      "path": "packages/extension/media/readme/tasks.png",
+      "url": "https://raw.githubusercontent.com/Glitch-Sound/glitchboard/v0.2.3/packages/extension/media/readme/tasks.png",
+      "status": 200,
+      "sha256": "bea3ffe26e8c6f09e672a312b69d44e9e9f08fdaaf62477200a4f922e0a84725",
+      "matchesLocal": true
+    },
+    {
+      "path": "packages/extension/media/readme/task-points.png",
+      "url": "https://raw.githubusercontent.com/Glitch-Sound/glitchboard/v0.2.3/packages/extension/media/readme/task-points.png",
+      "status": 200,
+      "sha256": "8f79dad324f86032013d7149d26dd71466efc650314e81079a7911077515c708",
+      "matchesLocal": true
+    },
+    {
+      "path": "packages/extension/media/readme/event-add.png",
+      "url": "https://raw.githubusercontent.com/Glitch-Sound/glitchboard/v0.2.3/packages/extension/media/readme/event-add.png",
+      "status": 200,
+      "sha256": "a1d7a2fcb413a12d67265243681f8c2c436672944918a9ae208c1bd133229957",
+      "matchesLocal": true
+    },
+    {
+      "path": "README.md",
+      "url": "https://raw.githubusercontent.com/Glitch-Sound/glitchboard/v0.2.3/README.md",
+      "status": 200,
+      "sha256": "2ac03a33f51deb48a0ba6bd9bbc091970ecd549a0f7aafec305206bcd9fd9eab",
+      "matchesLocal": true
+    },
+    {
+      "path": "CHANGELOG.md",
+      "url": "https://raw.githubusercontent.com/Glitch-Sound/glitchboard/v0.2.3/CHANGELOG.md",
+      "status": 200,
+      "sha256": "462d0bddfc6451e50c302f24eeca7fb5c8308e791f756b9471a0ae60c55d2711",
+      "matchesLocal": true
+    },
+    {
+      "path": "examples/readme-guide/manage.yaml",
+      "url": "https://raw.githubusercontent.com/Glitch-Sound/glitchboard/v0.2.3/examples/readme-guide/manage.yaml",
+      "status": 200,
+      "sha256": "6336db540f2a981d4a764db126498016aa127c70defd59c994aadabf9ae166d6",
+      "matchesLocal": true
+    }
+  ]
+}
